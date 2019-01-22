@@ -2,6 +2,9 @@ package com.pathfinder;
 
 /***
  * Represents a point in 3D space.
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
  */
 public final class Point {
 
@@ -57,6 +60,27 @@ public final class Point {
 
     public void setZ(int z) {
         this.z = z;
+    }
+
+    /***
+     * Get the Euclidian distance between two points
+     * @param p The first point
+     * @param q The second point
+     * @return The distance between the points, or -1 if the points are on different elevations.
+     */
+    public static double distance(Point p, Point q){
+        if(p.getY() != q.getY())
+            return -1;
+        return Math.abs(Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getZ() - q.getZ(), 2)));
+    }
+
+    /***
+     * Get the Euclidian distance between two points
+     * @param p The second point
+     * @return The distance between the points, or -1 if the points are on different elevations.
+     */
+    public double distance(Point p){
+        return distance(this, p);
     }
 
     @Override

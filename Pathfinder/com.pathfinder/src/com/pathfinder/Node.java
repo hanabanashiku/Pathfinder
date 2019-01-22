@@ -1,9 +1,10 @@
 package com.pathfinder;
 
-import com.pathfinder.Point;
-
 /***
  *  Represents a node on a graph
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
  */
 public abstract class Node {
     protected Point point;
