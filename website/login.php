@@ -1,11 +1,11 @@
 <?php
 const EXPIRE_TIME = 3600;
 
-if(defined($_GET["error"])){
-    // error message   
+if(isset($_GET["error"])){
+    die($_GET["error"]);
 }
 
-else if(defined($_GET["logout"])){
+else if(isset($_GET["logout"])){
     session_start();
     unset($_SESSION["username"]);
     unset($_SESSION["expires_in"]);
@@ -13,7 +13,7 @@ else if(defined($_GET["logout"])){
 }
 
 else{
-    if(!defined($_POST["username"]) || !defined($_POST["password"]))
+    if(!isset($_POST["username"]) || !isset($_POST["password"]))
         header("Location: index");
         
     $json = json_decode("assets/sql_login.json");
@@ -31,8 +31,8 @@ else{
     $password = password_hash(mysqli_real_escape_string($_POST["password"]));
     
     $conn = new mysqli($host, $user, $pw);
-    if($conn->connect_error){
-        header("Location: login?error=" . html_entities($conn->connect_error));
+    if($conn->connect_errno){
+        header("Location: login?error=" . htmlentities($conn->connect_error));
         die();
     }
     
