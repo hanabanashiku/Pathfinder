@@ -12,7 +12,7 @@
     <div id="main">
 
         <?php
-            include ('topNav.html');
+            include ('nav.html');
         ?>
 
         <br>    

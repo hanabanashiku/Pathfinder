@@ -9,6 +9,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 <style type="text/css">
+    body {
+        background-image: url("assets/background.jpg");
+        background-size: cover;
+    }
 	.login-form {
 		width: 340px;
     	margin: 50px auto;
@@ -30,12 +34,21 @@
         font-size: 15px;
         font-weight: bold;
     }
+
+    img{
+        /* max-height:160px; */
+        max-width:290px;
+        height:auto;
+        width:auto;
+    }
+
 </style>
 </head>
 <body>
 <div class="login-form">
     <form action="home.php" method="post">
-        <h2 class="text-center">Log in</h2>       
+        <img src="assets/logo4-final.png" class="img-fluid">
+        <h2 class="text-center">Log in</h2>
         <div class="form-group">
             <input type="text" class="form-control" placeholder="Username" required="required">
         </div>
