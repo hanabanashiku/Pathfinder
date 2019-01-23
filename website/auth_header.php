@@ -9,5 +9,5 @@ if(isset($_SESSION["expires_in"]) && $_SESSION["expires_in"] <= time()){
 
 // we need to log in!
 if(!isset($_SESSION["username"]) || !isset($_SESSION["expires_in"]))
-    http_redirect("index");
+    header("Location: index");
 ?>
