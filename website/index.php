@@ -7,7 +7,9 @@
 <title>Login</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.2/js/bootstrap.min.js"></script> 
+
 <style type="text/css">
     body {
         background-image: url("assets/background.jpg");
@@ -61,9 +63,10 @@
         <div class="clearfix">
             <label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
             <a href="#" class="pull-right">Forgot Password?</a>
-        </div>        
+        </div>
+        <br>
+        <button type="button" class="btn btn-info btn-block">Create an Account</button>
     </form>
-    <p class="text-center"><a href="#">Create an Account</a></p>
 </div>
 </body>
 </html>                                		                            
