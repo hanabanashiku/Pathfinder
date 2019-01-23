@@ -1,5 +1,11 @@
 package com.pathfinder;
 
+/***
+ * Represents a destination node
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
+ */
 public class Room extends Node {
 
     private String name;

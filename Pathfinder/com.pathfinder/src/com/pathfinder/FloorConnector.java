@@ -5,6 +5,9 @@ import java.util.stream.IntStream;
 
 /***
  * Represents a node that allows a user to move between floors, such as an elevator.
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
  */
 public class FloorConnector extends Node {
 
