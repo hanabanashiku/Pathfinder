@@ -2,12 +2,7 @@ IndexIgnore *
 
 <FilesMatch "^\.">
     Order Allow,Deny
-    Deny from all
-</FilesMatch>
-
-<FilesMatch "sql_login.json">
-    Order Allow,Deny
-    Deny from all
+    Require all denied
 </FilesMatch>
 
 RewriteEngine On

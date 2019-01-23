@@ -13,32 +13,26 @@ if(isset($_SESSION["username"])){
 
 <html lang="en">
 <head>
-<<<<<<< HEAD
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript">
-</script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
-</script>
     <style type="text/css">
 body {
-=======
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Login</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.2/js/bootstrap.min.js"></script> 
+    =======
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.2/js/bootstrap.min.js"></script> 
 
-<style type="text/css">
+    <style type="text/css">
     body {
->>>>>>> 736c143cf0fc092843afe65d645a62f63fecc589
         background-image: url("assets/background.jpg");
         background-size: cover;
     }
@@ -72,10 +66,9 @@ body {
     }
 
     </style>
-</head>
+    </head>
 
-<body>
-<<<<<<< HEAD
+    <body>
     <div class="login-form">
         <form action="login.php" method="post">
             <img src="assets/logo4-final.png" class="img-fluid">
@@ -101,8 +94,7 @@ body {
 
         <p class="text-center"><a href="#">Create an Account</a></p>
     </div>
-=======
-<div class="login-form">
+    <div class="login-form">
     <form action="home.php" method="post">
         <img src="assets/logo4-final.png" class="img-fluid">
         <h2 class="text-center">Log in</h2>
@@ -122,7 +114,15 @@ body {
         <br>
         <button type="button" class="btn btn-info btn-block">Create an Account</button>
     </form>
-</div>
->>>>>>> 736c143cf0fc092843afe65d645a62f63fecc589
+    </div>
+    </body>
+    </html>
+    </style>
+</head>
+
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript">
+</script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
+</script>
 </body>
 </html>
