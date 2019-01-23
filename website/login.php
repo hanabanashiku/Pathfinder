@@ -9,12 +9,12 @@ else if(defined($_GET["logout"])){
     session_start();
     unset($_SESSION["username"]);
     unset($_SESSION["expires_in"]);
-    http_redirect("index");
+    header("Location: index");
 }
 
 else{
     if(!defined($_POST["username"]) || !defined($_POST["password"]))
-        http_redirect("index");
+        header("Location: index");
         
     $json = json_decode("assets/sql_login.json");
     try{
@@ -32,13 +32,13 @@ else{
     
     $conn = new mysqli($host, $user, $pw);
     if($conn->connect_error){
-        header("Location: https://path-finder.tk/login?error=" . html_entities($conn->connect_error));
+        header("Location: login?error=" . html_entities($conn->connect_error));
         die();
     }
     
     $q = $conn->query("SELECT * FROM users WHERE username = '".$username."' AND password = '" . $password . "'");
     if($q->num_rows != 1){ // password didn't match
-        http_redirect("login?error=" . html_entities("Invalid username or password."));
+        header("Location: login?error=" . html_entities("Invalid username or password."));
         die();
     }
     
@@ -46,6 +46,6 @@ else{
     session_start();
     $_SESSION["username"] = $username;
     $_SESSION["expires_in"] = time() + EXPIRE_TIME;
-    http_redirect("home");
+    header("Location: home");
 }
 ?>

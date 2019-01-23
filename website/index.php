@@ -6,7 +6,7 @@ if(isset($_SESSION["username"])){
     unset($_SESSION["expires_in"]);
   }
   else
-    http_redirect("home");
+    header("Location: home");
 }
 ?>
 <!DOCTYPE html>
