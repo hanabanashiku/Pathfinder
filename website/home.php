@@ -1,3 +1,4 @@
+<?php require_once("auth_header.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
