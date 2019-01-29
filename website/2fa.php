@@ -16,6 +16,7 @@
     die();
   }
 
+  // verify the code
   try{
     $otp = Factory::loadFromProvisioningUri($d["uri"]);
   }
@@ -28,6 +29,9 @@
   if($otp->verify($d["code"])){
     http_response_code(200); // OK
     echo "1";
+    // make a note of success on the server
+    session_start();
+    $_SESSION["2fa_success"] = true;
     die();
   }
   else{

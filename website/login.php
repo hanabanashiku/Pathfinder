@@ -5,8 +5,10 @@ require_once('vendor/autoload.php')
 const EXPIRE_TIME = 3600;
 
 // start the user session
-function start_session($uname, $fname, $lname){
-  session_start();
+function start_user_session($uname, $fname, $lname){
+  if(session_status() == PHP_SESSION_NONE){
+    session_start();
+  }
   $_SESSION["username"] = $uname;
   $_SESSION["first_name"] = $fname;
   $_SESSION["last_name"] = $lname;
@@ -14,9 +16,11 @@ function start_session($uname, $fname, $lname){
 }
 
 // There was an error
-// todo error page
+// TODO error page
 if(isset($_GET["error"])){
     die($_GET["error"]);
+    ?>
+    <?php
 }
 
 // The user wants to logout
@@ -25,14 +29,31 @@ else if(isset($_GET["logout"])){
     unset($_SESSION["username"]);
     unset($_SESSION["expires_in"]);
     header("Location: index");
+    die();
 }
 
 // The user has to verify their account using 2FA-OTP
 else if(isset($_GET["2fa"])){
+  session_start();
   if(!isset($_SESSION["2fa"])){
     header("Location: login");
     die();
   }
+
+  // sucessful 2fa
+  elseif(isset($_SESSION["2fa_success"]) && $_SESSION["2fa_success"]){
+    start_user_session($_SESSION["2fa"]["username"], $_SESSION["2fa"]["first_name"],
+      $_SESSION["last_name"]);
+      unset($_SESSION["2fa"]);
+      unset($_SESSION["2fa_success"]);
+      header("Location: home");
+      die();
+  }
+
+  // TODO 2fa form
+  ?>
+
+  <?php
 }
 
 else{
@@ -74,12 +95,12 @@ else{
         "last_name" = $row["lname"],
         "2fa_uri" = $row["2fa_uri"]
       );
-      header("Location: login?2fa")
+      header("Location: login?2fa");
       die();
     }
 
     // start the user session and redirect
-    start_session($row["username"], $row["fname"], $row["lname"])
+    start_user_session($row["username"], $row["fname"], $row["lname"])
     header("Location: home");
 }
 ?>
