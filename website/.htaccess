@@ -5,6 +5,10 @@ IndexIgnore *
     Order Allow,Deny
     Require all denied
 </FilesMatch>
+<FilesMatch "^composer">
+  Order Allow,Deny
+  Require all denied
+</FilesMatch>
 
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
