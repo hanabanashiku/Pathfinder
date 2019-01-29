@@ -1,0 +1,5 @@
+{
+    "require": {
+        "spomky-labs/otphp": "^9.1"
+    }
+}
