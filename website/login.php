@@ -1,6 +1,7 @@
 <?php
 // Get dependencies
-require_once('vendor/autoload.php')
+require_once('vendor/autoload.php');
+require_once('api/Database.php');
 
 const EXPIRE_TIME = 3600;
 
@@ -60,47 +61,36 @@ else{
     if(!isset($_POST["username"]) || !isset($_POST["password"]))
         header("Location: index");
 
-    $json = json_decode("assets/sql_login.json");
-    try{
-         $host = $json["host"];
-        $user = $json["user"];
-        $pw = $json["pw"];
-    }
-    catch(Exception $e){
-        die("Could not authenticate with the database.");
-    }
-
     // get user data
     $username = mysqli_real_escape_string($_POST["username"]);
     $password = password_hash(mysqli_real_escape_string($_POST["password"]));
 
-    $conn = new mysqli($host, $user, $pw);
+    $conn = new Database();
     if($conn->connect_errno){
         header("Location: login?error=" . htmlentities($conn->connect_error));
         die();
     }
 
-    $q = $conn->query("SELECT * FROM users WHERE username = '".$username."' AND password = '" . $password . "'");
-    if($q->num_rows != 1){ // password didn't match
+    $q = $conn->verify_user($username, $password);
+    if(!$q){ // password didn't match
         header("Location: login?error=" . html_entities("Invalid username or password."));
         die();
     }
 
-    $row = $q->fetch_asssoc();
     // 2FA check
-    if($row["2fa_uri"] != null){
+    if($q["2fa_uri"] != null){
       $_SESSION["2fa"] = array(
-        "username" = $row["username"],
-        "first_name" = $row["fname"],
-        "last_name" = $row["lname"],
-        "2fa_uri" = $row["2fa_uri"]
+        "username" = $q["username"],
+        "first_name" = $q["fname"],
+        "last_name" = $q["lname"],
+        "2fa_uri" = $q["2fa_uri"]
       );
       header("Location: login?2fa");
       die();
     }
 
     // start the user session and redirect
-    start_user_session($row["username"], $row["fname"], $row["lname"])
+    start_user_session($q["username"], $q["fname"], $q["lname"])
     header("Location: home");
 }
 ?>
