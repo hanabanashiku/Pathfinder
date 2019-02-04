@@ -1,5 +1,7 @@
 package com.pathfinder;
 
+import java.util.ArrayList;
+
 /***
  *  Represents a node on a graph
  * @author Michael MacLean
@@ -9,6 +11,7 @@ package com.pathfinder;
 public abstract class Node {
     protected Point point;
     private boolean visited;
+    private ArrayList<Edge> edges = new ArrayList<Edge> ();
 
     /***
      * @return the location of the node in 3D space
@@ -27,6 +30,10 @@ public abstract class Node {
 
     public boolean isVisited(){
         return visited;
+    }
+    
+    public ArrayList<Edge> getEdges(){
+        return edges;
     }
 
     /***
