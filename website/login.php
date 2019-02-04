@@ -37,7 +37,7 @@ else if(isset($_GET["logout"])){
 else if(isset($_GET["2fa"])){
   session_start();
   if(!isset($_SESSION["2fa"])){
-    header("Location: login");
+    header("Location: index");
     die();
   }
 
@@ -58,19 +58,25 @@ else if(isset($_GET["2fa"])){
 }
 
 else{
-    if(!isset($_POST["username"]) || !isset($_POST["password"]))
-        header("Location: index");
-
-    // get user data
-    $username = mysqli_real_escape_string($_POST["username"]);
-    $password = password_hash(mysqli_real_escape_string($_POST["password"]));
-
-    $conn = new Database();
-    if($conn->connect_errno){
-        header("Location: login?error=" . htmlentities($conn->connect_error));
-        die();
+    if(!isset($_POST["username"]) || !isset($_POST["password"])){
+      header("Location: index");
+      die();
     }
 
+    $conn;
+    try{
+      $conn = new Database();
+    }
+    catch(Exception $e){
+      header("Location: login?error=" . htmlentities($e->getMessage()));
+      die();
+    }
+    
+    // get user data
+    $username = $conn->real_escape_string($_POST["username"]);
+    $password = password_hash($conn->real_escape_string($_POST["password"]));
+
+    
     $q = $conn->verify_user($username, $password);
     if(!$q){ // password didn't match
         header("Location: login?error=" . html_entities("Invalid username or password."));
@@ -80,17 +86,17 @@ else{
     // 2FA check
     if($q["2fa_uri"] != null){
       $_SESSION["2fa"] = array(
-        "username" = $q["username"],
-        "first_name" = $q["fname"],
-        "last_name" = $q["lname"],
-        "2fa_uri" = $q["2fa_uri"]
+        "username" => $q["username"],
+        "first_name" => $q["fname"],
+        "last_name" => $q["lname"],
+        "2fa_uri" => $q["2fa_uri"]
       );
       header("Location: login?2fa");
       die();
     }
 
     // start the user session and redirect
-    start_user_session($q["username"], $q["fname"], $q["lname"])
+    start_user_session($q["username"], $q["fname"], $q["lname"]);
     header("Location: home");
 }
 ?>

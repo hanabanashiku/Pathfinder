@@ -4,7 +4,8 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
   class Database extends mysqli {
     public function __construct(){
-      $json = json_decode("../assets/sql_login.json");
+      $json = json_decode(file_get_contents("assets/sql_login.json"), true);
+      $host; $user; $pw; $db;
       try{
           $host = $json["host"];
           $user = $json["user"];
@@ -12,7 +13,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
           $db = $json["db"];
       }
       catch(Exception $e){
-          die("Could not authenticate with the database.");
+          throw new Exception("Could not authenticate with the database.");
       }
       parent::__construct($host, $user, $pw, $db);
     }
