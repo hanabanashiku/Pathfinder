@@ -32,6 +32,10 @@ public abstract class Node {
         return visited;
     }
     
+    public void setVisited(boolean visited){
+        this.visited = visited;
+    }
+    
     public ArrayList<Edge> getEdges(){
         return edges;
     }
