@@ -8,6 +8,7 @@ package com.pathfinder;
  */
 public abstract class Node {
     protected Point point;
+    private boolean visited;
 
     /***
      * @return the location of the node in 3D space
@@ -22,6 +23,10 @@ public abstract class Node {
      */
     public void setPoint(Point value){
         point = value;
+    }
+
+    public boolean isVisited(){
+        return visited;
     }
 
     /***
