@@ -19,11 +19,15 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     }
 
     public function verify_user($username, $password){
-      $q = $this->query("SELECT * FROM users WHERE (username = '".$username."' OR email = '".$username."') AND password = '" . $password . "'");
+      $q = $this->query("SELECT * FROM users WHERE (username = '$username' OR email = '$username')");
       if($q->num_rows != 1){
         return false;
       }
-      return $q->fetch_assoc();
+      $q = $q->fetch_assoc();
+      if(!password_verify($password, $q["password"])){
+        return false;
+      }
+      return $q;
     }
   }
 ?>

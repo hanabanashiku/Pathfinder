@@ -74,7 +74,7 @@ else{
     
     // get user data
     $username = $conn->real_escape_string($_POST["username"]);
-    $password = password_hash($conn->real_escape_string($_POST["password"]));
+    $password = $conn->real_escape_string($_POST["password"]);
 
     
     $q = $conn->verify_user($username, $password);
