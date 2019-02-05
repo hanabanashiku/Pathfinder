@@ -79,7 +79,7 @@ else{
     
     $q = $conn->verify_user($username, $password);
     if(!$q){ // password didn't match
-        header("Location: login?error=" . html_entities("Invalid username or password."));
+        header("Location: login?error=" . htmlentities("Invalid username or password."));
         die();
     }
 
