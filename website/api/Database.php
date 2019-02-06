@@ -24,7 +24,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         return false;
       }
       $q = $q->fetch_assoc();
-      if(!password_verify($password, $q["password"])){
+      if(!password_verify($password, $q["userPassword"])){
         return false;
       }
       return $q;
