@@ -1,34 +1,35 @@
 import sys
 import numpy as np
+import cv2
 from skimage import io
 from skimage.feature import corner_harris, corner_peaks
-from skimage import filters as fl
+from skimage.filters import threshold_mean, gaussian as gaus
 from skimage.color import rgb2gray
 from matplotlib import pyplot as plt
 
+BINARY_THRESH = 127
+MAP_HEIGHT = 1000
+
 # get the raw image as a gray-scale np array
 def get_image(path):
-    img = io.imread(path)
-    # make the image black and white
-    img = np.where(img > np.mean(img), 1.0, 0.0)
+
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+
+    # make the image black and white (binary)
+    img = cv2.threshold(img, BINARY_THRESH, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+
+    # scale down to 800 height
+    scale = MAP_HEIGHT / img.shape[0]
+    if scale < 1:
+        h, w = [int(x * scale) for x in img.shape]
+        img = cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA)
     return img
 
 
-def get_corners(img):
-    corners = corner_peaks(corner_harris(img),min_distance=2)
-    return zip(*corners)
-
-
-def show_corners(img, corners):
-    x, y = corners
-    fig = plt.figure()
-    plt.imshow(img)
-    plt.plot(x, y, 'o')
-    plt.xlim(0, img.shape[1])
-    plt.ylim(img.shape[0], 0)
-    fig.set_size_inches(np.array(fig.get_size_inches()) * 1.5)
-    plt.show()
-    print(str(len(corners)) + ' corners')
+def show_image(img, title='image'):
+    cv2.imshow(title, img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 # main entry point
@@ -46,3 +47,8 @@ if __name__ == '__main__':
         exit(1)
 
     image = get_image(args[1])
+
+    corners = cv2.goodFeaturesToTrack(image, 5000, 0.06, 25)
+    for i in range(len(corners)):
+        image = cv2.circle(image, (corners[i][0][0], corners[i][0][1]), 5, 150, 2)
+    show_image(image)
