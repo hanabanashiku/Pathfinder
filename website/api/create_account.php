@@ -14,11 +14,12 @@
     die();
   }
   
-  $username = mysqli_real_escape_string($d["username"]);
-  $password = password_hash(mysqli_real_escape_string($d["password"]));
-  $email = mysqli_real_escape_string($d["email"]);
-  $lname = mysqli_real_escape_string($d["last_name"]);
-  $fname = mysqli_real_escape_string($d["first_name"]);
+  $db = new Database();
+  $username = $db->real_escape_string($d["username"]);
+  $password = password_hash($db->real_escape_string($d["password"]), PASSWORD_DEFAULT);
+  $email = $db->real_escape_string($d["email"]);
+  $lname = $db->real_escape_string($d["last_name"]);
+  $fname = $db->real_escape_string($d["first_name"]);
   
   // verify email format
   if(!filter_var($d["email"], FILTER_VALIDATE_EMAIL)){
@@ -41,10 +42,8 @@
     die();
   }
   
-  $db = new Database();
-  
   try{
-    $q = $db->query("INSERT INTO users (username, password, email, lname, fname) VALUES (`$username`, `$password`, `$email`, `$lname`, `$fname`)");
+    $q = $db->query("INSERT INTO users (username, userPassword, email, lname, fname) VALUES (`$username`, `$password`, `$email`, `$lname`, `$fname`)");
   }
   // we have violated a constraint.. probably, the user already exists.
   catch(mysqli_sql_exception $e){
