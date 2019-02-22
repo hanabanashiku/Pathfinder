@@ -99,7 +99,7 @@ def get_text(img, lang='eng'):
 
 # returns a DataFrame containing a list of doors in the map and their type.
 def get_doors(img):
-    doors = []
+    ret = []
     # filter through each type of door
     for i in os.listdir('ocr_img/doors'):
         template = cv2.imread('ocr_img/doors/' + i, 0)
@@ -108,8 +108,43 @@ def get_doors(img):
         res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= TEMP_THRESH)
         for j in zip(*loc[::-1]):
-            doors.append(get_box(j, h, w) + [door_type])
-    return pd.DataFrame(doors, columns=['top_left', 'bottom_left', 'top_right', 'bottom_right', 'door_type'])
+            ret.append(get_box(j, h, w) + [door_type])
+    return pd.DataFrame(ret, columns=['top_left', 'bottom_left', 'top_right', 'bottom_right', 'door_type'])
+
+
+# get all neighbors of a 2D point.
+def get_point_neighbors(img, pt):
+    shape = img.shape
+    neighbors = []
+    for i in range(pt[0] - 1, pt[0] + 2):
+        for j in range(pt[1] - 1, pt[1] + 2):
+            if (i, j) != pt and i < shape[0] and j < shape[0] and i >= 0 and j >= 0:
+                neighbors.append((i, j))
+    return np.array(neighbors)
+
+
+# find the other end of an edge given a node.
+# takes an image, a set of nodes, a current node, a reference to a list of visited nodes
+def crawl_edge(img, nodes, node, visited):
+    for pt in get_point_neighbors(img, node):
+        # look non-blank pixels
+        if img[pt[1]][pt[0]] != 255:
+            continue
+        if pt not in visited:
+            if pt in nodes:
+                return pt
+            visited.append(pt)
+            return crawl_edge(img, nodes, pt, visited)
+    return False  # there is no other edge
+
+
+# find an edge given a node.
+def find_edge(img, nodes, node):
+    visited = [node]
+    b = crawl_edge(img, nodes, node, visited)
+    if b:
+        return node, b
+    return False
 
 # try to find edges based on feature nodes
 # provide an array of 2D points and an image
