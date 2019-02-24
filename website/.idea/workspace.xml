@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="fbeeaf7b-b6be-4240-a372-3a9b8e6fd9c2" name="Default Changelist" comment="" />
+=======
+    <list default="true" id="fbeeaf7b-b6be-4240-a372-3a9b8e6fd9c2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/api/Database.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/Database.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/maps.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/maps.php" afterDir="false" />
+    </list>
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,9 +21,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/maps.php">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="1200">
               <caret line="80" column="47" lean-forward="true" selection-start-line="80" selection-start-column="47" selection-end-line="80" selection-end-column="47" />
             </state>
@@ -28,11 +36,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
               <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+=======
+            <state relative-caret-position="740">
+              <caret line="76" column="31" lean-forward="true" selection-start-line="76" selection-start-column="31" selection-end-line="76" selection-end-column="31" />
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/api/Database.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="195">
@@ -136,12 +148,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1551043451536</updated>
+<<<<<<< HEAD
       <workItem from="1551043454137" duration="4503000" />
+=======
+      <workItem from="1551043454137" duration="3782000" />
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="4503000" />
+=======
+    <option name="totallyTimeSpent" value="3782000" />
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="977" extended-state="6" />
@@ -183,6 +203,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-316">
           <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+<<<<<<< HEAD
         </state>
       </provider>
     </entry>
@@ -203,6 +224,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1200">
           <caret line="80" column="47" lean-forward="true" selection-start-line="80" selection-start-column="47" selection-end-line="80" selection-end-column="47" />
+=======
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
         </state>
       </provider>
     </entry>
@@ -210,6 +233,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="61" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
+<<<<<<< HEAD
+=======
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/api/maps.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="740">
+          <caret line="76" column="31" lean-forward="true" selection-start-line="76" selection-start-column="31" selection-end-line="76" selection-end-column="31" />
+>>>>>>> 36d170c0b5fdcca25a90956a74058ed8a3d779be
         </state>
       </provider>
     </entry>
