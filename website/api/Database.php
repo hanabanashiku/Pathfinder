@@ -9,6 +9,10 @@ class Database extends mysqli {
     private $user_db;
     private $nav_db;
 
+    /**
+     * Database constructor.
+     * @throws Exception if the connection could not be made.
+     */
     public function __construct(){
       $json = json_decode(file_get_contents("assets/sql_login.json"), true);
       try{
