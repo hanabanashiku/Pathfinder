@@ -55,9 +55,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(), "Pick");
-        adapter.addFragment(new Tab2Fragment(), "View");
-        adapter.addFragment(new Tab3Fragment(), "Tab3");
+        adapter.addFragment(new Tab1Fragment(), "Select");
+        adapter.addFragment(new Tab2Fragment(), "Route");
+        //adapter.addFragment(new Tab3Fragment(), "Tab3");
         viewPager.setAdapter(adapter);
     }
 
