@@ -1,0 +1,8 @@
+-- CREATE TABLE BUILDINGS
+CREATE IF NOT EXISTS buildings(
+  id INT UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  map_image_path VARCHAR(255),
+  PRIMARY KEY(id)
+)

@@ -1,10 +1,10 @@
 Options -Indexes
 IndexIgnore *
 
-<FilesMatch "^\.">
+<Files "Database.php">
     Order Allow,Deny
     Require all denied
-</FilesMatch>
+</Files>
 <FilesMatch "^composer">
   Order Allow,Deny
   Require all denied
