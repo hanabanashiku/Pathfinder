@@ -1,4 +1,4 @@
-package com.pathfinder;
+package tk.pathfinder.Map;
 
 /***
  * Represents an intersection between two or more edges.

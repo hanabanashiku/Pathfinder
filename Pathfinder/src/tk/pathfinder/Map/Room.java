@@ -1,4 +1,4 @@
-package com.pathfinder;
+package tk.pathfinder.Map;
 
 /***
  * Represents a destination node

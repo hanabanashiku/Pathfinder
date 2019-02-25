@@ -6,10 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Artifact" />
         <module name="com.pathfinder" />
+        <module name="Pathfinder" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Artifact" target="1.5" />
       <module name="com.pathfinder" target="1.5" />
       <module name="Pathfinder" target="1.5" />
     </bytecodeTargetLevel>

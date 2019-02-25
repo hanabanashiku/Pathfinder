@@ -1,4 +1,4 @@
-package com.pathfinder;
+package tk.pathfinder.Map;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

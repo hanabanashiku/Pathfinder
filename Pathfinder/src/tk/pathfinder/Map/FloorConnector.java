@@ -1,4 +1,4 @@
-package com.pathfinder;
+package tk.pathfinder.Map;
 
 import java.util.HashMap;
 import java.util.stream.IntStream;

@@ -1,4 +1,4 @@
-package com.pathfinder;
+package tk.pathfinder.Map;
 
 /***
  * Represents a point in 3D space.
