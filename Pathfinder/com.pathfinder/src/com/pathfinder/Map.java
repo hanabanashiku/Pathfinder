@@ -1,5 +1,6 @@
 package com.pathfinder;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -15,9 +16,19 @@ public class Map {
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
 
-    public Map(Edge[] edges){
+    private BufferedImage image;
+    private Integer id;
+    private String name;
+    private String address;
+
+    public Map(Integer id, String name, String address, BufferedImage image, Edge[] edges){
         if(edges == null)
             throw new NullPointerException("edges");
+
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.image = image;
 
         nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
@@ -138,7 +149,7 @@ public class Map {
         return n;
     }
     
-    public void calculateShortestDistances() {
+    /*public void calculateShortestDistances() {
         int nextNode = 0;
         // visiting every node in the map
             for (int i = 0; i < this.nodes.weight; i++) {
@@ -167,7 +178,7 @@ public class Map {
         int storedIndex = 0;
         int storedDist = Integer.MAX_VALUE;
         
-        for (int i = 0; i < this.nodes.weight; i++){
+        for (int i = 0; i < this.nodes.size(); i++){
             int currentDist = this.nodes.get(i);
             
             if (!this.nodes.get(i).isVisited() && currentDist < storedDist){
@@ -184,7 +195,7 @@ public class Map {
      * @param p The point to use as a reference
      * @return the closest node
      * @throws IllegalStateException if there are no nodes at all
-     */
+     *
     public FloorConnector closestFloorConnector(Point p) throws IllegalStateException {
         FloorConnector n = null; // result
         double dist = -1; // minimum distance
@@ -206,6 +217,21 @@ public class Map {
             }
         }
         return n;
+    }*/
+
+    public String getName() {
+        return name;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 }
