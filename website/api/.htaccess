@@ -1,2 +1,4 @@
-Order Allow,Deny
-Require all denied
+<Files "Database.php">
+    Order Deny,Allow
+    Require all denied
+</Files>
