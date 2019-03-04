@@ -1,9 +1,10 @@
 package tk.pathfinder.UI;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import tk.pathfinder.R;
 
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 4000;
@@ -23,3 +24,4 @@ public class MainActivity extends AppCompatActivity {
         },SPLASH_TIME_OUT);
     }
 }
+

@@ -1,4 +1,4 @@
-package tk.pathfinderk;
+package tk.pathfinder;
 
 import org.junit.Test;
 

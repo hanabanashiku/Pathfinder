@@ -1,13 +1,14 @@
 package tk.pathfinder.Map;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Api {
 
@@ -55,7 +56,7 @@ public class Api {
         }
 
         InputStream is = new ByteArrayInputStream(img.getBytes());
-        BufferedImage image = ImageIO.read(is);
+        Bitmap image = BitmapFactory.decodeStream(is);
 
         return new Map(index, name, addr, image, new Edge[0]);
     }
@@ -63,7 +64,6 @@ public class Api {
     /**
      * Get a list of maps from the database.
      * @return A JSONObject containing the map data.
-     * @throws IOException If the maps could not be retrieved.
      */
     public static JSONObject GetMaps() throws IOException {
         HttpsURLConnection con;

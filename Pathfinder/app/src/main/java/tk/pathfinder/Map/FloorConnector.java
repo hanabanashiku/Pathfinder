@@ -1,7 +1,5 @@
 package tk.pathfinder.Map;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import java.util.HashMap;
 import java.util.stream.IntStream;
@@ -49,7 +47,6 @@ public class FloorConnector extends Node {
      * @param requiresAuthorization if true, the connector requires authorization to use.
      * @throws IllegalArgumentException on invalid firstFloor or lastFloor arguments.
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public FloorConnector(Point p, String name, FloorConnectorTypes type, int firstFloor, int lastFloor,
                           boolean requiresAuthorization) throws IllegalArgumentException {
         processConstructor(p, name, type, requiresAuthorization);
