@@ -36,6 +36,19 @@ class DoorTypes:
         return False
 
 
+def pt_is_equal(a, b):
+    return a[0] == b[0] and a[1] == b[1]
+
+
+def pt_truth_iterator(points, pt):
+    return [pt_is_equal(pt, x) for x in points]
+
+
+def edge_truth_iterator(edges, edge):
+    return [(pt_is_equal(edge[0], x[0]) and pt_is_equal(edge[1], x[1]))
+            or (pt_is_equal(edge[1], x[0]) and pt_is_equal(edge[0], x[1])) for x in edges]
+
+
 # get the raw image as a gray-scale np array
 def get_image(path):
 
@@ -56,6 +69,14 @@ def show_image(img, title='image'):
     cv2.imshow(title, img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+def get_nodes(img):
+    nodes = []
+    features = cv2.goodFeaturesToTrack(img, 3000, 0.06, 15, blockSize=5)
+    for c in range(len(features)):
+        nodes.append((features[c][0][0], features[c][0][1]))
+    return np.array(nodes)
 
 
 # takes a 2D point tuple of the top left corner, a height, and a width
@@ -114,11 +135,12 @@ def get_doors(img):
 
 # get all neighbors of a 2D point.
 def get_point_neighbors(img, pt):
+    pt = (int(pt[0]), int(pt[1]))
     shape = img.shape
     neighbors = []
     for i in range(pt[0] - 1, pt[0] + 2):
         for j in range(pt[1] - 1, pt[1] + 2):
-            if (i, j) != pt and i < shape[0] and j < shape[0] and i >= 0 and j >= 0:
+            if (i != pt[0] and j != pt[1]) and i < shape[0] and j < shape[0] and i >= 0 and j >= 0:
                 neighbors.append((i, j))
     return np.array(neighbors)
 
@@ -130,8 +152,8 @@ def crawl_edge(img, nodes, node, visited):
         # look non-blank pixels
         if img[pt[1]][pt[0]] != 255:
             continue
-        if pt not in visited:
-            if pt in nodes:
+        if not any(pt_truth_iterator(visited, pt)):
+            if any(pt_truth_iterator(nodes, pt)):
                 return pt
             visited.append(pt)
             return crawl_edge(img, nodes, pt, visited)
@@ -142,13 +164,20 @@ def crawl_edge(img, nodes, node, visited):
 def find_edge(img, nodes, node):
     visited = [node]
     b = crawl_edge(img, nodes, node, visited)
-    if b:
+    if b is not False:
         return node, b
     return False
 
+
 # try to find edges based on feature nodes
 # provide an array of 2D points and an image
-# def find_edges(nodes, img):
+def find_edges(nodes, img):
+    edges = []
+    for i in nodes:
+        edge = find_edge(img, nodes, i)
+        if edge is not False and not any(edge_truth_iterator(edges, edge)):
+            edges.append(edge)
+    return edges
 
 
 # main entry point
@@ -161,18 +190,24 @@ if __name__ == '__main__':
         print('To run the script, simply run python3 [path/to/image]')
         exit(1)
 
-    if len(args) != 2:
+    if len(args) == 3:
+        floor = args[2]
+    elif len(args == 2):
+        floor = 1
+    else:
         print('Invalid number of arguments', file=sys.stderr)
         exit(1)
 
     image = get_image(args[1])
-    corners = cv2.goodFeaturesToTrack(image, 3000, 0.06, 15, blockSize=5)
+    nodes = get_nodes(image)
+    edges = find_edges(nodes, image)
     doors = get_doors(image)
     text = get_text(image)
-    for c in range(len(corners)):
-        image = cv2.circle(image, (corners[c][0][0], corners[c][0][1]), 5, 150, 1)
+    for n in nodes:
+        image = cv2.circle(image, (n[0], n[1]), 5, 150, 1)
     for _, row in text.iterrows():
         image = cv2.rectangle(image, row['top_left'], row['bottom_right'], (0, 0, 255), 2)
     for _, row in doors.iterrows():
         image = cv2.rectangle(image, row['top_left'], row['bottom_right'], (0, 255, 255), 2)
+    print(edges)
     show_image(image)
