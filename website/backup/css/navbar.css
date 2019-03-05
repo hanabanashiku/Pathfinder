@@ -1,0 +1,12 @@
+@media (min-width: 992px) {
+    .navbar {
+        height:160px;
+    }
+}
+
+img{
+    max-height:160px;
+    /* max-width:500px; */
+    height:auto;
+    width:auto;
+}

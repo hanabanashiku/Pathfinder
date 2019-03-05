@@ -1,4 +1,0 @@
-<Files "sql_login.json">
-     Order deny,allow
-     Require all denied
-</Files>
