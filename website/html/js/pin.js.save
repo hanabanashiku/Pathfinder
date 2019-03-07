@@ -11,7 +11,6 @@ var tempy = -1;
 var xPosToSet = -1;
 var yPosToSet = -1;
 var makingHallway = false;
-var showBackground = true;
 
 class Beacon {
     constructor(xCoord, yCoord, metaData) {
@@ -50,10 +49,10 @@ class Beacon {
         this.fillColor = color(255, 0, 0);
     }
     show() {
-        this.metaData.style.visibility = "visible"; 
+        this.metaData.style.visibility = "visible";
     }
     hide() {
-        this.metaData.style.visibility = "hidden"; 
+        this.metaData.style.visibility = "hidden";
     }
 }
 
@@ -126,10 +125,10 @@ class Destination {
         this.fillColor = color(255, 0, 0);
     }
     show() {
-        this.metaData.style.visibility = "visible"; 
+        this.metaData.style.display = "block"; 
     }
     hide() {
-        this.metaData.style.visibility = "hidden"; 
+        this.metaData.style.display = "none"; 
     }
 }
 
@@ -164,10 +163,7 @@ function setup() {
 }
 
 function draw() {
-    if(showBackground)
-        image(img, 0, 0, canMaxX, canMaxY);
-    else
-        background(255);
+    image(img, 0, 0, canMaxX, canMaxY);
     if (drawMode == "addBeacon"){
         for(var element of beacons) {
             element.display();
@@ -349,8 +345,6 @@ function mouseClicked() {
     else if (drawMode == "removeDestination"){
         for(var element of destinations) {
             if (element.hurtbox(mouseX, mouseY)){
-                var listView = document.getElementById("listview");
-                listView.removeChild(element.metaData);
                 destinations.splice(destinations.indexOf(element), 1);
             }
         }
@@ -372,13 +366,8 @@ function keyPressed() {
     }
     else if (drawMode == "addDestination" || drawMode == "removeDestination"){
         if (keyCode === LEFT_ARROW) {
-            var listView = document.getElementById("listview");
-            listView.removeChild(destinations[destinations.length-1].metaData);
             destinations.splice(-1,1);
         }
-    }
-    if (keyCode === RIGHT_ARROW) {
-        showBackground = !showBackground;
     }
 }
 
