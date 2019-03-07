@@ -1,6 +1,7 @@
 package tk.pathfinder.Map;
 
-import java.awt.image.BufferedImage;
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -16,12 +17,12 @@ public class Map {
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
 
-    private BufferedImage image;
+    private Bitmap image;
     private Integer id;
     private String name;
     private String address;
 
-    public Map(Integer id, String name, String address, BufferedImage image, Edge[] edges){
+    public Map(Integer id, String name, String address, Bitmap image, Edge[] edges){
         if(edges == null)
             throw new NullPointerException("edges");
 
@@ -124,7 +125,6 @@ public class Map {
      * Get the closest node to a given location
      * @param p The point to use as a reference
      * @return the closest node.
-     * @throws IllegalStateException if there are no nodes at all
      */
     public Node closestNode(Point p) throws IllegalStateException {
         Node n = null; // result
@@ -227,7 +227,7 @@ public class Map {
         return address;
     }
 
-    public BufferedImage getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
