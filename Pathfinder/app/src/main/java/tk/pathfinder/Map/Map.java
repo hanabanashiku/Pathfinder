@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /***
  * Represents a graph for a building map.
@@ -53,10 +54,24 @@ public class Map {
     }
 
     /***
-     * @return an iterator point to all edges.
+     * @return an iterator pointing to all edges.
      */
     public Iterator<Edge> getEdges(){
         return edges.iterator();
+    }
+
+    /***
+     * @return an iterator pointing to all rooms.
+     */
+    public Iterator<Room> getRooms(){
+        List<Room> rooms = new ArrayList<>();
+        for(Iterator<Node> i = getNodes(); i.hasNext(); ){
+            Node n = i.next();
+            if(n instanceof Room)
+                rooms.add((Room)n);
+        }
+
+        return rooms.iterator();
     }
 
     /***
