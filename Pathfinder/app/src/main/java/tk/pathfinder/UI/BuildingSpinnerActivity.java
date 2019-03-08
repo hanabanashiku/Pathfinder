@@ -1,7 +1,9 @@
 package tk.pathfinder.UI;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,22 +39,23 @@ public class BuildingSpinnerActivity extends Activity implements AdapterView.OnI
         map_ids = new HashMap<>();
         JSONObject maps;
 
+        maps = new GetMaps().doInBackground(this);
+        if(maps == null)
+            return;
         try {
-            maps = Api.GetMaps();
             JSONArray arr = maps.getJSONArray("buildings");
-            for(int i = 0; i < maps.getInt("total"); i++){
+            for (int i = 0; i < maps.getInt("total"); i++) {
                 JSONObject obj = arr.getJSONObject(i);
                 map_ids.put(obj.getString("name"), obj.getInt("id"));
                 cats.add(obj.getString("name"));
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cats);
-            spinner.setAdapter(adapter);
-        } catch (IOException e) {
-            new Alert("Error", "Could not access server: \n" + e.getMessage(), this).show();
         }
         catch(JSONException e){
-            new Alert("Error", "Invalid data received: \n" + e.getMessage(), this).show();
-        }
+                new Alert("Error", "Invalid data received: \n" + e.getMessage(), this).show();
+            }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cats);
+        spinner.setAdapter(adapter);
+
     }
 
     /**
@@ -77,7 +80,8 @@ public class BuildingSpinnerActivity extends Activity implements AdapterView.OnI
                 cats.add(r.getName());
             }
 
-            // todo add cats to dest spinner.
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cats);
+            destSpin.setAdapter(adapter);
         }
         catch(IOException e){
             new Alert("Error", "Could not find map: \n" + e.getMessage(), this);
@@ -87,5 +91,19 @@ public class BuildingSpinnerActivity extends Activity implements AdapterView.OnI
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private class GetMaps extends AsyncTask<Context, Void, JSONObject>{
+
+        @Override
+        protected JSONObject doInBackground(Context... c) {
+            try{
+                return Api.GetMaps();
+            }
+            catch (IOException e){
+                new Alert("Error", "Could not access server \n" + e.getMessage(), c[0]).show();
+            }
+            return null;
+        }
     }
 }

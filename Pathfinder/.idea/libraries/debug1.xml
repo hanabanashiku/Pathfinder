@@ -1,0 +1,44 @@
+<component name="libraryTable">
+  <library name="debug1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/19.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/31.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/36.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/22.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/35.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/28.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/34.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/21.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/29.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/20.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/33.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/26.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/24.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/23.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/27.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/desugar/debug/14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
