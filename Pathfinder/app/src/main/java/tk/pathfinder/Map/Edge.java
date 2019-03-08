@@ -1,6 +1,7 @@
 package tk.pathfinder.Map;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * Represents a link between two nodes.
@@ -54,5 +55,21 @@ public class Edge implements Comparator<Edge>, Comparable<Edge> {
     @Override
     public int compare(Edge edge, Edge t1) {
         return Double.compare(edge.getWeight(), t1.getWeight());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Edge edge = (Edge) o;
+        return (node1.equals(edge.node1) &&
+                node2.equals(edge.node2)) ||
+                (node1.equals(edge.node2) &&
+                node2.equals(edge.node1));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(node1, node2);
     }
 }
