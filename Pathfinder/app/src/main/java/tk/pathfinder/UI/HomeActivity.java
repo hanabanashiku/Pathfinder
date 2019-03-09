@@ -1,5 +1,6 @@
 package tk.pathfinder.UI;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,10 +12,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import tk.pathfinder.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import tk.pathfinder.Map.Api;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -24,6 +34,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private ViewPager mViewPager;
+    private HashMap<String, Integer> map_ids;
+    Bitmap map_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,8 @@ public class HomeActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
 
         tabLayout.setupWithViewPager(mViewPager);
+
+
 
     }
 

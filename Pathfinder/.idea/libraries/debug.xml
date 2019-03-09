@@ -1,0 +1,44 @@
+<component name="libraryTable">
+  <library name="debug">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/33.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/20.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/35.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/29.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/26.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/21.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/34.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/30.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/14.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/28.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/23.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/22.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/27.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/31.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/18.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/24.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/transforms/stackFramesFixer/debug/19.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
