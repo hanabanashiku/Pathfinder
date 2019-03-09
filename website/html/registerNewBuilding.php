@@ -18,12 +18,7 @@
         <link rel="shortcut icon" href="assets/favicon.png" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-    
-        <style>
-            .custom-file-input ~ .custom-file-label::after {
-                content: "Button Text";
-            }
-        </style>
+        <script src="js/regNewBuilding.js"></script>
     </head>
 
     <body>
@@ -51,39 +46,13 @@
                             <input type="submit" value="Upload Image" name="submit"><br>
                         </form> -->
 
-                        <form action="fileUP.php" method="post" enctype="multipart/form-data">
+                        <form action="fileUP.php" method="post" enctype="multipart/form-data" id="fileList">
                             <p>Select the floor map (if multiple floors exist, please select the first floor) map to upload:</p>
-
-                            <div class="d-flex">
-                                <div class="p-2">
-                                    <label for="buildingName" class="mx-auto">Floor Name:</label>
-                                </div>
-                                <div class="p-2">
-                                    <input type="text" class="form-control" id="buildingName">
-                                </div>
-                                <div class="p-2 flex-grow-1">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="fileToUpload" name="fileToUpload"/>
-                                        <label class="custom-file-label" for="fileToUpload">Choose file</label>
-                                    </div>
-                                </div>
-                                <div class="p-2">
-                                    <button type="button" class="btn btn-danger">✘</button>
-                                </div>
+                            
+                            <div id="listview">
                             </div>
 
-                            <script>
-                                $('#fileToUpload').on('change',function(){
-                                    //get the file name
-                                    var fileName = $(this).val();
-                                    //Only returns the filename
-                                    var fileName = fileName.substring(fileName.lastIndexOf("\\")+1);
-                                    //replace the "Choose a file" label
-                                    $(this).next('.custom-file-label').html(fileName);
-                                })
-                            </script>
-
-                            <button type="button" class="btn btn-info btn-block">+</button>
+                            <button type="button" class="btn btn-info btn-block" id="addFloorButton" onclick='addNewFloor()';>+</button>
 
                             <div class="mt-3">
                                 <input type="submit" class="btn btn-success btn-block" value="Create Building" name="submit"><br>
