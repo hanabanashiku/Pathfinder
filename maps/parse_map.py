@@ -1,9 +1,11 @@
 import sys
 import os
+import timeit
 import numpy as np
 import cv2
 import pandas as pd
 import pytesseract as pct
+import json
 
 BINARY_THRESH = 127
 TEMP_THRESH = 0.8
@@ -180,6 +182,59 @@ def find_edges(nodes, img):
     return edges
 
 
+current_i = 0
+index = {}
+S = []
+low_link = {}
+
+
+# Tarjan's strongly connected components algorithm
+# returns a list of components
+def find_rooms(V, E):
+    find_rooms.index = {}
+    result = []
+    for v in V:
+        if v not in index:
+            for j in strong_connect(v, E):
+                result.append(j)
+    return result
+
+
+def strong_connect(v, E):
+    global current_i, low_link, index, S
+    index[v] = current_i
+    result = []
+    low_link[v] = current_i
+    current_i += 1
+    S.append(v)
+
+    # considering successors of v
+    for j in E:
+        if j[0] == v:
+            w = j[1]
+        elif j[1] == v:
+            w = j[0]
+        else:
+            continue
+
+        if w not in index:
+            for k in strong_connect(w, E):
+                result.append(k)
+            low_link[v] = min(low_link[v], low_link[w])
+
+        elif w in S:
+            low_link[v] = min(low_link[v], low_link[w])
+
+    if low_link[v] == index[v]:
+        w = None
+        component = []
+        while w is not v:
+            w = S.pop()
+            component.append(w)
+        result.append(component)
+    return result
+
+
 # main entry point
 if __name__ == '__main__':
     args = sys.argv
@@ -195,19 +250,56 @@ if __name__ == '__main__':
     elif len(args == 2):
         floor = 1
     else:
+        floor = 0  # silence an error message
         print('Invalid number of arguments', file=sys.stderr)
         exit(1)
 
+    start = timeit.default_timer()
     image = get_image(args[1])
     nodes = get_nodes(image)
     edges = find_edges(nodes, image)
+    rooms = find_rooms(nodes, edges)
     doors = get_doors(image)
     text = get_text(image)
-    for n in nodes:
-        image = cv2.circle(image, (n[0], n[1]), 5, 150, 1)
-    for _, row in text.iterrows():
-        image = cv2.rectangle(image, row['top_left'], row['bottom_right'], (0, 0, 255), 2)
-    for _, row in doors.iterrows():
-        image = cv2.rectangle(image, row['top_left'], row['bottom_right'], (0, 255, 255), 2)
-    print(edges)
-    show_image(image)
+
+    jsn = {'nodes': [], 'edges': [], 'rooms': [], 'floor_connectors': [], 'name': None, 'timer': None}
+
+    for i in nodes:
+        jsn['nodes'].append((i[0], floor, i[1]))
+
+    for i in edges:
+        edge = {
+            0: (i[0][0], floor, i[0][1]),
+            1: (i[1][0], floor, i[1][1])
+        }
+        jsn['edges'].append(edge)
+
+    for i in rooms:
+        room = {}
+        r_nodes = []
+        for j in i:
+            r_nodes.append((j[0], floor, j[1]))
+        room['nodes'] = r_nodes
+
+        r_doors = []
+        for _, r in doors.iterrows():
+            box = [r['top_left'], r['bottom_left'], r['top_right'], r['bottom_right']]
+            if is_inside_of(i, box):
+                door = {
+                    'top_left': (r['top_left'][0], floor, r['top_left'][1]),
+                    'bottom_left': (r['bottom_left'][0], floor, r['bottom_left'][1]),
+                    'top_right': (r['top_right'][0], floor, r['top_right'][1]),
+                    'bottom_right': (r['bottom_right'][0], floor, r['bottom_right'][1]),
+                    'type': r['door_type']
+                }
+                r_doors.append(door)
+
+        r_text = []
+        for _, r in text.iterrows():
+            box = [r['top_left'], r['bottom_left'], r['top_right'], r['bottom_right']]
+            if is_inside_of(i, box):
+                r_text.append(r['text'])
+        room['name'] = ' '.join(r_text)
+        room['timer'] = timeit.default_timer() - start
+        jsn['rooms'].append(room)
+    print(json.dumps(jsn))

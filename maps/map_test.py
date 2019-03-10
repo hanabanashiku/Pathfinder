@@ -1,5 +1,7 @@
+import sys
 from parse_map import *
 
+args = sys.argv
 image = get_image(args[1])
 nodes = get_nodes(image)
 edges = find_edges(nodes, image)
