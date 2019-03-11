@@ -164,47 +164,6 @@ public class Map {
         return n;
     }
     
-    /*public void calculateShortestDistances() {
-        int nextNode = 0;
-        // visiting every node in the map
-            for (int i = 0; i < this.nodes.weight; i++) {
-                //looping the edges of the current node
-                ArrayList<Edge> currentNodeEdges = this.nodes.get(nextNode).getEdges();
-                
-                    for (int connectedEdge = 0; connectedEdge < currentNodeEdges.size(); connectedEdge++) {
-                        int neighborIndex = currentNodeEdges.get(connectedEdge).getNeighbourIndex(nextNode);
-                        
-                            // if the node has not been visited yet
-                            if (!this.nodes.get(neighborIndex).isVisited()) {
-                                int tentative = this.nodes.get(nextNode) + currentNodeEdges.get(connectedEdge).getWeight();
-                                
-                            if (tentative < nodes.get(neighborIndex)) {
-                                nodes.get(neighborIndex);
-                            }
-                }
-            }
-                    
-            nodes.get(nextNode).setVisited(true);
-            nextNode = getNodeShortestDistance();
-        }
-    }
-    
-    private int getNodeShortestDistance(){
-        int storedIndex = 0;
-        int storedDist = Integer.MAX_VALUE;
-        
-        for (int i = 0; i < this.nodes.size(); i++){
-            int currentDist = this.nodes.get(i);
-            
-            if (!this.nodes.get(i).isVisited() && currentDist < storedDist){
-                storedDist = currentDist;
-                storedIndex = i;
-            }
-        }
-        
-        return storedIndex;
-    }
-
     /***
      * Get the closest floor connector to a given location
      * @param p The point to use as a reference

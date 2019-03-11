@@ -1,11 +1,12 @@
 <?php
-    error_reporting(E_ALL);
-    ini_set(`display_errors`, True);
+    // error_reporting(E_ALL);
+    // ini_set(`display_errors`, True);
     //ini_set(`display_startup_errors`, True);
     //$db = mysqli_connect('localhost', 'ksmith', 'Angela10!', 'ksmith')
     //or die('Error connecting to MySql server');
-    //session_start();
-    require('/var/www/html/dbConnect.php');
+    session_start();
+    // require('/var/www/html/dbConnect.php');
+    echo $_SESSION["username"];
 ?>
 
 <!doctype html>
@@ -34,7 +35,7 @@
                     <div class="card-header">
                         <div class="form-group">
                             <label for="buildingName">Building Name:</label>
-                            <input type="text" class="form-control" id="buildingName">
+                            <input type="text" class="form-control" id="buildingName" onkeyup="checkName()">
                         </div>
                     </div>
                     <div class="card-body">
@@ -46,17 +47,14 @@
                             <input type="submit" value="Upload Image" name="submit"><br>
                         </form> -->
 
-                        <form action="fileUP.php" method="post" enctype="multipart/form-data" id="fileList">
+                        <form enctype="multipart/form-data" id="fileList">
                             <p>Select the floor map (if multiple floors exist, please select the first floor) map to upload:</p>
                             
                             <div id="listview">
                             </div>
 
-                            <button type="button" class="btn btn-info btn-block" id="addFloorButton" onclick='addNewFloor()';>+</button>
-
-                            <div class="mt-3">
-                                <input type="submit" class="btn btn-success btn-block" value="Create Building" name="submit"><br>
-                            </div>
+                            <button type="button" class="btn btn-info btn-block" id="addFloorButton" onclick='addNewFloor()' disabled='true'>+</button>
+                            <button type="button" class="btn btn-success btn-block" id="uploadButton" onclick='uploadFiles()' disabled='true'>Upload All</button>
                         </form>
 
                     </div>
