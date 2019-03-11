@@ -14,6 +14,18 @@ function addNewFloor(){
     floors.push(currFloor);
 }
 
+function checkName() {
+    // alert(document.getElementById("buildingName").value);
+    if (document.getElementById("buildingName").value.length > 0){
+        document.getElementById('addFloorButton').disabled = false;
+        document.getElementById('uploadButton').disabled = false;
+    }
+    else {
+        document.getElementById('addFloorButton').disabled = true;
+        document.getElementById('uploadButton').disabled = true;
+    }
+}
+
 function createNode() {  
     var parentDiv = document.createElement("div");
     parentDiv.className = 'd-flex';
@@ -90,4 +102,45 @@ function createNode() {
     element.appendChild(parentDiv);
     arbNum += 1;
     return parentDiv;
+}
+
+function uploadFiles() {
+    document.getElementById("buildingName").disabled = true;
+    document.getElementById("uploadButton").disabled = true;
+
+    document.getElementById("addFloorButton").remove();
+    document.getElementById("uploadButton").innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    var formData = new FormData();
+    formData.set('folderName', document.getElementById("buildingName").value);
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "../api/folderCreate.php", false);
+    xhttp.send(formData);
+
+    var uploads = [];
+    for(var element of floors) {
+        var formData = new FormData();
+        formData.set('file', element.metaData.childNodes[2].childNodes[0].childNodes[0].files[0]);
+        formData.set('name', element.metaData.childNodes[1].childNodes[0].value.concat(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.substring(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.lastIndexOf("."))));
+        formData.set('folderName', document.getElementById("buildingName").value);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "../api/multiUpload.php", false);
+        xhttp.addEventListener("load", function(){
+            element.metaData.childNodes[1].childNodes[0].disabled = true;
+            element.metaData.childNodes[2].childNodes[0].childNodes[0].disabled = true;
+
+            element.metaData.childNodes[3].childNodes[0].disabled = true; 
+            element.metaData.childNodes[3].childNodes[0].className = "btn btn-success";
+            element.metaData.childNodes[3].childNodes[0].innerHTML = '✔';
+            element.metaData.childNodes[3].childNodes[0].onclick = function() { return false; };
+        }); 
+        xhttp.send(formData);
+    }
+    document.getElementById("uploadButton").innerHTML = '✔';
+}
+
+function outputfirstname() {
+    alert(document.getElementById("buildingName").value);
 }
