@@ -396,7 +396,7 @@ function displaySideList(displayArray){
 
 function createNode(displayArray) {  
     var parentDiv = document.createElement("div");
-    parentDiv.className = 'd-flex justify-content-between';
+    parentDiv.className = 'd-flex justify-content-start';
     parentDiv.id = 'beacon' + displayArray.length;
 
     var inputDiv = document.createElement("div");

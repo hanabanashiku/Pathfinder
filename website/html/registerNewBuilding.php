@@ -4,9 +4,8 @@
     //ini_set(`display_startup_errors`, True);
     //$db = mysqli_connect('localhost', 'ksmith', 'Angela10!', 'ksmith')
     //or die('Error connecting to MySql server');
-    session_start();
     // require('/var/www/html/dbConnect.php');
-    echo $_SESSION["username"];
+    session_start();
 ?>
 
 <!doctype html>
@@ -24,13 +23,31 @@
 
     <body>
         <div id="main">
+
             <?php
                 include ('nav.html');
             ?>
 
+            <!-- Success Toast -->
+            <div class="position-absolute w-100 d-flex flex-column p-4">
+                <div class="toast ml-auto" data-autohide="false">
+                    <div class="toast-header bg-success">
+                        <strong class="mr-auto">Upload Complete</strong>
+                        <small class="text-muted">just now</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                    You may leave this page at any time.
+                    </div>
+                </div>
+            </div>
+
             <br>
-            
+
             <div class="container">
+
                 <div class="card">
                     <div class="card-header">
                         <div class="form-group">
@@ -39,7 +56,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-
                         <!-- Saved for Ref. -->
                         <!-- <form action="fileUP.php" method="post" enctype="multipart/form-data">
                             Select the floor map (if multiple floors exist, please select the first floor) map to upload<br>
@@ -56,9 +72,9 @@
                             <button type="button" class="btn btn-info btn-block" id="addFloorButton" onclick='addNewFloor()' disabled='true'>+</button>
                             <button type="button" class="btn btn-success btn-block" id="uploadButton" onclick='uploadFiles()' disabled='true'>Upload All</button>
                         </form>
-
                     </div>
                 </div>
+                
             </div>
 
             <?php

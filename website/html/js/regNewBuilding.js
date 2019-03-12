@@ -28,7 +28,7 @@ function checkName() {
 
 function createNode() {  
     var parentDiv = document.createElement("div");
-    parentDiv.className = 'd-flex';
+    parentDiv.className = 'd-flex justify-content-start';
     parentDiv.id = 'file' + arbNum;
 
     var textDiv = document.createElement("div");
@@ -139,6 +139,11 @@ function uploadFiles() {
         xhttp.send(formData);
     }
     document.getElementById("uploadButton").innerHTML = '✔';
+    showToast();
+}
+
+function showToast(){
+    $('.toast').toast('show');
 }
 
 function outputfirstname() {

@@ -32,10 +32,13 @@
                 </div>
             </div>
 
-            <div class="d-flex justify-content-between">
-                <div class="p-2" id="listview">Beacon Locations:</div>
-                <!-- <div class="p-2">Flex item 2</div> -->
-                <div class="p-2" id="sketch-holder"></div>
+            <div class="p-2 d-flex justify-content-between">
+                <div class="card flex-grow-1">
+                    <div class="card-header">Beacon Locations</div>
+                    <div class="card-body" id="listview">
+                    </div>
+                </div>
+                <div id="sketch-holder"></div>
             </div>
 
         </div>
