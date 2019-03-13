@@ -3,9 +3,12 @@ package tk.pathfinder.Map;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import tk.pathfinder.Networking.Beacon;
 
 /***
  * Represents a graph for a building map.
@@ -17,13 +20,14 @@ public class Map {
 
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
+    private ArrayList<Beacon> beacons;
 
     private Bitmap image;
     private Integer id;
     private String name;
     private String address;
 
-    public Map(Integer id, String name, String address, Bitmap image, Edge[] edges){
+    public Map(Integer id, String name, String address, Bitmap image, Edge[] edges, Beacon[] beacons){
         if(edges == null)
             throw new NullPointerException("edges");
 
@@ -44,6 +48,9 @@ public class Map {
             if (edge != null && edge.getNode2() != null && !nodes.contains(edge.getNode2()))
                 nodes.add(edge.getNode2());
         }
+
+        this.beacons = new ArrayList<>();
+        this.beacons.addAll(Arrays.asList(beacons));
     }
 
     /**
@@ -165,11 +172,7 @@ public class Map {
     }
     
     /***
-     * Get the closest floor connector to a given location
-     * @param p The point to use as a reference
-     * @return the closest node
-     * @throws IllegalStateException if there are no nodes at all
-     *
+
     public FloorConnector closestFloorConnector(Point p) throws IllegalStateException {
         FloorConnector n = null; // result
         double dist = -1; // minimum distance
@@ -207,5 +210,12 @@ public class Map {
 
     public Integer getId() {
         return id;
+    }
+
+    public Beacon getBeacon(String ssid){
+        for(Beacon i : beacons)
+            if(i.getSsid().equals(ssid))
+                return i;
+        return null;
     }
 }

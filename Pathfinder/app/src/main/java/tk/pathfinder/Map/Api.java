@@ -10,8 +10,11 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import tk.pathfinder.Networking.Beacon;
+
 public class Api {
 
+    // TODO Get beacons from database
     public static Map GetMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
@@ -58,7 +61,7 @@ public class Api {
         InputStream is = new ByteArrayInputStream(img.getBytes());
         Bitmap image = BitmapFactory.decodeStream(is);
 
-        return new Map(index, name, addr, image, new Edge[0]);
+        return new Map(index, name, addr, image, new Edge[0], new Beacon[] {});
     }
 
     /**
