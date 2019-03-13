@@ -1,8 +1,8 @@
 package tk.pathfinder.Map;
 
-import android.support.annotation.NonNull;
-
 import java.util.Iterator;
+
+import androidx.annotation.NonNull;
 
 public class Path implements Iterable<Edge> {
     private Edge[] edges;

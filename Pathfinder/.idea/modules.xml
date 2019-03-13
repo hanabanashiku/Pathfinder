@@ -2,26 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pathfinder.iml" filepath="$PROJECT_DIR$/.idea/modules/Pathfinder.iml" />
       <module fileurl="file://$PROJECT_DIR$/Pathfinder.iml" filepath="$PROJECT_DIR$/Pathfinder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/androidTest/androidTest.iml" filepath="$PROJECT_DIR$/app/build/generated/source/buildConfig/androidTest/androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/generated/source/r/androidTest/androidTest1.iml" filepath="$PROJECT_DIR$/app/build/generated/source/r/androidTest/androidTest1.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/buildConfig.iml" filepath="$PROJECT_DIR$/app/build/generated/source/buildConfig/buildConfig.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_dep/debug/dependencies/dependencies.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_dep/debug/dependencies/dependencies.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/production/Pathfinder/main/main.iml" filepath="$PROJECT_DIR$/app/build/production/Pathfinder/main/main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/generated/source/r/r.iml" filepath="$PROJECT_DIR$/app/build/generated/source/r/r.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/split-apk/debug/resources/resources.iml" filepath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/resources/resources.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_0/slice_0.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_0/slice_0.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_1/slice_1.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_1/slice_1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_2/slice_2.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_2/slice_2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_3/slice_3.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_3/slice_3.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_4/slice_4.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_4/slice_4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_5/slice_5.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_5/slice_5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_6/slice_6.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_6/slice_6.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_7/slice_7.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_7/slice_7.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_8/slice_8.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_8/slice_8.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_9/slice_9.iml" filepath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/slice_9/slice_9.iml" />
     </modules>
   </component>
 </project>
