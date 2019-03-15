@@ -56,6 +56,7 @@
                         </div>
                     </div>
                     <div class="card-body">
+                    
                         <!-- Saved for Ref. -->
                         <!-- <form action="fileUP.php" method="post" enctype="multipart/form-data">
                             Select the floor map (if multiple floors exist, please select the first floor) map to upload<br>
@@ -64,7 +65,7 @@
                         </form> -->
 
                         <form enctype="multipart/form-data" id="fileList">
-                            <p>Select the floor map (if multiple floors exist, please select the first floor) map to upload:</p>
+                            <p>Give the building a name and then begin to add floors along with their floor number:</p>
                             
                             <div id="listview">
                             </div>

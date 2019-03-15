@@ -9,15 +9,36 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
-        <script src="js/pin.js"></script>
+        <script src="js/adminPanel.js"></script>
     </head>
     <body>
         <div id="main">
-
             <?php
                 include ('nav.html');
             ?>
             
+            <div class="d-flex justify-content-center bg-light">
+                <div class="form-group p-1">
+                    <div class="input-group mt-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Building Name:</span>
+                        </div>
+                        <select class="form-control" id="buildingList" onchange="populateFloors()">
+                        <option active id='tempOption'>Select</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group p-1">
+                    <div class="input-group mt-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Floor Number:</span>
+                        </div>
+                        <select class="form-control" id="floorList" disabled>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-center bg-light">
                 <div class="btn-group-vertical p-2">
                     <button type="button" class="btn btn-outline-primary" id="addBeaconButton" onclick="setMode('addBeacon')">Place Beacon</button>

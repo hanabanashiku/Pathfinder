@@ -122,7 +122,8 @@ function uploadFiles() {
     for(var element of floors) {
         var formData = new FormData();
         formData.set('file', element.metaData.childNodes[2].childNodes[0].childNodes[0].files[0]);
-        formData.set('name', element.metaData.childNodes[1].childNodes[0].value.concat(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.substring(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.lastIndexOf("."))));
+        formData.set('floorNumber', element.metaData.childNodes[1].childNodes[0].value);
+        formData.set('fileName', element.metaData.childNodes[1].childNodes[0].value.concat(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.substring(element.metaData.childNodes[2].childNodes[0].childNodes[1].innerHTML.lastIndexOf("."))));
         formData.set('folderName', document.getElementById("buildingName").value);
 
         var xhttp = new XMLHttpRequest();
@@ -144,8 +145,4 @@ function uploadFiles() {
 
 function showToast(){
     $('.toast').toast('show');
-}
-
-function outputfirstname() {
-    alert(document.getElementById("buildingName").value);
 }

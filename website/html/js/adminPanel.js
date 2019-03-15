@@ -4,7 +4,7 @@ var img;
 var beacons = [];
 var hallways = [];
 var destinations = [];
-var intersections = [];
+// var intersections = [];
 var drawMode = "addBeacon";
 var tempx = -1;
 var tempy = -1;
@@ -133,21 +133,21 @@ class Destination {
     }
 }
 
-class Intersection {
-    constructor(xCoord, yCoord) {
-        this.xCoord = xCoord;
-        this.yCoord = yCoord;
-        this.displayPosX = xCoord*canMaxX;
-        this.displayPosY = yCoord*canMaxY;
-    }
-    display() {
-        stroke(0, 0, 0);
-        strokeWeight(1);
-        smooth();
-        fill(0, 0, 255);
-        ellipse(this.displayPosX, this.displayPosY, 20, 20);
-    }
-}
+// class Intersection {
+//     constructor(xCoord, yCoord) {
+//         this.xCoord = xCoord;
+//         this.yCoord = yCoord;
+//         this.displayPosX = xCoord*canMaxX;
+//         this.displayPosY = yCoord*canMaxY;
+//     }
+//     display() {
+//         stroke(0, 0, 0);
+//         strokeWeight(1);
+//         smooth();
+//         fill(0, 0, 255);
+//         ellipse(this.displayPosX, this.displayPosY, 20, 20);
+//     }
+// }
 
 function preload() {
     img = loadImage("../uploads/floorPlan.jpg");
@@ -190,9 +190,9 @@ function draw() {
             element.display();
             element.snapBox(mouseX, mouseY);
         }
-        for(var element of intersections) {
-            element.display();
-        }
+        // for(var element of intersections) {
+        //     element.display();
+        // }
         for(var element of destinations) {
             element.display();
             element.hurtbox(mouseX, mouseY);
@@ -203,9 +203,9 @@ function draw() {
             element.display();
             element.snapBox(mouseX, mouseY);
         }
-        for(var element of intersections) {
-            element.display();
-        }
+        // for(var element of intersections) {
+        //     element.display();
+        // }
         for(var element of destinations) {
             element.display();
         }
@@ -214,9 +214,9 @@ function draw() {
         for(var element of hallways) {
             element.display();
         }
-        for(var element of intersections) {
-            element.display();
-        }
+        // for(var element of intersections) {
+        //     element.display();
+        // }
         for(var element of destinations) {
             element.display();
             element.hurtbox(mouseX, mouseY);
@@ -250,15 +250,15 @@ function mouseClicked() {
                 if (element.snapBox(mouseX, mouseY) == "first") {
                     tempx = element.displayPosX1;
                     tempy = element.displayPosY1;
-                    var currIntersection = new Intersection(tempx/canMaxX, tempy/canMaxY);
-                    intersections.push(currIntersection);
+                    // var currIntersection = new Intersection(tempx/canMaxX, tempy/canMaxY);
+                    // intersections.push(currIntersection);
                     break;
                 }
                 else if (element.snapBox(mouseX, mouseY) == "last") {
                     tempx = element.displayPosX2;
                     tempy = element.displayPosY2;
-                    var currIntersection = new Intersection(tempx/canMaxX, tempy/canMaxY);
-                    intersections.push(currIntersection);
+                    // var currIntersection = new Intersection(tempx/canMaxX, tempy/canMaxY);
+                    // intersections.push(currIntersection);
                     break;
                 }
             }
@@ -286,15 +286,15 @@ function mouseClicked() {
                 if (element.snapBox(mouseX, mouseY) == "first"){
                     xPosToSet = element.displayPosX1;
                     yPosToSet = element.displayPosY1;
-                    var currIntersection = new Intersection(xPosToSet/canMaxX, yPosToSet/canMaxY);
-                    intersections.push(currIntersection);
+                    // var currIntersection = new Intersection(xPosToSet/canMaxX, yPosToSet/canMaxY);
+                    // intersections.push(currIntersection);
                     break;
                 }
                 else if (element.snapBox(mouseX, mouseY) == "last"){
                     xPosToSet = element.displayPosX2;
                     yPosToSet = element.displayPosY2;
-                    var currIntersection = new Intersection(xPosToSet/canMaxX, yPosToSet/canMaxY);
-                    intersections.push(currIntersection);
+                    // var currIntersection = new Intersection(xPosToSet/canMaxX, yPosToSet/canMaxY);
+                    // intersections.push(currIntersection);
                     break;
                 }
                 else {
@@ -489,4 +489,44 @@ function resetMode(){
     for(var element of buttons) {
         element.classList.remove("active");
     }
+}
+
+window.onload = function() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var myObj = JSON.parse(this.responseText);
+        for(var element of myObj) {
+            var option = document.createElement("option");
+            option.text = element;
+            document.getElementById("buildingList").add(option);
+        }
+    }
+    };
+    xmlhttp.open("POST", "../api/populateBuildingBox.php", true);
+    xmlhttp.send();
+};
+
+function populateFloors() {
+    try{
+        document.getElementById('tempOption').remove();
+    } catch (ex) {}
+    document.getElementById('floorList').disabled = false;
+
+    // var formData = new FormData();
+    // formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+
+    // var xmlhttp = new XMLHttpRequest();
+    // xmlhttp.onreadystatechange = function() {
+    // if (this.readyState == 4 && this.status == 200) {
+    //     var myObj = JSON.parse(this.responseText);
+    //     for(var element of myObj) {
+    //         var option = document.createElement("option");
+    //         option.text = element[0];
+    //         document.getElementById("floorList").add(option);
+    //     }
+    // }
+    // };
+    // xmlhttp.open("POST", "../api/populateFloorBox.php", true);
+    // xmlhttp.send(formData);
 }
