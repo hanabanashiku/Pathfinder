@@ -37,7 +37,7 @@
     elseif(isset($_GET['id'])){
         try{
             $id = $db->real_escape_string($_GET['id']);
-            $res = $db->get_map($id);
+            $res = $db->get_map($id, isset($_GET['images']));
         }
         catch(Exception $e){
             $res['error_type'] = 'SQL Error';
