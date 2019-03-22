@@ -13,17 +13,19 @@ public class Room extends Node {
     private boolean auth;
 
     /***
+     * @param id The database index of the room.
      * @param p The location of the room in 3D space.
      * @param roomNumber The room's room number.
      * @param name The name of the room (leave null to set as roomNumber)
      * @param locked Whether or not the room requires authorization to enter.
      */
-    public Room(Point p, String roomNumber, String name, boolean locked){
+    public Room(int id, Point p, String roomNumber, String name, boolean locked){
         if(point == null)
             throw new NullPointerException("p");
         if(roomNumber == null)
             throw new NullPointerException("roomNumber");
 
+        this.id = id;
         this.point = p;
         this.roomNumber = roomNumber;
         if(name == null)

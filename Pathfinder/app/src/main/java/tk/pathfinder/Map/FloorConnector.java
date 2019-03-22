@@ -1,8 +1,12 @@
 package tk.pathfinder.Map;
 
 
+import android.os.Build;
+
 import java.util.HashMap;
 import java.util.stream.IntStream;
+
+import androidx.annotation.RequiresApi;
 
 /***
  * Represents a node that allows a user to move between floors, such as an elevator.
@@ -27,12 +31,13 @@ public class FloorConnector extends Node {
      * @param name The name of the node (set to null for a generic name).
      * @param type The type of connector.
      * @param floors An array containing all floors accessible from the connector.
+     * @params operational Whether the elevator is working.
      * @param requiresAuthorization if true, the connector requires authorization to use.
      */
-    public FloorConnector(Point p, String name, FloorConnectorTypes type, int[] floors, boolean requiresAuthorization){
+    public FloorConnector(int id, Point p, String name, FloorConnectorTypes type, int[] floors, boolean operational, boolean requiresAuthorization){
         if(floors == null || floors.length == 0)
             throw new NullPointerException("floors must be non-empty");
-        processConstructor(p, name, type, requiresAuthorization);
+        processConstructor(id, p, name, type, operational, requiresAuthorization);
 
         this.floors = new HashMap<>();
         for (int floor : floors) this.floors.put(floor, true);
@@ -44,27 +49,30 @@ public class FloorConnector extends Node {
      * @param type The type of connector.
      * @param firstFloor The most bottom floor number that the connector can reach.
      * @param lastFloor The most highest floor number that the connector can reach.
+     * @param operational Whether the elevator is working.
      * @param requiresAuthorization if true, the connector requires authorization to use.
      * @throws IllegalArgumentException on invalid firstFloor or lastFloor arguments.
      */
-    public FloorConnector(Point p, String name, FloorConnectorTypes type, int firstFloor, int lastFloor,
-                          boolean requiresAuthorization) throws IllegalArgumentException {
-        processConstructor(p, name, type, requiresAuthorization);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public FloorConnector(int id, Point p, String name, FloorConnectorTypes type, int firstFloor, int lastFloor,
+                          boolean operational, boolean requiresAuthorization) throws IllegalArgumentException {
+        processConstructor(id, p, name, type, operational, requiresAuthorization);
 
         if(firstFloor >= lastFloor)
             throw new IllegalArgumentException("The last floor must be greater than the first floor!");
         IntStream.rangeClosed(firstFloor, lastFloor).forEach(floor -> this.floors.put(floor, true));
     }
 
-    private void processConstructor(Point p, String name, FloorConnectorTypes type, boolean requiresAuthorization){
+    private void processConstructor(int id, Point p, String name, FloorConnectorTypes type, boolean operational, boolean requiresAuthorization){
         if(p == null)
             throw new NullPointerException("p");
 
+        this.id = id;
         this.point = p;
         this.type = type;
+        this.operational = operational;
         this.auth = requiresAuthorization;
         setName(name);
-        operational = true;
     }
 
     /***
