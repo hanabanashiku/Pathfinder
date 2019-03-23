@@ -118,7 +118,6 @@ function uploadFiles() {
     xhttp.open("POST", "../api/folderCreate.php", false);
     xhttp.send(formData);
 
-    var uploads = [];
     for(var element of floors) {
         var formData = new FormData();
         formData.set('file', element.metaData.childNodes[2].childNodes[0].childNodes[0].files[0]);

@@ -23,8 +23,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Building Name:</span>
                         </div>
-                        <select class="form-control" id="buildingList" onchange="populateFloors()">
-                        <option active id='tempOption'>Select</option>
+                        <select class="form-control" id="buildingList" onchange="populateFloorsChange()" onfocus="populateFloorsFocus()">
+                            <option active id='tempOptionBuilding'>Select</option>
                         </select>
                     </div>
                 </div>
@@ -33,7 +33,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Floor Number:</span>
                         </div>
-                        <select class="form-control" id="floorList" disabled>
+                        <select class="form-control" id="floorList" onchange="changeImageChange()" onfocus="changeImageFocus()" disabled>
+                            <option active id='tempOptionFloor'>Select</option>
                         </select>
                     </div>
                 </div>
@@ -62,6 +63,9 @@
                 <div id="sketch-holder"></div>
             </div>
 
+            <br>
+            <button type="button" class="btn btn-block btn-outline-success" id="submitButton" onclick="sendToDB()">Submit</button>
+            <br>
         </div>
 
         <?php

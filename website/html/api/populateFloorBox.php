@@ -1,7 +1,6 @@
 <?php
-    $floorNumber = array();
+    $floorNumbers = array();
     $floorImages = array();
-    $buildingID;
 
     session_start();
     $servername = "localhost";
@@ -39,7 +38,7 @@
     if ($res = mysqli_query($conn, $sql)) {
         if (mysqli_num_rows($res) > 0) {
             while ($row = mysqli_fetch_array($res)) {
-                array_push($floorNumber, $row['floor_number']);
+                array_push($floorNumbers, $row['floor_number']);
                 array_push($floorImages, $row['path_to_image']);
             }
             // mysqli_free_res($res);  //This is breaking the .php file, not sure why...
@@ -55,7 +54,7 @@
 
     $data = array
         (
-            $floorNumber,
+            $floorNumbers,
             $floorImages
         );
 

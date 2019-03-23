@@ -150,12 +150,12 @@ class Destination {
 // }
 
 function preload() {
-    img = loadImage("../uploads/floorPlan.jpg");
+    img = loadImage("../uploads/placeholder.png");
 }
 
 function setup() {
-    canMaxX = img.width;
-    canMaxY = img.height;
+    canMaxX = 1000;
+    canMaxY = 1000;
     var canvas = createCanvas(canMaxX+1 , canMaxY+1);
     canvas.parent('sketch-holder');
 
@@ -164,6 +164,7 @@ function setup() {
 }
 
 function draw() {
+    background(255);
     if(showBackground)
         image(img, 0, 0, canMaxX, canMaxY);
     else
@@ -507,26 +508,89 @@ window.onload = function() {
     xmlhttp.send();
 };
 
-function populateFloors() {
+function populateFloorsFocus() {
+    
+}
+
+function populateFloorsChange() {
     try{
-        document.getElementById('tempOption').remove();
+        document.getElementById('tempOptionBuilding').remove();
     } catch (ex) {}
     document.getElementById('floorList').disabled = false;
 
-    // var formData = new FormData();
-    // formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+    var floorList = document.getElementById("floorList");
+    while (floorList.firstChild) {
+        floorList.removeChild(floorList.firstChild);
+    }
 
-    // var xmlhttp = new XMLHttpRequest();
-    // xmlhttp.onreadystatechange = function() {
-    // if (this.readyState == 4 && this.status == 200) {
-    //     var myObj = JSON.parse(this.responseText);
-    //     for(var element of myObj) {
-    //         var option = document.createElement("option");
-    //         option.text = element[0];
-    //         document.getElementById("floorList").add(option);
-    //     }
-    // }
-    // };
-    // xmlhttp.open("POST", "../api/populateFloorBox.php", true);
-    // xmlhttp.send(formData);
+    var option = document.createElement("option");
+    option.text = 'Select';
+    option.id = 'tempOptionFloor';
+    document.getElementById("floorList").add(option);
+
+    var formData = new FormData();
+    formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myObj = JSON.parse(this.responseText);
+            for (var i = 0; i < myObj[0].length; i++) {
+                var option = document.createElement("option");
+                option.text = myObj[0][i];
+                option.value = myObj[1][i];
+                document.getElementById("floorList").add(option);
+            }
+        }
+    };
+    xmlhttp.open("POST", "../api/populateFloorBox.php", false);
+    xmlhttp.send(formData);
+
+    resetData();
+    img = loadImage("../uploads/placeholder.png");
+}
+
+function changeImageFocus() {
+    
+}
+
+function changeImageChange() {
+    try{
+        document.getElementById('tempOptionFloor').remove();
+    } catch (ex) {}
+
+    img = loadImage(document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].value);
+    resetData();
+}
+
+function resetData() {
+    beacons = [];
+    hallways = [];
+    destinations = [];
+
+    var listView = document.getElementById("listview");
+    while (listView.firstChild) {
+        listView.removeChild(listView.firstChild);
+    }
+}
+
+function sendToDB() {
+    sendBeacons();
+}
+
+function sendBeacons() {
+    document.getElementById("submitButton").disabled = true;
+
+    for(var element of beacons) {
+        var formData = new FormData();
+        formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+        formData.set('floor', document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].text);
+        formData.set('beaconName', element.metaData.firstChild.firstChild.value);
+        formData.set('xPos', element.xCoord);
+        formData.set('yPos', element.yCoord);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "../api/beaconUpload.php", false);
+        xhttp.send(formData);
+    }
 }

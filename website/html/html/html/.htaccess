@@ -1,0 +1,16 @@
+Options -Indexes
+IndexIgnore *
+
+<Files "Database.php">
+    Order Allow,Deny
+    Require all denied
+</Files>
+<FilesMatch "^composer">
+  Order Allow,Deny
+  Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
