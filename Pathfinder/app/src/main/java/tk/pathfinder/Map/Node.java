@@ -10,6 +10,7 @@ import java.util.Objects;
  * @since 1.0
  */
 public abstract class Node {
+    protected int id;
     protected Point point;
     private boolean visited;
     private ArrayList<Edge> edges = new ArrayList<Edge> ();
@@ -20,6 +21,8 @@ public abstract class Node {
     public Point getPoint(){
         return point;
     }
+
+    public int getId() { return id; }
 
     /***
      * @return the floor the node is located on.

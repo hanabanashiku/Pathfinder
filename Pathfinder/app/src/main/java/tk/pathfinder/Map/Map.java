@@ -1,7 +1,5 @@
 package tk.pathfinder.Map;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,19 +20,19 @@ public class Map {
     private ArrayList<Edge> edges;
     private ArrayList<Beacon> beacons;
 
-    private Bitmap image;
+    //private Bitmap image;
     private Integer id;
     private String name;
     private String address;
 
-    public Map(Integer id, String name, String address, Bitmap image, Edge[] edges, Beacon[] beacons){
+    public Map(Integer id, String name, String address, Edge[] edges, Beacon[] beacons){
         if(edges == null)
             throw new NullPointerException("edges");
 
         this.id = id;
         this.name = name;
         this.address = address;
-        this.image = image;
+        //this.image = image;
 
         nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
@@ -204,9 +202,9 @@ public class Map {
         return address;
     }
 
-    public Bitmap getImage() {
+    /*public Bitmap getImage() {
         return image;
-    }
+    }*/
 
     public Integer getId() {
         return id;
@@ -214,7 +212,7 @@ public class Map {
 
     public Beacon getBeacon(String ssid){
         for(Beacon i : beacons)
-            if(i.getSsid().equals(ssid))
+            if(i.getSSID().equals(ssid))
                 return i;
         return null;
     }

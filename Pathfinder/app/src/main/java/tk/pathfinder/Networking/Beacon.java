@@ -1,24 +1,44 @@
 package tk.pathfinder.Networking;
 
+import android.os.Build;
+
+import java.util.Objects;
+
+import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Point;
 
-public class Beacon {
+public class Beacon implements Comparable<Beacon> {
     private String ssid;
     private int index;
     private int building_index;
     private int strength;
     private Point location;
 
-    public Beacon(String ssid, int strength){
+    public Beacon(String ssid, Point p) throws IllegalArgumentException {
         this.ssid = ssid;
-        this.strength = strength;
+        this.location = p;
+        this.strength = -128; // minimum strength for now.
+        String[] parts = ssid.split("_");
+        try{ // PF_building_node
+            if(parts.length != 3) throw new Exception();
+            if(!parts[0].equals("PF")) throw new Exception();
+            this.building_index = Integer.parseInt(parts[1]);
+            this.index = Integer.parseInt(parts[2]);
+        }
+        catch(Exception e){
+            throw new IllegalArgumentException("Invalid SSID format for beacon");
+        }
+    }
+
+    public int getIndex(){
+        return index;
     }
 
     public int getBuildingIndex(){
         return building_index;
     }
 
-    public String getSsid(){
+    public String getSSID(){
         return ssid;
     }
 
@@ -30,5 +50,30 @@ public class Beacon {
         if(level < -127 || level > 128)
             throw new IllegalArgumentException();
         strength = level;
+    }
+
+    public Point getLocation(){
+        return location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beacon beacon = (Beacon) o;
+        return index == beacon.index &&
+                building_index == beacon.building_index &&
+                Objects.equals(ssid, beacon.ssid);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public int hashCode() {
+        return Objects.hash(ssid, index, building_index);
+    }
+
+    @Override
+    public int compareTo(Beacon o) {
+        return Integer.compare(getLevel(), o.getLevel());
     }
 }

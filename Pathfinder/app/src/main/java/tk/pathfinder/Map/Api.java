@@ -1,7 +1,6 @@
 package tk.pathfinder.Map;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,12 +8,19 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import tk.pathfinder.Networking.Beacon;
 
+/**
+ * Contains API calls for map data.
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
+ */
 public class Api {
 
-    // TODO Get beacons from database
     public static Map GetMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
@@ -47,21 +53,78 @@ public class Api {
         }
 
         Integer index;
-        String name, addr, img;
+        String name, addr;
+        List<Node> nodes = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
+        List<Beacon> beacons = new ArrayList<>();
         try{
             index = json.getInt("id");
             name = json.getString("name");
             addr = json.getString("address");
-            img = json.getString("map_image");
+
+            // parse map nodes
+            JSONArray nArr = json.getJSONArray("nodes");
+            for(int i = 0; i < nArr.length(); i++){
+                JSONObject j = nArr.getJSONObject(i);
+                int n_id = j.getInt("id");
+                JSONObject n_corr = j.getJSONObject("coordinate");
+                Point p = new Point((int)(n_corr.getDouble("x")*100),
+                        (int)(n_corr.getDouble("y")*100), (int)(n_corr.getDouble("z")*100));
+
+                switch(j.getString("type")){
+                    case "room":
+                        String room_num = j.getString("room_number");
+                        String room_name = j.getString("name");
+                        boolean auth = j.getBoolean("requires_auth");
+                        nodes.add(new Room(n_id, p, room_num, room_name, auth));
+                        break;
+
+                    case "floor_connector":
+                        String fc_name = j.getString("name");
+                        FloorConnector.FloorConnectorTypes fc_type = FloorConnector.FloorConnectorTypes.values()[j.getInt("connector_type")];
+                        boolean fc_auth = j.getBoolean("requires_auth");
+                        boolean operating = j.getBoolean("is_operational");
+                        nodes.add(new FloorConnector(id, p, fc_name, fc_type, new int[0], operating, fc_auth));
+                        break;
+
+                    case "intersection":
+                        nodes.add(new Intersection(id, p));
+                        break;
+                }
+            }
+
+            // parse map edges
+            JSONArray eArr = json.getJSONArray("edges");
+            for(int i = 0; i < eArr.length(); i++){
+                JSONObject j = eArr.getJSONObject(i);
+                int n1_id = j.getInt("node1");
+                int n2_id = j.getInt("node2");
+                Node node1 = findNode(nodes, n1_id);
+                Node node2 = findNode(nodes, n2_id);
+                if(node1 == null || node2 == null)
+                    continue;
+                edges.add(new Edge(node1, node2));
+            }
+
+            // parse map beacons
+            JSONArray bArr = json.getJSONArray("beacons");
+            for(int i = 0; i < bArr.length(); i++){
+                JSONObject j = bArr.getJSONObject(i);
+                String ssid = j.getString("ssid");
+                JSONObject b_corr = j.getJSONObject("coordinate");
+                Point p = new Point((int)(b_corr.getDouble("x")*100),
+                        (int)(b_corr.getDouble("y")*100), (int)(b_corr.getDouble("z")*100));
+                beacons.add(new Beacon(ssid, p));
+            }
         }
         catch(JSONException e){
             throw new IOException("Invalid JSON data type received: " + e.getMessage());
         }
 
-        InputStream is = new ByteArrayInputStream(img.getBytes());
-        Bitmap image = BitmapFactory.decodeStream(is);
+        /*InputStream is = new ByteArrayInputStream(img.getBytes());
+        Bitmap image = BitmapFactory.decodeStream(is);*/
 
-        return new Map(index, name, addr, image, new Edge[0], new Beacon[] {});
+        return new Map(index, name, addr, (Edge[])edges.toArray(),(Beacon[])beacons.toArray());
     }
 
     /**
@@ -103,5 +166,12 @@ public class Api {
 
         BufferedReader r = new BufferedReader(new InputStreamReader(con.getInputStream()));
         return r.readLine();
+    }
+
+    private static Node findNode(List<Node> nodes, int id){
+        for(Node n : nodes)
+            if(n.id == id)
+                return n;
+        return null;
     }
 }

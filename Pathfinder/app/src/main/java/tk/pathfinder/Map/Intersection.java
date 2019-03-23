@@ -8,7 +8,8 @@ package tk.pathfinder.Map;
  */
 public class Intersection extends Node {
 
-    public Intersection(Point p){
+    public Intersection(int id, Point p){
+        this.id = id;
         point = p;
     }
 
