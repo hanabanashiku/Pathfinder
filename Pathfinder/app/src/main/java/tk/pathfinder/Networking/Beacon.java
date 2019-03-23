@@ -7,14 +7,14 @@ import java.util.Objects;
 import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Point;
 
-public class Beacon {
+public class Beacon implements Comparable<Beacon> {
     private String ssid;
     private int index;
     private int building_index;
     private int strength;
     private Point location;
 
-    public Beacon(String ssid, Point p){
+    public Beacon(String ssid, Point p) throws IllegalArgumentException {
         this.ssid = ssid;
         this.location = p;
         this.strength = -128; // minimum strength for now.
@@ -70,5 +70,10 @@ public class Beacon {
     @Override
     public int hashCode() {
         return Objects.hash(ssid, index, building_index);
+    }
+
+    @Override
+    public int compareTo(Beacon o) {
+        return Integer.compare(getLevel(), o.getLevel());
     }
 }

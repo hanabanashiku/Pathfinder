@@ -12,6 +12,10 @@ public final class Point {
     private Integer y;
     private Integer z;
 
+    private static Point nullPoint = new Point(-1, -1, -1);
+
+    public static Point getDefault() { return nullPoint; }
+
 
     /**
      * @param x The x coordinate
