@@ -18,4 +18,6 @@
     <string name="destination_search_box">Destination Search Box</string>
     <string name="search_for_a_destination">Search for a Destination...</string>
     <string name="title_activity_navigation_search">NavigationSearchActivity</string>
+    <string name="dest_not_found">Oops! We couldn\'t find anything with those search terms.</string>
+    <string name="room_requires_auth">This room requiress authorization.</string>
 </resources>

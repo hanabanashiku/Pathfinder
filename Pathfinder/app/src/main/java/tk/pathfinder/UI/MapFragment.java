@@ -5,12 +5,16 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 
 
 import tk.pathfinder.Map.Map;
@@ -34,6 +38,7 @@ public class MapFragment extends Fragment {
         mapView = new MapView(getContext());
         mapView.setMap(AppStatus.getCurrentMap());
         mapView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
     }
 
     @Override
@@ -44,6 +49,17 @@ public class MapFragment extends Fragment {
         // add the map
         LinearLayout l = v.findViewById(R.id.map_content);
         l.addView(mapView);
+
+        // press submit button automatically when hitting done
+        EditText searchBox = v.findViewById(R.id.map_search);
+        Button searchButton = v.findViewById(R.id.map_submit);
+        searchBox.setOnEditorActionListener((v1, actionId, event) -> {
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                searchButton.performClick();
+                return true;
+            }
+            return false;
+        });
         return v;
     }
 

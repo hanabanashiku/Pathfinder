@@ -1,18 +1,19 @@
 package tk.pathfinder.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
-
 import tk.pathfinder.R;
 
 public class NavigationSearchActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,21 @@ public class NavigationSearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent i = getIntent();
+
+        String keywords = i.getStringExtra("keywords");
+
+        // let's submit our search!
+        if(keywords != null){
+            EditText search = findViewById(R.id.dest_search_box);
+            ImageButton submit = findViewById(R.id.dest_search_submit);
+            search.setText(keywords);
+            submit.performClick();
+        }
     }
 
+    public void onSubmitClick(View v){
+
+    }
 }

@@ -168,31 +168,63 @@ public class Map {
         }
         return n;
     }
-    
-    /***
 
-    public FloorConnector closestFloorConnector(Point p) throws IllegalStateException {
-        FloorConnector n = null; // result
-        double dist = -1; // minimum distance
-        Iterator<FloorConnector> i = getFloorConnectors();
+    public List<Room> findDestination(String keywords){
+        List<Room> ret = new ArrayList<>();
+        String[] parts = keywords.split(" ");
 
-        if(!i.hasNext())
-            throw new IllegalStateException("There are no nodes in the map!");
+        for(Iterator<Room> rooms = getRooms(); rooms.hasNext(); ){
+            Room i = rooms.next();
+            for(String j : parts)
+                if (i.getName().contains(j) || i.getRoomNumber().contains(j)){
+                    ret.add(i);
+                    break;
+                }
+        }
 
-        // search each node and compare the distances
-        while(i.hasNext()){
-            FloorConnector current = i.next();
-            // The user can't be closest to this point if the floor is different!
-            if(p.getY() != current.point.getY())
-                continue;
-            double currentDistance = p.distance(current.getPoint());
-            if(dist == -1 || currentDistance < dist){
-                dist = currentDistance;
-                n = current;
+        return ret;
+    }
+
+    public FloorConnector getClosestFloorConnector(Point p) throws IllegalStateException{
+        FloorConnector result = null;
+        double min = Double.POSITIVE_INFINITY; // minimum distance
+
+        for(Iterator<FloorConnector> fcs = getFloorConnectors(); fcs.hasNext(); ){
+            FloorConnector i = fcs.next();
+            double dist = p.distance(i.getPoint());
+            if(dist < min){
+                min = dist;
+                result = i;
             }
         }
-        return n;
-    }*/
+
+        return result;
+    }
+
+    /**
+     * Approximate the distance to a node.
+     * @param a The starting location
+     * @param b The destination node
+     * @return The distance, or a negative number if there was an error.
+     */
+    public int getNodeDistance(Point a, Node b){
+        if(a == null || b == null)
+            return -2;
+        if(!nodes.contains(b))
+            return -1;
+
+        // different floor!
+        if(a.getY() != b.getPoint().getY()){
+            FloorConnector fc = getClosestFloorConnector(a);
+            if(fc == null)
+                return -2;
+            // get distance to the floor, and then to the destination.
+            return (int)(a.distance(new Point(fc.getPoint().getX(), a.getY(), fc.getPoint().getZ())) +
+                    b.getPoint().distance(new Point(fc.getPoint().getX(), b.getPoint().getY(), fc.getPoint().getZ())));
+        }
+        else
+            return (int)a.distance(b.getPoint());
+    }
 
     public String getName() {
         return name;

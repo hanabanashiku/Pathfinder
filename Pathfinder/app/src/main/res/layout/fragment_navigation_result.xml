@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3pt"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:onClick="OnRoomSelected"
+    tools:context=".UI.NavigationResult">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/res_r_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Space android:layout_width="25pt" />
+
+        <TextView
+            android:id="@+id/res_r_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="3pt">
+
+        <ImageView
+            android:id="@+id/res_r_auth"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/room_requires_auth"
+            android:src="@android:drawable/ic_lock_lock"
+            android:visibility="gone" />
+
+        <Space android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/res_r_dist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:textAlignment="textEnd" />
+
+    </TableRow>
+</TableLayout>

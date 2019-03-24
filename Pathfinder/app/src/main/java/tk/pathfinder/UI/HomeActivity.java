@@ -8,6 +8,7 @@ import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.Networking.BeaconReceiver;
 import tk.pathfinder.R;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -44,6 +45,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onDestinationSearch(String keywords) {
-
+        Bundle b = new Bundle();
+        b.putString("keywords", keywords);
+        Intent intent = new Intent(HomeActivity.this, NavigationSearchActivity.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
