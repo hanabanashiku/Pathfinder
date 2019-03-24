@@ -12,7 +12,8 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity
+        implements MapFragment.MapFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
     @Override
@@ -38,5 +39,11 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction trans = fragmentManager.beginTransaction();
         trans.replace(R.id.home_content, fragment);
         trans.commit();
+    }
+
+
+    @Override
+    public void onDestinationSearch(String keywords) {
+
     }
 }

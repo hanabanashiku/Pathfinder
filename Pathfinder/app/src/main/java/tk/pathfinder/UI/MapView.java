@@ -72,6 +72,10 @@ public class MapView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // check for nulls
+        if(map == null)
+            return;
+
         // draw paths (first so nodes are above the line if there is overlap)
         for(Iterator<Edge> edges = map.getEdges(); edges.hasNext(); ){
             Edge e = edges.next();

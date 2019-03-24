@@ -15,4 +15,7 @@
     <string name="no_map_header">Well, this is awkward.</string>
     <string name="no_map_desc">It looks like the building you are in is not Pathfinder-enabled. In the mean time, why not look for locations that are?</string>
     <string name="building_search_box_hint">Building Search Box</string>
+    <string name="destination_search_box">Destination Search Box</string>
+    <string name="search_for_a_destination">Search for a Destination...</string>
+    <string name="title_activity_navigation_search">NavigationSearchActivity</string>
 </resources>
