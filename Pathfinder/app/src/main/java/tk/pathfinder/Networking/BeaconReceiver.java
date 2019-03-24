@@ -20,9 +20,17 @@ import tk.pathfinder.Map.Point;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;
+    private WifiManager.WifiLock wifiLock;
 
-    public BeaconReceiver(){
+    public BeaconReceiver(Context app){
         beacons = new ArrayList<>();
+        wifiLock = ((WifiManager)app.getApplicationContext().getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock((android.os.Build.VERSION.SDK_INT>=19?WifiManager.WIFI_MODE_FULL_HIGH_PERF:WifiManager.WIFI_MODE_FULL),
+                        "pathfinder_wifi_lock");
+    }
+
+    public WifiManager.WifiLock getWifiLock() {
+        return wifiLock;
     }
 
     /**
@@ -34,6 +42,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
      * @param context The context
      * @param intent The intent
      */
+    // TODO Update location as well
     @Override
     public synchronized void onReceive(Context context, Intent intent){
         WifiManager mgr = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);

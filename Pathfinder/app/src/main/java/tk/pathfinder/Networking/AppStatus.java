@@ -1,9 +1,12 @@
 package tk.pathfinder.Networking;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.io.IOException;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import tk.pathfinder.Map.*;
 
 /**
@@ -15,6 +18,8 @@ import tk.pathfinder.Map.*;
 public class AppStatus {
     private static Map currentMap;
     private static Point location;
+    private static BeaconReceiver receiver;
+    private static Context appContext;
 
     public static Map getCurrentMap(){
         return currentMap;
@@ -22,6 +27,11 @@ public class AppStatus {
 
     public static void setCurrentMap(Map map){
         currentMap = map;
+
+        // tell the main activity that the map has changed!
+        LocalBroadcastManager.getInstance(appContext).sendBroadcast(
+                new Intent("tk.pathfinder.MAP_CHANGED")
+        );
     }
 
     public static void pullMap(int map_id){
@@ -51,4 +61,18 @@ public class AppStatus {
             return -1;
         return currentMap.getId();
     }
+
+    public static BeaconReceiver getBeaconReceiver(){
+        return receiver;
+    }
+
+    public static void setBeaconReceiver(BeaconReceiver value){
+        receiver = value;
+    }
+
+    public static void setAppContext(Context ctx){
+        appContext = ctx;
+    }
+
+    private AppStatus() {}
 }

@@ -8,4 +8,11 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="tab_text_3">Tab 3</string>
     <string name="appbar_scrolling_view_behavior">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
+    <string name="no_map_header">Well, this is awkward.</string>
+    <string name="no_map_desc">It looks like the building you are in is not Pathfinder-enabled. In the mean time, why not look for locations that are?</string>
+    <string name="building_search_box_hint">Building Search Box</string>
 </resources>

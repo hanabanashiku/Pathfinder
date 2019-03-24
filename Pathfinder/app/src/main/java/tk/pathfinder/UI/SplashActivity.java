@@ -6,7 +6,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import tk.pathfinder.R;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 4000;
 
     @Override
@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new Handler().postDelayed(() -> {
-            Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
+            Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
             startActivity(homeIntent);
             finish();
         },SPLASH_TIME_OUT);
