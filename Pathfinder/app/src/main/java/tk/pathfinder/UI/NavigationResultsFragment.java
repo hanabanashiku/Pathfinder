@@ -100,7 +100,7 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
         mListener = null;
     }
 
-    // a room has been selected, show navigation page.
+    // TODO a room has been selected, show navigation page.
     public void onRoomSelected(int roomId){
 
     }

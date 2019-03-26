@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".UI.NavigationActivity"
+            android:label="@string/title_activity_navigation"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".UI.NavigationSearchActivity"
             android:label="@string/title_activity_navigation_search"
             android:parentActivityName=".UI.HomeActivity"
