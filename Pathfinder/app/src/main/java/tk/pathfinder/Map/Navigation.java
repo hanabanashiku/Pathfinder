@@ -1,5 +1,6 @@
 package tk.pathfinder.Map;
 
+import tk.pathfinder.Networking.Beacon;
 import tk.pathfinder.exceptions.NoValidPathException;
 import java.lang.UnsupportedOperationException;
 
@@ -31,10 +32,10 @@ public class Navigation {
     }
 
     //converts signal strength (in Mhz) to distance (in meters)
-    public double strengthToDistance(int signalStrength, int frequency){
+    public double strengthToDistance(Beacon strength, Beacon frequency){
 
 
-        double exp = (27.55 - (20 * Math.log10(frequency)) + Math.abs(signalStrength)) / 20.0;
+        double exp = (27.55 - (20 * Math.log10((double)frequency.getFrequency())) + Math.abs((double)strength.getLevel())) / 20.0;
         return Math.pow(10.0, exp);
     }
 
