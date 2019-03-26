@@ -12,8 +12,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import tk.pathfinder.R;
 
-public class NavigationSearchActivity extends AppCompatActivity {
-
+/**
+ * An activity for searching for destinations on a map.
+ */
+public class NavigationSearchActivity extends AppCompatActivity implements NavigationResult.NavigationResultListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,5 +41,14 @@ public class NavigationSearchActivity extends AppCompatActivity {
 
     public void onSubmitClick(View v){
 
+    }
+
+    // we have selected a room, start navigation activity.
+    public void onRoomSelected(int roomId){
+        Bundle b = new Bundle();
+        b.putInt("roomId", roomId);
+        Intent i = new Intent(this, NavigationActivity.class);
+        i.putExtras(b);
+        startActivity(i);
     }
 }

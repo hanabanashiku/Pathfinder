@@ -5,18 +5,26 @@ import android.os.Bundle;
 
 
 import java.util.Iterator;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
+import tk.pathfinder.Map.Edge;
+import tk.pathfinder.Map.Map;
+import tk.pathfinder.Map.Navigation;
+import tk.pathfinder.Map.Node;
+import tk.pathfinder.Map.Path;
 import tk.pathfinder.Map.Room;
 import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.exceptions.NoValidPathException;
 
 public class NavigationActivity extends AppCompatActivity {
 
     private Room destination;
+    private Path path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,7 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
 
@@ -34,13 +43,26 @@ public class NavigationActivity extends AppCompatActivity {
                 Room room = it.next();
                 if(room.getId() == roomId){
                     destination = room;
-                    try{
-
-                    }
-                    break;
+                    recalculatePath();
                 }
-
             }
+        }
+    }
+
+    public boolean recalculatePath(){
+        try{
+            if(AppStatus.getCurrentMap() == null){
+                path = null;
+                return false;
+            }
+            Map map = AppStatus.getCurrentMap();
+            Node current = map.closestNode(AppStatus.getCurrentLocation());
+            path = Navigation.NavigatePath(map, current, destination);
+            return true;
+        }
+        catch(NoValidPathException e){
+            path = null;
+            return false;
         }
     }
 

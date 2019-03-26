@@ -21,12 +21,7 @@ import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NavigationResultsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NavigationResultsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A fragment for displaying the results of a destination search.
  */
 public class NavigationResultsFragment extends Fragment implements NavigationResult.NavigationResultListener {
 
@@ -90,7 +85,7 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement NavigationResultsListener");
         }
     }
 
@@ -100,13 +95,13 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
         mListener = null;
     }
 
-    // TODO a room has been selected, show navigation page.
+    // Button click event
+    // A room has been selected, send the callback.
     public void onRoomSelected(int roomId){
-
+        mListener.roomSelected(roomId);
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void roomSelected(int roomId);
     }
 }
