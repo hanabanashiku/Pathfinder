@@ -71,6 +71,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
                         AppStatus.pullMap(b.getBuildingIndex());
 
                 }
+                b.setFrequency(i.frequency);
                 // add our node. This is either the reference we already knew,
                 // or it is the new placeholder node we have created.
                 current.add(b);
@@ -164,8 +165,10 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             Beacon b = beacons.get(i);
             Beacon mb = map.getBeacon(b.getSSID());
             // check the reference!
-            if(b != mb)
+            if(b != mb) {
                 beacons.set(i, mb);
+                mb.setFrequency(b.getFrequency());
+            }
         }
     }
 
@@ -176,6 +179,20 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
                 level = 0;
             b.setLevel(level);
         }
+
+        if(AppStatus.getCurrentMap() != null)
+            for(Iterator<Beacon> i = AppStatus.getCurrentMap().getBeacons(); i.hasNext(); ){
+                Beacon b = i.next();
+                if(beacons.contains(b))
+                    continue;
+                try{
+                    int strength = strengths.get(b.getIndex());
+                    b.setLevel(strength);
+                }
+                catch(Exception e){
+                    b.setLevel(-128);
+                }
+            }
     }
 
     /**

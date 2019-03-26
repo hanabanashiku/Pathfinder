@@ -12,6 +12,7 @@ public class Beacon implements Comparable<Beacon> {
     private int index;
     private int building_index;
     private int strength;
+    private int frequency;
     private Point location;
 
     public Beacon(String ssid, Point p) throws IllegalArgumentException {
@@ -47,9 +48,15 @@ public class Beacon implements Comparable<Beacon> {
     }
 
     public void setLevel(int level){
-        if(level < -127 || level > 128)
+        if(level < -128 || level > 128)
             throw new IllegalArgumentException();
         strength = level;
+    }
+
+    public int getFrequency() { return frequency; }
+
+    public void setFrequency(int value){
+        frequency = value;
     }
 
     public Point getLocation(){

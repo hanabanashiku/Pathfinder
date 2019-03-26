@@ -65,6 +65,8 @@ public class Map {
         return edges.iterator();
     }
 
+    public Iterator<Beacon> getBeacons() { return beacons.iterator(); }
+
     /***
      * @return an iterator pointing to all rooms.
      */
