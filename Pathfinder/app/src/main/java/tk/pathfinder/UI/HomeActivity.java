@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class HomeActivity extends AppCompatActivity
-        implements MapFragment.MapFragmentInteractionListener {
+        implements MapFragment.MapFragmentInteractionListener, NoMapFragment.NoMapListener {
 
     private FragmentManager fragmentManager;
     @Override
@@ -66,4 +66,12 @@ public class HomeActivity extends AppCompatActivity
             status.setCurrentActivity(null);
     }
 
+    @Override
+    public void onSearch(String keywords) {
+        Bundle b = new Bundle();
+        b.putString("keywords", keywords);
+        Intent i = new Intent(this, MapSearchActivity.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
 }

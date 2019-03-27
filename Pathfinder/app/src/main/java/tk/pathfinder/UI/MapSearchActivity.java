@@ -49,9 +49,14 @@ public class MapSearchActivity extends AppCompatActivity implements MapResultsFr
         t.replace(R.id.map_results_content, f);
     }
 
+    // display the map
     @Override
     public void onMapSelected(int mapId) {
-
+        AppStatus status = (AppStatus)getApplicationContext();
+        Intent i = new Intent(status.getCurrentActivity(), MapView.class);
+        i.putExtra("mapId", mapId);
+        startActivity(i);
+        finish();
     }
 
     @Override
