@@ -22,16 +22,6 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // register our beacon receiver
-        BeaconReceiver br = new BeaconReceiver(this.getApplicationContext());
-        IntentFilter bf = new IntentFilter(WifiManager.RSSI_CHANGED_ACTION);
-        registerReceiver(br, bf);
-
-        // keep the radios awake
-        br.getWifiLock().acquire();
-        AppStatus.setAppContext(getApplicationContext());
-        AppStatus.setBeaconReceiver(br);
-
         fragmentManager = getSupportFragmentManager();
         switchFragment(new NoMapFragment());
     }
