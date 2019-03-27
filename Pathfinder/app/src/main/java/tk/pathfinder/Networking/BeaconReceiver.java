@@ -23,19 +23,19 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     private WifiManager wifiMananger;
     private WifiManager.WifiLock wifiLock;
 
-    public BeaconReceiver(Context app){
+    public BeaconReceiver(Context app) {
         beacons = new ArrayList<>();
-        wifiMananger = (WifiManager)app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiMananger = (WifiManager) app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         // make sure the radios don't go to sleep
         wifiLock = wifiMananger
-                .createWifiLock((android.os.Build.VERSION.SDK_INT>=19?WifiManager.WIFI_MODE_FULL_HIGH_PERF:WifiManager.WIFI_MODE_FULL),
+                .createWifiLock((android.os.Build.VERSION.SDK_INT >= 19 ? WifiManager.WIFI_MODE_FULL_HIGH_PERF : WifiManager.WIFI_MODE_FULL),
                         "pathfinder_wifi_lock");
 
         // start wifi scanning
         // note, triggering a scan is deprecated
         new ScanThread().start();
     }
-
+    
     public WifiManager.WifiLock getWifiLock() {
         return wifiLock;
     }
