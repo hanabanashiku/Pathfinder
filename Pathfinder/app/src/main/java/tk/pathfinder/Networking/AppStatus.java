@@ -3,6 +3,8 @@ package tk.pathfinder.Networking;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import tk.pathfinder.Map.*;
 import tk.pathfinder.UI.HomeActivity;
+import tk.pathfinder.UI.MapReceiver;
 import tk.pathfinder.UI.MapSearchActivity;
 import tk.pathfinder.UI.NavigationActivity;
 import tk.pathfinder.UI.NavigationSearchActivity;
@@ -31,6 +34,7 @@ public class AppStatus extends Application {
     private MapSearchActivity mapSearch;
     private ViewMapActivity viewMap;
     private Activity current;
+    private MapReceiver mapReceiver;
 
     public HomeActivity getHomeActivity() { return home; }
     public void setHomeActivity(HomeActivity value) { home = value;}
@@ -98,6 +102,18 @@ public class AppStatus extends Application {
 
     public void setBeaconReceiver(BeaconReceiver value){
         receiver = value;
+        IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        registerReceiver(value, bf);
+    }
+
+    public MapReceiver getMapReceiver() {
+        return mapReceiver;
+    }
+
+    public void setMapReceiver(MapReceiver value){
+        mapReceiver = value;
+        IntentFilter mf = new IntentFilter("tk.pathfinder.MAP_CHANGED");
+        registerReceiver(value, mf);
     }
 
     public AppStatus() {}

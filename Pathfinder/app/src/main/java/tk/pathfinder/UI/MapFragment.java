@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.TextView;
 
 
 import tk.pathfinder.Map.Map;
@@ -36,7 +35,7 @@ public class MapFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mapView = new MapView(getContext());
-        mapView.setMap(AppStatus.getCurrentMap());
+        mapView.setMap(((AppStatus)getActivity().getApplicationContext()).getCurrentMap());
         mapView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
     }

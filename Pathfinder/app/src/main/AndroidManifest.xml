@@ -40,11 +40,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.pathfinder.UI.HomeActivity" />
         </activity>
-        <activity android:name=".UI.HomeActivity">
+        <activity
+            android:name=".UI.HomeActivity"
+            android:label="HomeActivity">
+        </activity>
+        <receiver android:name=".UI.MapReceiver">
             <intent-filter>
                 <action android:name="tk.pathfinder.MAP_CHANGED" />
             </intent-filter>
-        </activity>
+        </receiver>
         <activity android:name=".UI.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
