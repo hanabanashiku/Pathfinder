@@ -22,7 +22,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
-        android:id="@+id/dest_search_content"
+        android:id="@+id/map_search_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="5pt"
@@ -34,7 +34,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/dest_search_box"
+                android:id="@+id/map_search_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -42,10 +42,10 @@
                 android:ems="10"
                 android:hint="@string/destination_search_box"
                 android:inputType="textNoSuggestions|textPersonName|text"
-                android:text="@string/search_for_a_destination" />
+                android:text="@string/search_for_a_map" />
 
             <ImageButton
-                android:id="@+id/dest_search_submit"
+                android:id="@+id/map_search_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -57,7 +57,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/dest_results_content"
+            android:id="@+id/map_results_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

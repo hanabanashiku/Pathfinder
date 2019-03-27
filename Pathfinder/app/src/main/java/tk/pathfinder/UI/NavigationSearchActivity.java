@@ -1,5 +1,8 @@
 package tk.pathfinder.UI;
 
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
 /**
@@ -26,6 +30,8 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ((AppStatus)getApplicationContext()).setNavigationSearchActivity(this);
+
         Intent i = getIntent();
 
         String keywords = i.getStringExtra("keywords");
@@ -40,6 +46,12 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
     }
 
     public void onSubmitClick(View v){
+        EditText search = findViewById(R.id.dest_search_box);
+        String keywords = search.getText().toString();
+        FragmentManager fm = this.getSupportFragmentManager();
+        NavigationResultsFragment f = NavigationResultsFragment.newInstance(keywords);
+        FragmentTransaction t = fm.beginTransaction();
+        t.replace(R.id.dest_results_content, f);
 
     }
 
@@ -50,5 +62,20 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtras(b);
         startActivity(i);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ((AppStatus)getApplicationContext()).setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setNavigationSearchActivity(null);
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
     }
 }

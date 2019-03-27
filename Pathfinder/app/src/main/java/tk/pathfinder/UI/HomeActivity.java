@@ -5,12 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.Networking.AppStatus;
-import tk.pathfinder.Networking.BeaconReceiver;
 import tk.pathfinder.R;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 public class HomeActivity extends AppCompatActivity
@@ -20,17 +17,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AppStatus)getApplicationContext()).setHomeActivity(this);
         setContentView(R.layout.activity_home);
-
-        // register our beacon receiver
-        BeaconReceiver br = new BeaconReceiver(this.getApplicationContext());
-        IntentFilter bf = new IntentFilter(WifiManager.RSSI_CHANGED_ACTION);
-        registerReceiver(br, bf);
-
-        // keep the radios awake
-        br.getWifiLock().acquire();
-        AppStatus.setAppContext(getApplicationContext());
-        AppStatus.setBeaconReceiver(br);
 
         fragmentManager = getSupportFragmentManager();
         switchFragment(new NoMapFragment());
@@ -42,6 +31,10 @@ public class HomeActivity extends AppCompatActivity
         trans.commit();
     }
 
+    public void setNoMap(){
+        switchFragment(new NoMapFragment());
+    }
+
 
     @Override
     public void onDestinationSearch(String keywords) {
@@ -51,4 +44,21 @@ public class HomeActivity extends AppCompatActivity
         intent.putExtras(b);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setHomeActivity(null);
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
+    }
+
 }
