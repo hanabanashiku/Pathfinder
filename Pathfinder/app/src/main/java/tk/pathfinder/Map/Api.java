@@ -8,6 +8,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +161,53 @@ public class Api {
         return json;
     }
 
+
+    /**
+     * Get a list of maps from the database whose names match a search term.
+     * @param keywords The search terms to return
+     * @return A list of map information
+     * @throws IOException on API failure.
+     */
+    public static MapQueryResult[] findMaps(String keywords) throws IOException {
+        HttpsURLConnection con;
+
+        try{
+            keywords = URLEncoder.encode(keywords, "UTF-8");
+            URL url = new URL("https://path-finder.tk/api/maps?q=" + keywords);
+            con = (HttpsURLConnection)url.openConnection();
+        }
+        catch(MalformedURLException e){
+            throw new RuntimeException("Invalid URL encountered");
+        }
+
+        String response = getReader(con);
+        JSONObject json;
+
+        if(con.getResponseCode() != 200)
+            try{
+                throw new IOException("Error getting maps: " + new JSONObject(response).getString("details"));
+            }
+            catch(JSONException e){
+                throw new IOException("Error getting maps; additionally, a JSON error was encountered while parsing the error.");
+            }
+
+        try{
+            json = new JSONObject(response);
+
+            MapQueryResult[] results = new MapQueryResult[json.getInt("total")];
+            JSONArray arr = json.getJSONArray("buildings");
+
+            for(int i = 0; i < arr.length(); i++){
+                JSONObject o = arr.getJSONObject(i);
+                results[i] = new MapQueryResult(o.getInt("id"), o.getString("name"));
+            }
+            return results;
+        }
+        catch(JSONException e){
+            throw new IOException("Could not parse the JSON data");
+        }
+    }
+
     private static String getReader(HttpsURLConnection con) throws IOException {
         con.setUseCaches(false);
         con.connect();
@@ -173,5 +221,18 @@ public class Api {
             if(n.id == id)
                 return n;
         return null;
+    }
+
+    public static class MapQueryResult{
+        private final int id;
+        private final String name;
+
+        public int getId() { return id; }
+        public String getName() { return name;}
+
+        MapQueryResult(int id, String name){
+            this.id = id;
+            this.name = name;
+        }
     }
 }

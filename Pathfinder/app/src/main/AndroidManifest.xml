@@ -13,9 +13,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".UI.ViewMapActivity"
+            android:label="@string/title_activity_view_map"
+            android:parentActivityName=".UI.MapSearchActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.pathfinder.UI.MapSearchActivity" />
+        </activity>
+        <activity
+            android:name=".UI.MapSearchActivity"
+            android:label="@string/title_activity_map_search"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".UI.NavigationActivity"
             android:label="@string/title_activity_navigation"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.NavigationSearchActivity"
             android:label="@string/title_activity_navigation_search"
