@@ -55,6 +55,13 @@
                 android:src="@android:drawable/ic_menu_search" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/dest_results_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
     </FrameLayout>
 
 

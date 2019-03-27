@@ -1,5 +1,8 @@
 package tk.pathfinder.UI;
 
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -40,6 +43,12 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
     }
 
     public void onSubmitClick(View v){
+        EditText search = findViewById(R.id.dest_search_box);
+        String keywords = search.getText().toString();
+        FragmentManager fm = this.getSupportFragmentManager();
+        NavigationResultsFragment f = NavigationResultsFragment.newInstance(keywords);
+        FragmentTransaction t = fm.beginTransaction();
+        t.replace(R.id.dest_results_content, f);
 
     }
 
