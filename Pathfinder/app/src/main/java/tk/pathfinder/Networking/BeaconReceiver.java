@@ -20,13 +20,20 @@ import tk.pathfinder.Map.Point;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;
+    private WifiManager wifiMananger;
     private WifiManager.WifiLock wifiLock;
 
     public BeaconReceiver(Context app){
         beacons = new ArrayList<>();
-        wifiLock = ((WifiManager)app.getApplicationContext().getSystemService(Context.WIFI_SERVICE))
+        wifiMananger = (WifiManager)app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        // make sure the radios don't go to sleep
+        wifiLock = wifiMananger
                 .createWifiLock((android.os.Build.VERSION.SDK_INT>=19?WifiManager.WIFI_MODE_FULL_HIGH_PERF:WifiManager.WIFI_MODE_FULL),
                         "pathfinder_wifi_lock");
+
+        // start wifi scanning
+        // note, triggering a scan is deprecated
+        new ScanThread().start();
     }
 
     public WifiManager.WifiLock getWifiLock() {
@@ -45,8 +52,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     // TODO Update location as well
     @Override
     public synchronized void onReceive(Context context, Intent intent){
-        WifiManager mgr = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        List<ScanResult> res = mgr.getScanResults();
+        List<ScanResult> res = wifiMananger.getScanResults();
 
         List<Beacon> current = new ArrayList<>();
         Map currentMap = AppStatus.getCurrentMap();
@@ -202,5 +208,20 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     @Override
     public Iterator<Beacon> iterator() {
         return beacons.iterator();
+    }
+
+    class ScanThread extends Thread{
+        public void run(){
+            while(true){
+                // note: this is currently deprecated;
+                // it will have to be removed at some point
+                wifiMananger.startScan();
+                try{
+                    sleep(500);
+                }
+                catch(InterruptedException ignored){ }
+
+            }
+        }
     }
 }
