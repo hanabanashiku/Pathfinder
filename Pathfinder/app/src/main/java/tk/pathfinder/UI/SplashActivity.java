@@ -18,13 +18,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // register our beacon receiver
+        // register our receiver
         BeaconReceiver br = new BeaconReceiver(this.getApplicationContext());
-        IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(br, bf);
 
         // keep the radios awake
         br.getWifiLock().acquire();
+        // set and register our receiver
         ((AppStatus)getApplicationContext()).setBeaconReceiver(br);
 
         new Handler().postDelayed(() -> {

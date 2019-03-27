@@ -13,6 +13,8 @@ public class MapReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppStatus status = (AppStatus)context.getApplicationContext();
+        if(status.getHomeActivity() == null)
+            return;
         Map current = status.getCurrentMap();
         if(current == null){
             // switch to home activity if we aren't already there

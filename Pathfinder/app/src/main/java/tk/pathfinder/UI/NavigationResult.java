@@ -39,13 +39,13 @@ public class NavigationResult extends Fragment {
     }
 
 
-    public static NavigationResult newInstance(Room node) {
+    public static NavigationResult newInstance(Room node, AppStatus context) {
         NavigationResult fragment = new NavigationResult();
         Bundle args = new Bundle();
         args.putInt(ROOM_ID, node.getId());
         args.putString(ROOM_NUMBER, node.getRoomNumber());
         args.putString(ROOM_NAME, node.getName());
-        int dist = AppStatus.getCurrentMap().getNodeDistance(AppStatus.getCurrentLocation(), node);
+        int dist = context.getCurrentMap().getNodeDistance(context.getCurrentLocation(), node);
         args.putInt(DISTANCE, dist);
         args.putBoolean(AUTH, node.requiresAuthorization());
         fragment.setArguments(args);

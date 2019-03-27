@@ -58,9 +58,10 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
         FragmentTransaction t = fm.beginTransaction();
         List<Room> results = null;
         if(keywords != null){
-            results = AppStatus.getCurrentMap().findDestination(keywords);
+            AppStatus context = (AppStatus)getActivity().getApplicationContext();
+            results = context.getCurrentMap().findDestination(keywords);
             for(Room r : results){
-                NavigationResult result = NavigationResult.newInstance(r);
+                NavigationResult result = NavigationResult.newInstance(r, context);
                 t.add(layout.getId(), result);
             }
         }

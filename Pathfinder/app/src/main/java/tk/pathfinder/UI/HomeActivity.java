@@ -18,11 +18,16 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((AppStatus)getApplicationContext()).setHomeActivity(this);
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setHomeActivity(this);
         setContentView(R.layout.activity_home);
 
         fragmentManager = getSupportFragmentManager();
-        switchFragment(new NoMapFragment());
+
+        MapReceiver mr = new MapReceiver();
+        status.setMapReceiver(mr);
+        // make sure it's called at least once
+        mr.onReceive(this, new Intent());
     }
 
     private void switchFragment(Fragment fragment){
