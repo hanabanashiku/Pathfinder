@@ -111,6 +111,24 @@ public class Map {
         return resultEdges.iterator();
     }
 
+    /**
+     * @return An array with [0] being the lowest floor, and [1] being the highest.
+     */
+    public int[] getFloorRange(){
+        int lowest = Integer.MAX_VALUE;
+        int highest = Integer.MIN_VALUE;
+
+        for(Node n : nodes){
+            int floor = n.getPoint().getY();
+            if(floor < lowest)
+                lowest = floor;
+            if(floor > highest)
+                highest = floor;
+        }
+
+        return new int[] {lowest, highest};
+    }
+
     /***
      * Add an edge to the map, and any associated nodes.
      * @param e The edge ot add.
