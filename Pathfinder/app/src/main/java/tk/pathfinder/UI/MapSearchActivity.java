@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
 public class MapSearchActivity extends AppCompatActivity implements MapResultsFragment.MapResultsListener {
@@ -51,5 +52,20 @@ public class MapSearchActivity extends AppCompatActivity implements MapResultsFr
     @Override
     public void onMapSelected(int mapId) {
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ((AppStatus)getApplicationContext()).setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setMapSearchActivity(null);
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
     }
 }

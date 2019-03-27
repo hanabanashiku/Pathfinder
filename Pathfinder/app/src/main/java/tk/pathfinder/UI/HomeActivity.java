@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
 import android.content.Intent;
@@ -16,6 +17,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AppStatus)getApplicationContext()).setHomeActivity(this);
         setContentView(R.layout.activity_home);
 
         fragmentManager = getSupportFragmentManager();
@@ -28,6 +31,10 @@ public class HomeActivity extends AppCompatActivity
         trans.commit();
     }
 
+    public void setNoMap(){
+        switchFragment(new NoMapFragment());
+    }
+
 
     @Override
     public void onDestinationSearch(String keywords) {
@@ -37,4 +44,21 @@ public class HomeActivity extends AppCompatActivity
         intent.putExtras(b);
         startActivity(intent);
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setHomeActivity(null);
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
+    }
+
 }

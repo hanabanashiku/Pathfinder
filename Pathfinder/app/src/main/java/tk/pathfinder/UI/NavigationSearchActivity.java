@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
 /**
@@ -28,6 +29,8 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ((AppStatus)getApplicationContext()).setNavigationSearchActivity(this);
 
         Intent i = getIntent();
 
@@ -59,5 +62,20 @@ public class NavigationSearchActivity extends AppCompatActivity implements Navig
         Intent i = new Intent(this, NavigationActivity.class);
         i.putExtras(b);
         startActivity(i);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ((AppStatus)getApplicationContext()).setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setNavigationSearchActivity(null);
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
     }
 }

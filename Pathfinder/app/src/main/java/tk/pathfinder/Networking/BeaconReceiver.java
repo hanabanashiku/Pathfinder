@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,14 +19,14 @@ import tk.pathfinder.Map.Point;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;
-    private WifiManager wifiMananger;
+    private WifiManager wifiManager;
     private WifiManager.WifiLock wifiLock;
 
     public BeaconReceiver(Context app) {
         beacons = new ArrayList<>();
-        wifiMananger = (WifiManager) app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         // make sure the radios don't go to sleep
-        wifiLock = wifiMananger
+        wifiLock = wifiManager
                 .createWifiLock((android.os.Build.VERSION.SDK_INT >= 19 ? WifiManager.WIFI_MODE_FULL_HIGH_PERF : WifiManager.WIFI_MODE_FULL),
                         "pathfinder_wifi_lock");
 
@@ -35,7 +34,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         // note, triggering a scan is deprecated
         new ScanThread().start();
     }
-    
+
     public WifiManager.WifiLock getWifiLock() {
         return wifiLock;
     }
@@ -52,10 +51,11 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     // TODO Update location as well
     @Override
     public synchronized void onReceive(Context context, Intent intent){
-        List<ScanResult> res = wifiMananger.getScanResults();
+        List<ScanResult> res = wifiManager.getScanResults();
+        AppStatus status = (AppStatus)context.getApplicationContext();
 
         List<Beacon> current = new ArrayList<>();
-        Map currentMap = AppStatus.getCurrentMap();
+        Map currentMap = status.getCurrentMap();
         HashMap<Integer, Integer> beaconStrength = new HashMap<>();
 
         for(ScanResult i : res){
@@ -74,7 +74,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
 
                     // we have a map node but no map! Pull the map!
                     if(currentMap == null)
-                        AppStatus.pullMap(b.getBuildingIndex());
+                        status.pullMap(b.getBuildingIndex());
 
                 }
                 b.setFrequency(i.frequency);
@@ -91,20 +91,20 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
 
         // we are out of range of a map!
         if(beacons.size() == 0){
-            AppStatus.setCurrentMap(null);
+            status.setCurrentMap(null);
             return;
         }
 
         // make sure we have the correct map
         int curr_map = getCurrentMapId();
-        if(curr_map != AppStatus.getCurrentBuildingId())
-            AppStatus.pullMap(curr_map);
+        if(curr_map != status.getCurrentBuildingId())
+            status.pullMap(curr_map);
 
         // make sure we have the correct references.
-        correctBeaconReferences(AppStatus.getCurrentMap());
+        correctBeaconReferences(status.getCurrentMap());
 
         // update the signal strength of the nodes
-        updateSignalStrength(beaconStrength);
+        updateSignalStrength(beaconStrength, status);
 
         // sort by signal strength
         Collections.sort(beacons);
@@ -178,7 +178,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         }
     }
 
-    private void updateSignalStrength(HashMap<Integer, Integer> strengths){
+    private void updateSignalStrength(HashMap<Integer, Integer> strengths, AppStatus status){
         for(Beacon b : beacons){
             Integer level = strengths.get(b.getIndex());
             if(level == null)
@@ -186,8 +186,8 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             b.setLevel(level);
         }
 
-        if(AppStatus.getCurrentMap() != null)
-            for(Iterator<Beacon> i = AppStatus.getCurrentMap().getBeacons(); i.hasNext(); ){
+        if(status.getCurrentMap() != null)
+            for(Iterator<Beacon> i = status.getCurrentMap().getBeacons(); i.hasNext(); ){
                 Beacon b = i.next();
                 if(beacons.contains(b))
                     continue;
@@ -215,7 +215,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             while(true){
                 // note: this is currently deprecated;
                 // it will have to be removed at some point
-                wifiMananger.startScan();
+                wifiManager.startScan();
                 try{
                     sleep(500);
                 }

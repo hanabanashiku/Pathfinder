@@ -25,14 +25,27 @@ public class SplashActivity extends AppCompatActivity {
 
         // keep the radios awake
         br.getWifiLock().acquire();
-        AppStatus.setAppContext(getApplicationContext());
-        AppStatus.setBeaconReceiver(br);
+        ((AppStatus)getApplicationContext()).setBeaconReceiver(br);
 
         new Handler().postDelayed(() -> {
             Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
             startActivity(homeIntent);
             finish();
         },SPLASH_TIME_OUT);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        ((AppStatus)getApplicationContext()).setCurrentActivity(this);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
     }
 }
 

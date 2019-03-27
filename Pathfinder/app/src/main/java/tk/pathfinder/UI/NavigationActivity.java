@@ -5,13 +5,11 @@ import android.os.Bundle;
 
 
 import java.util.Iterator;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
-import tk.pathfinder.Map.Edge;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Map.Navigation;
 import tk.pathfinder.Map.Node;
@@ -34,12 +32,15 @@ public class NavigationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setNavigationActivity(this);
+
         Intent i = getIntent();
 
         int roomId = i.getIntExtra("roomId", -1);
         // an argument was provided
         if(roomId != -1){
-            for(Iterator<Room> it = AppStatus.getCurrentMap().getRooms(); it.hasNext(); ){
+            for(Iterator<Room> it = status.getCurrentMap().getRooms(); it.hasNext(); ){
                 Room room = it.next();
                 if(room.getId() == roomId){
                     destination = room;
@@ -50,13 +51,14 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     public boolean recalculatePath(){
+        AppStatus status = (AppStatus)getApplicationContext();
         try{
-            if(AppStatus.getCurrentMap() == null){
+            if(status.getCurrentMap() == null){
                 path = null;
                 return false;
             }
-            Map map = AppStatus.getCurrentMap();
-            Node current = map.closestNode(AppStatus.getCurrentLocation());
+            Map map = status.getCurrentMap();
+            Node current = map.closestNode(status.getCurrentLocation());
             path = Navigation.NavigatePath(map, current, destination);
             return true;
         }
