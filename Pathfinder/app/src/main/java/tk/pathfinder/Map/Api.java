@@ -25,7 +25,7 @@ public class Api {
     public static Map GetMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
-            URL url = new URL("https://path-finder.tk/api/maps?id=" + id.toString());
+            URL url = new URL("https://path-finder.tk/api/maps?list"); //id=" + id.toString());
             con = (HttpsURLConnection)url.openConnection();
         }
         catch(MalformedURLException e){

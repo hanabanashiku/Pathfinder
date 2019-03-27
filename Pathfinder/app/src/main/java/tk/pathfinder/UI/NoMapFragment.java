@@ -15,7 +15,6 @@ import tk.pathfinder.R;
 
 public class NoMapFragment extends Fragment {
 
-    private NoMapListener mListener;
 
     public NoMapFragment() {}
 
@@ -30,32 +29,5 @@ public class NoMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_no_map, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof NoMapListener) {
-            mListener = (NoMapListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement NoMapListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public void onClick(View v){
-        EditText text = v.findViewById(R.id.search_submit);
-        mListener.onSearch(text.getText().toString());
-    }
-
-
-    public interface NoMapListener {
-        void onSearch(String keywords);
     }
 }

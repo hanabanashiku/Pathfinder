@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,9 @@ public class MapResult extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getInt("id");
             name = getArguments().getString("name");
+        }
+        else{
+            Log.d("MapResult", "null arguments");
         }
     }
 

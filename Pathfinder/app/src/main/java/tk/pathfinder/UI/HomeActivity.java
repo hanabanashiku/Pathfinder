@@ -9,9 +9,11 @@ import tk.pathfinder.R;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 
 public class HomeActivity extends AppCompatActivity
-        implements MapFragment.MapFragmentInteractionListener, NoMapFragment.NoMapListener {
+        implements MapFragment.MapFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
     @Override
@@ -66,12 +68,17 @@ public class HomeActivity extends AppCompatActivity
             status.setCurrentActivity(null);
     }
 
-    @Override
     public void onSearch(String keywords) {
         Bundle b = new Bundle();
         b.putString("keywords", keywords);
         Intent i = new Intent(this, MapSearchActivity.class);
         i.putExtras(b);
         startActivity(i);
+    }
+
+
+    public void onClick(View view) {
+        EditText text = findViewById(R.id.noMap_search);
+        onSearch(text.getText().toString());
     }
 }

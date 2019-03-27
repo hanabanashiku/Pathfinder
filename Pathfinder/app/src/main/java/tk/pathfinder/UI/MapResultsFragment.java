@@ -6,10 +6,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import androidx.fragment.app.FragmentTransaction;
+import tk.pathfinder.Map.Api;
 import tk.pathfinder.R;
 
 /**
@@ -38,6 +42,7 @@ public class MapResultsFragment extends Fragment implements MapResult.MapResultL
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             keywords = getArguments().getString("keywords");
+            Log.d("MapResultsFragment", "found keywords" + keywords);
         }
     }
 
@@ -45,7 +50,24 @@ public class MapResultsFragment extends Fragment implements MapResult.MapResultL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_results, container, false);
+        View v = inflater.inflate(R.layout.fragment_map_results, container, false);
+       // LinearLayout layout = v.findViewById(R.id.map_search_results_content);
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        try{
+            for(Api.MapQueryResult r : Api.findMaps(keywords)){
+                Log.d("MapResultsFragment", "Found " + r.getName());
+
+                MapResult result = MapResult.newInstance(r);
+                t.add(R.id.map_search_results_content, result);
+            }
+        }
+        catch(Exception e) {
+            Log.d("MapResultsActivity", e.getMessage());
+            e.printStackTrace();
+        }
+
+        t.commit();
+        return v;
     }
 
     @Override

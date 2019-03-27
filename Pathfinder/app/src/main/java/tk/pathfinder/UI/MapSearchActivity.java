@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,7 +25,7 @@ public class MapSearchActivity extends AppCompatActivity implements MapResultsFr
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
         String keywords = i.getStringExtra("keywords");
@@ -39,6 +40,7 @@ public class MapSearchActivity extends AppCompatActivity implements MapResultsFr
     }
 
     public void onSubmitClick(View v){
+        Log.d("MapSearchActivity", "submitting..");
         String keywords = ((EditText)findViewById(R.id.map_search_box)).getText().toString();
         if(keywords.isEmpty()) // don't submit for an empty string
             return;
