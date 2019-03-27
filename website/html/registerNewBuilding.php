@@ -7,7 +7,7 @@
     // require('/var/www/html/dbConnect.php');
     session_start();
 ?>
-
+<?php require_once("auth_header.php"); ?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -49,7 +49,7 @@
             <div class="container">
 
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header bg-light">
                         <div class="form-group">
                             <label for="buildingName">Building Name:</label>
                             <input type="text" class="form-control" id="buildingName" onkeyup="checkName()">

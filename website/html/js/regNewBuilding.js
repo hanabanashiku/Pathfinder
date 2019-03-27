@@ -115,7 +115,7 @@ function uploadFiles() {
     formData.set('folderName', document.getElementById("buildingName").value);
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "../api/folderCreate.php", false);
+    xhttp.open("POST", "../api/registerBuilding.php", false);
     xhttp.send(formData);
 
     for(var element of floors) {
@@ -126,7 +126,7 @@ function uploadFiles() {
         formData.set('folderName', document.getElementById("buildingName").value);
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "../api/multiUpload.php", false);
+        xhttp.open("POST", "../api/registerFloor.php", false);
         xhttp.addEventListener("load", function(){
             element.metaData.childNodes[1].childNodes[0].disabled = true;
             element.metaData.childNodes[2].childNodes[0].childNodes[0].disabled = true;

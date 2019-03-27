@@ -4,6 +4,7 @@ var img;
 var beacons = [];
 var hallways = [];
 var destinations = [];
+var destinationIDs = [];
 // var intersections = [];
 var drawMode = "addBeacon";
 var tempx = -1;
@@ -50,10 +51,10 @@ class Beacon {
         this.fillColor = color(255, 0, 0);
     }
     show() {
-        this.metaData.style.visibility = "visible"; 
+        this.metaData.style.visibility = 'visible'; 
     }
     hide() {
-        this.metaData.style.visibility = "hidden"; 
+        this.metaData.style.visibility = 'hidden'; 
     }
 }
 
@@ -126,10 +127,10 @@ class Destination {
         this.fillColor = color(255, 0, 0);
     }
     show() {
-        this.metaData.style.visibility = "visible"; 
+        this.metaData.style.visibility = 'visible'; 
     }
     hide() {
-        this.metaData.style.visibility = "hidden"; 
+        this.metaData.style.visibility = 'hidden'; 
     }
 }
 
@@ -228,14 +229,14 @@ function draw() {
 function mouseClicked() {
     if (drawMode == "addBeacon"){
         if (mouseX>=0 && mouseX<canMaxX && mouseY>=0 && mouseY<canMaxY) {
-            currBeacon = new Beacon(mouseX/canMaxX, mouseY/canMaxY, createNode(beacons));
+            currBeacon = new Beacon(mouseX/canMaxX, mouseY/canMaxY, createNode(beacons, "SSID:", "listviewBeacons"));
             beacons.push(currBeacon);
         }
     }
     else if (drawMode == "removeBeacon"){
         for(var element of beacons) {
             if (element.hurtbox(mouseX, mouseY)){
-                var listView = document.getElementById("listview");
+                var listView = document.getElementById("listviewBeacons");
                 listView.removeChild(element.metaData);
                 beacons.splice(beacons.indexOf(element), 1);
             }
@@ -343,14 +344,14 @@ function mouseClicked() {
                     yPosToSet = mouseY;
                 }
             }
-            var currDestination = new Destination(xPosToSet/canMaxX, yPosToSet/canMaxY, createNode(destinations));
+            var currDestination = new Destination(xPosToSet/canMaxX, yPosToSet/canMaxY, createNode(destinations, "Destination:", "listviewNodes"));
             destinations.push(currDestination);
         }
     }
     else if (drawMode == "removeDestination"){
         for(var element of destinations) {
             if (element.hurtbox(mouseX, mouseY)){
-                var listView = document.getElementById("listview");
+                var listView = document.getElementById("listviewNodes");
                 listView.removeChild(element.metaData);
                 destinations.splice(destinations.indexOf(element), 1);
             }
@@ -361,7 +362,7 @@ function mouseClicked() {
 function keyPressed() {
     if (drawMode == "addBeacon" || drawMode == "removeBeacon"){
         if (keyCode === LEFT_ARROW) {
-            var listView = document.getElementById("listview");
+            var listView = document.getElementById("listviewBeacons");
             listView.removeChild(beacons[beacons.length-1].metaData);
             beacons.splice(-1,1);
         }
@@ -373,7 +374,7 @@ function keyPressed() {
     }
     else if (drawMode == "addDestination" || drawMode == "removeDestination"){
         if (keyCode === LEFT_ARROW) {
-            var listView = document.getElementById("listview");
+            var listView = document.getElementById("listviewNodes");
             listView.removeChild(destinations[destinations.length-1].metaData);
             destinations.splice(-1,1);
         }
@@ -383,33 +384,43 @@ function keyPressed() {
     }
 }
 
-function displaySideList(displayArray){
-    for(var element of beacons) {
-        element.hide();
-    }
-    for(var element of destinations) {
-        element.hide();
-    }
-    for(var element of displayArray) {
-        element.show();
-    }
-}
+// function displaySideList(displayArray){
+//     for(var element of beacons) {
+//         element.hide();
+//     }
+//     for(var element of destinations) {
+//         element.hide();
+//     }
+//     for(var element of displayArray) {
+//         element.show();
+//     }
+// }
 
-function createNode(displayArray) {  
+function createNode(displayArray, text, listView) {  
     var parentDiv = document.createElement("div");
     parentDiv.className = 'd-flex justify-content-start';
     parentDiv.id = 'beacon' + displayArray.length;
 
     var inputDiv = document.createElement("div");
-    inputDiv.className = 'p-2';
+    inputDiv.className = 'p-1 input-group';
     var identifyButtonDiv = document.createElement("div");
-    identifyButtonDiv.className = 'p-2';
+    identifyButtonDiv.className = 'p-1';
     var removeButtonDiv = document.createElement("div");
-    removeButtonDiv.className = 'p-2';
+    removeButtonDiv.className = 'p-1';
+
+    var labelDiv = document.createElement("div");
+    labelDiv.className = 'input-group-prepend';
+
+    var labelSpan = document.createElement("span");
+    labelSpan.className = 'input-group-text';
+    labelSpan.innerHTML = text;
 
     var input = document.createElement("input");
     input.type = "text";
     input.className = "form-control";
+
+    labelDiv.appendChild(labelSpan);
+    inputDiv.appendChild(labelDiv);
     inputDiv.appendChild(input);
     
     var identifyButton = document.createElement('button');
@@ -446,7 +457,7 @@ function createNode(displayArray) {
     parentDiv.appendChild(identifyButtonDiv);
     parentDiv.appendChild(removeButtonDiv);
 
-    var element = document.getElementById("listview");
+    var element = document.getElementById(listView);
     element.appendChild(parentDiv);
     return parentDiv;
 }
@@ -457,31 +468,31 @@ function setMode(mode) {
         resetMode();
         var elem = document.getElementById("addBeaconButton");
         elem.classList.add("active");
-        displaySideList(beacons);
+        // displaySideList(beacons);
     }
     else if (mode == "removeBeacon") {
         resetMode();
         var elem = document.getElementById("removeBeaconButton");
         elem.classList.add("active");
-        displaySideList(beacons);
+        // displaySideList(beacons);
     }
     else if (mode == "addHallway") {
         resetMode();
         var elem = document.getElementById("addHallwayButton");
         elem.classList.add("active");
-        displaySideList(destinations);
+        // displaySideList(destinations);
     }
     else if (mode == "addDestination") {
         resetMode();
         var elem = document.getElementById("addDestinationButton");
         elem.classList.add("active");
-        displaySideList(destinations);
+        // displaySideList(destinations);
     }
     else if (mode == "removeDestination") {
         resetMode();
         var elem = document.getElementById("removeDestinationButton");
         elem.classList.add("active");
-        displaySideList(destinations);
+        // displaySideList(destinations);
     }
 }
 
@@ -548,6 +559,7 @@ function populateFloorsChange() {
 
     resetData();
     img = loadImage("../uploads/placeholder.png");
+    document.getElementById("submitButton").disabled = true;
 }
 
 function changeImageFocus() {
@@ -561,6 +573,9 @@ function changeImageChange() {
 
     img = loadImage(document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].value);
     resetData();
+
+    if (document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].text != "Select")
+        document.getElementById("submitButton").disabled = false;
 }
 
 function resetData() {
@@ -568,19 +583,24 @@ function resetData() {
     hallways = [];
     destinations = [];
 
-    var listView = document.getElementById("listview");
+    var listView = document.getElementById("listviewBeacons");
+    while (listView.firstChild) {
+        listView.removeChild(listView.firstChild);
+    }
+    var listView = document.getElementById("listviewNodes");
     while (listView.firstChild) {
         listView.removeChild(listView.firstChild);
     }
 }
 
 function sendToDB() {
+    document.getElementById("submitButton").disabled = true;
     sendBeacons();
+    sendDestination();
+    sendHallways();
 }
 
 function sendBeacons() {
-    document.getElementById("submitButton").disabled = true;
-
     for(var element of beacons) {
         var formData = new FormData();
         formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
@@ -592,5 +612,51 @@ function sendBeacons() {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "../api/beaconUpload.php", false);
         xhttp.send(formData);
+    }
+}
+
+function sendDestination() {
+    for(var element of destinations) {
+        var formData = new FormData();
+        formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+        formData.set('floor', document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].text);
+        formData.set('destinationName', element.metaData.firstChild.firstChild.value);
+        formData.set('xPos', element.xCoord);
+        formData.set('yPos', element.yCoord);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var myObj = JSON.parse(this.responseText);
+                destinationIDs.push(myObj);
+            }
+        };
+        xhttp.open("POST", "../api/destinationUpload.php", false);
+        xhttp.send(formData);
+    }
+}
+
+function sendHallways() {
+    for(var hallwayElement of hallways) {
+        var dest1IDPos;
+        var dest2IDPos;
+        for (i = 0; i < destinations.length; i++) { 
+            if (hallwayElement.xCoord1 == destinations[i].xCoord && hallwayElement.yCoord1 == destinations[i].yCoord){
+                dest1IDPos = i;
+            }
+            if (hallwayElement.xCoord2 == destinations[i].xCoord && hallwayElement.yCoord2 == destinations[i].yCoord){
+                dest2IDPos = i;
+            }
+        }
+        
+        var formData = new FormData();
+        formData.set('building', document.getElementById("buildingList").options[document.getElementById("buildingList").selectedIndex].text);
+        // formData.set('floor', document.getElementById("floorList").options[document.getElementById("floorList").selectedIndex].text);
+        formData.set('node1', destinationIDs[dest1IDPos]);
+        formData.set('node2', destinationIDs[dest2IDPos]);
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "../api/hallwayUpload.php", false);
+        xmlhttp.send(formData);
     }
 }

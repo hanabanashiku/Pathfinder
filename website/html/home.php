@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="assets/favicon.png" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <script src="js/home.js"></script>
 </head>
 <body>
     <div id="main">
@@ -22,12 +23,17 @@
 
         <div class="container">
             <div class="card">
-                <div class="card-header">Pathfinder Title</div>
-                <div class="card-body">
-                    <p>Pathfinder Description</p>
+                <div class="card-header bg-dark text-white">Your Buildings:</div>
+                <div class="card-body" id="myBuildings">
                 </div>
             </div>
         </div>
+
+        <br>
+
+        <?php
+            // include ('buildingExample.php');
+        ?>
 
     </div>
 

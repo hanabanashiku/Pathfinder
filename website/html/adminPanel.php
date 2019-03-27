@@ -1,4 +1,5 @@
 <html>
+    <?php require_once("auth_header.php"); ?>
     <head>
         <title>Pathfinder</title>
         <meta charset="utf-8">
@@ -54,18 +55,37 @@
                 </div>
             </div>
 
-            <div class="p-2 d-flex justify-content-between">
-                <div class="card flex-grow-1">
-                    <div class="card-header">Beacon Locations</div>
-                    <div class="card-body" id="listview">
+            <div class="d-flex justify-content-between">
+
+                <div class="container-fluid m-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white">Beacons:</div>
+                                <div class="card-body" id="listviewBeacons">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white">Destinations:</div>
+                                <div class="card-body" id="listviewNodes">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="sketch-holder"></div>
+
+                <span class="border border-dark m-2">
+                    <div id="sketch-holder"></div>
+                </span>
             </div>
 
-            <br>
-            <button type="button" class="btn btn-block btn-outline-success" id="submitButton" onclick="sendToDB()">Submit</button>
-            <br>
+            <div class="contianer-fluid m-2">
+                <button type="button" class="btn btn-block btn-outline-success" id="submitButton" onclick="sendToDB()" disabled>Submit</button>
+            </div>
+
         </div>
 
         <?php
