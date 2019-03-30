@@ -65,7 +65,7 @@ class Database extends mysqli {
     public function find_maps($needle) {
         $this->select_db($this->nav_db);
         $needle = $this->real_escape_string($needle);
-        $q = $this->query("SELECT id, name, owner FROM buildings WHERE name LIKE '$needle'");
+        $q = $this->query("SELECT id, name, owner FROM buildings WHERE lower(name) LIKE '%$needle%'");
         $res['buildings'] = [];
         while ($row = $q->fetch_assoc()) {
             array_push($res['buildings'], $row);
