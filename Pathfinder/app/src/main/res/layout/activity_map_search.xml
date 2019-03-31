@@ -5,39 +5,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UI.NavigationSearchActivity">
+    tools:context=".UI.MapSearchActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:orientation="horizontal">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <EditText
+            android:id="@+id/map_search_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/destination_search_box"
+            android:inputType="textNoSuggestions|textPersonName|text"
+            android:text="@string/search_for_a_map" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <ImageButton
+            android:id="@+id/map_search_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/search"
+            android:onClick="onSubmitClick"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_menu_search" />
+
+    </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/map_search_content"
+        android:id="@+id/map_results_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="5pt"
-        android:layout_weight="1">
+        android:layout_height="match_parent"/>
+</LinearLayout>
 
+    <!--<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".UI.NavigationSearchActivity">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </com.google.android.material.appbar.AppBarLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/map_search_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.8"
                 android:autofillHints=""
                 android:ems="10"
                 android:hint="@string/destination_search_box"
@@ -46,23 +92,19 @@
 
             <ImageButton
                 android:id="@+id/map_search_submit"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:contentDescription="@string/search"
-                android:onClick="onSubmitClick"
-                android:scaleType="center"
-                android:src="@android:drawable/ic_menu_search" />
-
+                android:contentDescription="@string/submit_button"
+                app:srcCompat="@android:drawable/ic_menu_search" />
         </LinearLayout>
 
         <FrameLayout
             android:id="@+id/map_results_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_weight="35">
 
         </FrameLayout>
-    </FrameLayout>
 
-
-</LinearLayout>
+    </LinearLayout> -->

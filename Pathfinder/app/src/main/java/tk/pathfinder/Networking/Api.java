@@ -1,4 +1,7 @@
-package tk.pathfinder.Map;
+package tk.pathfinder.Networking;
+
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,8 +15,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import tk.pathfinder.Networking.Beacon;
-
+import tk.pathfinder.Map.*;
 /**
  * Contains API calls for map data.
  * @author Michael MacLean
@@ -25,7 +27,7 @@ public class Api {
     public static Map GetMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
-            URL url = new URL("https://path-finder.tk/api/maps?list"); //id=" + id.toString());
+            URL url = new URL("https://path-finder.tk/api/maps?d=" + id.toString());
             con = (HttpsURLConnection)url.openConnection();
         }
         catch(MalformedURLException e){
@@ -183,9 +185,17 @@ public class Api {
         String response = getReader(con);
         JSONObject json;
 
+        // empty result!
+        if(con.getResponseCode() == 204){
+            return new MapQueryResult[0];
+        }
+
         if(con.getResponseCode() != 200)
             try{
                 throw new IOException("Error getting maps: " + new JSONObject(response).getString("details"));
+            }
+            catch(NullPointerException e){
+                throw new IOException("Error retrieving maps.");
             }
             catch(JSONException e){
                 throw new IOException("Error getting maps; additionally, a JSON error was encountered while parsing the error.");
@@ -193,7 +203,7 @@ public class Api {
 
         try{
             json = new JSONObject(response);
-
+            Log.d("ApiResult", json.toString());
             MapQueryResult[] results = new MapQueryResult[json.getInt("total")];
             JSONArray arr = json.getJSONArray("buildings");
 
@@ -218,7 +228,7 @@ public class Api {
 
     private static Node findNode(List<Node> nodes, int id){
         for(Node n : nodes)
-            if(n.id == id)
+            if(n.getId() == id)
                 return n;
         return null;
     }
