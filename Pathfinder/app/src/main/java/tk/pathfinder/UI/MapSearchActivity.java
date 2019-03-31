@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;
 
-public class MapSearchActivity extends AppCompatActivity implements MapResultsFragment.MapResultsListener {
+public class MapSearchActivity extends AppCompatActivity implements MapResult.MapResultListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class MapSearchActivity extends AppCompatActivity implements MapResultsFr
         MapResultsFragment f = MapResultsFragment.newInstance(keywords);
         FragmentTransaction t = fm.beginTransaction();
         t.replace(R.id.map_results_content, f);
+        t.commit();
     }
 
     // display the map

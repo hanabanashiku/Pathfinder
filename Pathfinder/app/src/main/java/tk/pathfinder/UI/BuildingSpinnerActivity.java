@@ -2,7 +2,6 @@ package tk.pathfinder.UI;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.Spinner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tk.pathfinder.Map.Api;
+import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Map.Room;
 import tk.pathfinder.R;

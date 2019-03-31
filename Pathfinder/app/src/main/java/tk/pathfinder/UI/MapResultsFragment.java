@@ -1,7 +1,9 @@
 package tk.pathfinder.UI;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,20 +12,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
+import java.io.IOException;
 
 import androidx.fragment.app.FragmentTransaction;
-import tk.pathfinder.Map.Api;
+import tk.pathfinder.Networking.Api;
 import tk.pathfinder.R;
 
 /**
  * A fragment for listing the results of a map search.
  */
-public class MapResultsFragment extends Fragment implements MapResult.MapResultListener {
+public class MapResultsFragment extends Fragment {
 
     private String keywords;
 
-    private MapResultsListener mListener;
+    private MapSearchActivity ctx;
 
     public MapResultsFragment() {
         // Required empty public constructor
@@ -40,10 +43,9 @@ public class MapResultsFragment extends Fragment implements MapResult.MapResultL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if (getArguments() != null)
             keywords = getArguments().getString("keywords");
-            Log.d("MapResultsFragment", "found keywords" + keywords);
-        }
+        ctx = (MapSearchActivity)getActivity();
     }
 
     @Override
@@ -51,49 +53,55 @@ public class MapResultsFragment extends Fragment implements MapResult.MapResultL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_map_results, container, false);
-       // LinearLayout layout = v.findViewById(R.id.map_search_results_content);
-        FragmentTransaction t = getFragmentManager().beginTransaction();
-        try{
-            for(Api.MapQueryResult r : Api.findMaps(keywords)){
-                Log.d("MapResultsFragment", "Found " + r.getName());
-
-                MapResult result = MapResult.newInstance(r);
-                t.add(R.id.map_search_results_content, result);
-            }
-        }
-        catch(Exception e) {
-            Log.d("MapResultsActivity", e.getMessage());
-            e.printStackTrace();
-        }
-
-        t.commit();
+        new MapSearchTask().execute(keywords);
         return v;
     }
 
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof MapResultsListener) {
-            mListener = (MapResultsListener)context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement MapResultsListener");
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+
+    }
+
+    private class MapSearchTask extends AsyncTask<String, String, Api.MapQueryResult[]>{
+        ProgressDialog d;
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+            d = new ProgressDialog(getActivity());
+            d.setMessage("Searching...");
+            d.setIndeterminate(false);
+            d.setCancelable(false);
+            d.show();
         }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+        @Override
+        protected Api.MapQueryResult[] doInBackground(String... args){
+            Api.MapQueryResult[] res = null;
+            try{
+                res = Api.findMaps(args[0]);
+            }
+            catch(IOException e){
+                d.hide();
+                new Alert("Error", e.getMessage(), getActivity()).show();
+            }
+            return res;
+        }
 
-    @Override
-    public void onMapSelected(int id) {
-        mListener.onMapSelected(id);
-    }
+        @Override
+        protected void onPostExecute(Api.MapQueryResult[] result){
+            super.onPostExecute(result);
+            d.hide();
+            if(result == null)
+                return;
 
-
-    public interface MapResultsListener {
-        void onMapSelected(int mapId);
+            FragmentTransaction t = ctx.getSupportFragmentManager().beginTransaction();
+            for(Api.MapQueryResult r : result){
+                MapResult f = MapResult.newInstance(r);
+                t.add(R.id.map_search_results_content, f);
+            }
+            t.commit();
+        }
     }
 }

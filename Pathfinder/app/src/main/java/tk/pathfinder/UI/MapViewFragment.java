@@ -15,7 +15,7 @@ import java.io.IOException;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import tk.pathfinder.Map.Api;
+import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Networking.AppStatus;
 import tk.pathfinder.R;

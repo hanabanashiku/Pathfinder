@@ -24,4 +24,5 @@
     <string name="title_activity_map_search">MapSearchActivity</string>
     <string name="search_for_a_map">Search for a Map</string>
     <string name="title_activity_view_map">ViewMapActivity</string>
+    <string name="submit_button">Submit Button</string>
 </resources>

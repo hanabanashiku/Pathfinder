@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
-import tk.pathfinder.Map.Api;
+import tk.pathfinder.Networking.Api;
 import tk.pathfinder.R;
 
 /**
@@ -55,7 +56,7 @@ public class MapResult extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map_result, container, false);
-        EditText label = v.findViewById(R.id.map_name_label);
+        TextView label = v.findViewById(R.id.map_name_label);
         label.setText(name);
         FrameLayout layout = v.findViewById(R.id.map_result_container);
         layout.setOnClickListener(x -> mListener.onMapSelected(id));
@@ -71,6 +72,10 @@ public class MapResult extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement MapResultListener");
         }
+    }
+
+    public void onClick(View v){
+        mListener.onMapSelected(id);
     }
 
     @Override
