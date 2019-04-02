@@ -70,7 +70,7 @@ public class AppStatus extends Application {
 
     public void pullMap(int map_id){
         try {
-            Map map = Api.GetMap(map_id);
+            Map map = Api.getMap(map_id);
             setCurrentMap(map);
             setCurrentLocation(Point.getDefault());
         } catch (IOException e) {

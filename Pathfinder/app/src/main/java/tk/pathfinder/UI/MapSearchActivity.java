@@ -25,7 +25,7 @@ public class MapSearchActivity extends AppCompatActivity implements MapResult.Ma
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
         String keywords = i.getStringExtra("keywords");
@@ -56,10 +56,9 @@ public class MapSearchActivity extends AppCompatActivity implements MapResult.Ma
     @Override
     public void onMapSelected(int mapId) {
         AppStatus status = (AppStatus)getApplicationContext();
-        Intent i = new Intent(status.getCurrentActivity(), MapView.class);
+        Intent i = new Intent(status.getCurrentActivity(), ViewMapActivity.class);
         i.putExtra("mapId", mapId);
         startActivity(i);
-        finish();
     }
 
     @Override

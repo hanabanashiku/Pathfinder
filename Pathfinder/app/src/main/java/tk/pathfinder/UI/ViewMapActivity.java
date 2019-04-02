@@ -18,14 +18,17 @@ public class ViewMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_map);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        CoordinatorLayout container = findViewById(R.id.map_container);
-
         // display the map widget
-        int mapId = savedInstanceState.getInt("mapId");
+
+        int mapId = getIntent().getIntExtra("mapId", -1);
+        if(mapId == -1){
+            new Alert("Error", "An unknown error has occurred.", this).show();
+            return;
+        }
         MapViewFragment f = MapViewFragment.newInstance(mapId);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.add(R.id.map_container, f);

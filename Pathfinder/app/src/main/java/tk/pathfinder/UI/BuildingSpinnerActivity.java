@@ -71,7 +71,7 @@ public class BuildingSpinnerActivity extends Activity implements AdapterView.OnI
         int index = map_ids.get(name);
 
         try{
-            Map m = Api.GetMap(index);
+            Map m = Api.getMap(index);
             Spinner destSpin = findViewById(R.id.destSpinner);
             List<String> cats = new ArrayList<>();
             for(Iterator<Room> i = m.getRooms(); i.hasNext(); ){

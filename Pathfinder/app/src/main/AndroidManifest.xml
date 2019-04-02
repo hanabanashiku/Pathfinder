@@ -27,7 +27,12 @@
         <activity
             android:name=".UI.MapSearchActivity"
             android:label="@string/title_activity_map_search"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".UI.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tk.pathfinder.UI.HomeActivity" />
+        </activity>
         <activity
             android:name=".UI.NavigationActivity"
             android:label="@string/title_activity_navigation"

@@ -24,7 +24,7 @@ import tk.pathfinder.Map.*;
  */
 public class Api {
 
-    public static Map GetMap(Integer id) throws IOException{
+    public static Map getMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
             URL url = new URL("https://path-finder.tk/api/maps?d=" + id.toString());
@@ -203,7 +203,6 @@ public class Api {
 
         try{
             json = new JSONObject(response);
-            Log.d("ApiResult", json.toString());
             MapQueryResult[] results = new MapQueryResult[json.getInt("total")];
             JSONArray arr = json.getJSONArray("buildings");
 
