@@ -38,6 +38,16 @@ public class Path implements Iterable<Edge> {
         return edges[i];
     }
 
+    public Path append(Path path){
+        if(edges[edges.length - 1] != path.edges[path.length() - 1])
+            throw new IllegalArgumentException("The end node of the first path must equal the start node of the second.");
+
+        Edge[] arr = new Edge[edges.length + path.length()];
+        System.arraycopy(edges, 0, arr, 0, edges.length);
+        System.arraycopy(path.edges, 0, arr, edges.length, path.length());
+        return new Path(arr);
+    }
+
 
     @NonNull
     @Override

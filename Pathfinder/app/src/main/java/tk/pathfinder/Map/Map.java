@@ -95,6 +95,16 @@ public class Map {
         return elevators.iterator();
     }
 
+    public Iterator<FloorConnector> getFloorConnectors(FloorConnector.FloorConnectorTypes type){
+        List<FloorConnector> connectors = new ArrayList<>();
+        for(Iterator<Node> i = getNodes(); i.hasNext(); ){
+            Node n = i.next();
+            if(n instanceof FloorConnector && ((FloorConnector)n).getType() == type)
+                connectors.add((FloorConnector)n);
+        }
+        return connectors.iterator();
+    }
+
     /***
      * @param n The current edge
      * @return an iterator pointing to all edges connected to the current, sorted by weight.
@@ -103,7 +113,7 @@ public class Map {
         final ArrayList<Edge> resultEdges = new ArrayList<>();
 
         for(Edge e : edges)
-            if(e.getNode1() == n || e.getNode2() == n)
+            if(e.contains(n))
                 resultEdges.add(e);
 
             Collections.sort(resultEdges);
@@ -127,6 +137,20 @@ public class Map {
         }
 
         return new int[] {lowest, highest};
+    }
+
+
+    /**
+     * Get the edge that connects the two nodes.
+     * @param a A node.
+     * @param b A node.
+     * @return The edge, or null if it does not exist.
+     */
+    public Edge getEdge(Node a, Node b){
+        for(Edge e : edges)
+            if(e.contains(a) && e.contains(b))
+                return e;
+        return null;
     }
 
     /***

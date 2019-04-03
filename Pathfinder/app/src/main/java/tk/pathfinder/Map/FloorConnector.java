@@ -153,13 +153,14 @@ public class FloorConnector extends Node {
     /***
      * @param floor The floor to check.
      * @return true if the node may be used to access the floor.
-     */
+     */ // TODO implement this
     public boolean isFloorAccessible(int floor){
-        if(!isOperational())
+        return true;
+        /*if(!isOperational())
             return false;
         if(this.floors.containsKey(floor))
             return this.floors.get(floor);
-        return false;
+        return false;*/
     }
 
     /***
