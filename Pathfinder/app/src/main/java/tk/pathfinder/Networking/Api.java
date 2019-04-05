@@ -27,7 +27,7 @@ public class Api {
     public static Map getMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
-            URL url = new URL("https://path-finder.tk/api/maps?d=" + id.toString());
+            URL url = new URL("https://path-finder.tk/api/maps?id=" + id.toString());
             con = (HttpsURLConnection)url.openConnection();
         }
         catch(MalformedURLException e){
@@ -124,10 +124,12 @@ public class Api {
             throw new IOException("Invalid JSON data type received: " + e.getMessage());
         }
 
-        /*InputStream is = new ByteArrayInputStream(img.getBytes());
-        Bitmap image = BitmapFactory.decodeStream(is);*/
+        Edge[] eArr = new Edge[edges.size()];
+        Beacon[] bArr = new Beacon[beacons.size()];
+        eArr = edges.toArray(eArr);
+        bArr = beacons.toArray(bArr);
 
-        return new Map(index, name, addr, (Edge[])edges.toArray(),(Beacon[])beacons.toArray());
+        return new Map(index, name, addr, eArr, bArr);
     }
 
     /**

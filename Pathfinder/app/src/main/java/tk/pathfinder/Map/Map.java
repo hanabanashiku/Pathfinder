@@ -128,6 +128,8 @@ public class Map {
         int lowest = Integer.MAX_VALUE;
         int highest = Integer.MIN_VALUE;
 
+        if(nodes.size() == 0)
+            return new int[] {0, 0};
         for(Node n : nodes){
             int floor = n.getPoint().getY();
             if(floor < lowest)

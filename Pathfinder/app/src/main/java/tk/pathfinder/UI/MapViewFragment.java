@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ public class MapViewFragment extends Fragment {
     private Map map;
     private MapFragment mapController;
     private int mapId;
+    private ProgressDialog d;
 
     private SectionsPagerAdapter mPageAdapter;
     private ViewPager mViewPager;
@@ -55,6 +55,9 @@ public class MapViewFragment extends Fragment {
 
         AppStatus status = (AppStatus)getContext().getApplicationContext();
         if(status == null || status.getCurrentBuildingId() != mapId){
+            d = new ProgressDialog(getActivity());
+            d.setMessage("Getting your map...");
+            d.show();
             new MapDetailsTask().execute(mapId, getActivity().getApplicationContext(), this);
         }
         else{
@@ -93,7 +96,7 @@ public class MapViewFragment extends Fragment {
         private int count = -1;
         private int smallestFloor;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -134,29 +137,25 @@ public class MapViewFragment extends Fragment {
 
     private static class MapDetailsTask extends AsyncTask<Object, String, Map> {
         private AppStatus ctx;
-        private ProgressDialog d;
         private MapViewFragment f;
 
         @Override
         protected Map doInBackground(Object... args) {
             ctx = (AppStatus)args[1];
             f = (MapViewFragment)args[2];
-            Looper.prepare();
-
-            d = new ProgressDialog(ctx.getCurrentActivity());
-            d.setMessage("Getting your map...");
-            d.show();
 
             Map m = null;
             try{
                 m = Api.getMap((Integer)args[0]);
             }
             catch(IOException e){
-                d.hide();
+                //d.hide();
+                Looper.prepare();
                 new Alert("Error", e.getMessage(), ctx.getCurrentActivity());
+                e.printStackTrace();
             }
 
-            d.hide();
+            //d.hide();
             return m;
         }
 
@@ -164,7 +163,7 @@ public class MapViewFragment extends Fragment {
         protected void onPostExecute(Map result){
             f.map = result;
             f.setMapView();
-            d = null;
+            f.d.dismiss();
         }
     }
 }

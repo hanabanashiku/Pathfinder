@@ -26,6 +26,7 @@ import tk.pathfinder.R;
 public class MapResultsFragment extends Fragment {
 
     private String keywords;
+    private ProgressDialog d;
 
     public MapResultsFragment() {
         // Required empty public constructor
@@ -51,54 +52,52 @@ public class MapResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_map_results, container, false);
-        new MapSearchTask().execute(keywords, getActivity().getApplicationContext(), getFragmentManager());
+        d = new ProgressDialog(getActivity());
+        d.setMessage("Searching...");
+        d.setIndeterminate(false);
+        d.setCancelable(false);
+        d.show();
+        new MapSearchTask().execute(keywords, getActivity().getApplicationContext(), this);
         return v;
+    }
+
+    private void addResults(Api.MapQueryResult[] result){
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        for(Api.MapQueryResult r : result){
+            MapResult f = MapResult.newInstance(r);
+            t.add(R.id.map_search_results_content, f);
+        }
+        t.commit();
     }
 
     // static to avoid memory leaks
     // takes (string)keywords, (AppStatus)context, (FragmentManager)mgr as arguments
     private static class MapSearchTask extends AsyncTask<Object, String, Api.MapQueryResult[]>{
-        ProgressDialog d;
         AppStatus ctx;
-        FragmentManager mgr;
+        MapResultsFragment f;
 
         @Override
         protected Api.MapQueryResult[] doInBackground(Object... args){
             Api.MapQueryResult[] res = null;
             ctx = (AppStatus)args[1];
-            mgr = (FragmentManager)args[2];
-            Looper.prepare();
-
-            d = new ProgressDialog(ctx.getCurrentActivity());
-            d.setMessage("Searching...");
-            d.setIndeterminate(false);
-            d.setCancelable(false);
-            d.show();
+            f = (MapResultsFragment)args[2];
 
             try{
                 res = Api.findMaps((String)args[0]);
             }
             catch(IOException e){
-                d.hide();
-                new Alert("Error", e.getMessage(), ctx).show();
+                new Alert("Error", e.getMessage(), ctx.getCurrentActivity().getBaseContext()).show();
             }
-            d.hide();
             return res;
         }
 
         @Override
         protected void onPostExecute(Api.MapQueryResult[] result){
             super.onPostExecute(result);
-            d = null;
             if(result == null)
                 return;
-
-            FragmentTransaction t = mgr.beginTransaction();
-            for(Api.MapQueryResult r : result){
-                MapResult f = MapResult.newInstance(r);
-                t.add(R.id.map_search_results_content, f);
-            }
-            t.commit();
+            f.addResults(result);
+            f.d.dismiss();
         }
     }
 }
