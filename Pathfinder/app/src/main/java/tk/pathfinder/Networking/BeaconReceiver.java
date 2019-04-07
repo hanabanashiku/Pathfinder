@@ -5,6 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.net.wifi.rtt.RangingRequest;
+import android.net.wifi.rtt.RangingResult;
+import android.net.wifi.rtt.RangingResultCallback;
+import android.net.wifi.rtt.WifiRttManager;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,13 +21,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Map.Point;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;
     private WifiManager wifiManager;
+    private WifiRttManager rttManager;
     private WifiManager.WifiLock wifiLock;
+    private List<ScanResult> lastResults;
 
     public BeaconReceiver(Context app) {
         beacons = new ArrayList<>();
@@ -30,9 +40,22 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
                 .createWifiLock((android.os.Build.VERSION.SDK_INT >= 19 ? WifiManager.WIFI_MODE_FULL_HIGH_PERF : WifiManager.WIFI_MODE_FULL),
                         "pathfinder_wifi_lock");
 
+        // start a ranging thread to make up for
+        // delayed start time
+        if(Build.VERSION.SDK_INT >= 28){
+            setRttManager(app);
+            new RttThread().start();
+        }
+
         // start wifi scanning
         // note, triggering a scan is deprecated
         new ScanThread().start();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void setRttManager(Context app){
+        rttManager = (WifiRttManager)app.getSystemService(Context.WIFI_RTT_RANGING_SERVICE);
     }
 
     public WifiManager.WifiLock getWifiLock() {
@@ -50,63 +73,81 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
      */
     // TODO Update location as well
     @Override
-    public synchronized void onReceive(Context context, Intent intent){
-        List<ScanResult> res = wifiManager.getScanResults();
-        AppStatus status = (AppStatus)context.getApplicationContext();
+    public synchronized void onReceive(Context context, Intent intent) {
+        AppStatus ctx = (AppStatus) context.getApplicationContext();
+        Map currentMap = ctx.getCurrentMap();
 
+
+        // this is a Wifi scan result
+        // this will be ran every half second for < 28 and ~4 times/2 minutes for >= 28
+        lastResults = wifiManager.getScanResults();
         List<Beacon> current = new ArrayList<>();
-        Map currentMap = status.getCurrentMap();
-        HashMap<Integer, Integer> beaconStrength = new HashMap<>();
 
-        for(ScanResult i : res){
+        // let's check the results
+        for (ScanResult i : lastResults) {
             String[] parts = i.SSID.split("_");
 
-            // this is one of ours! let's add it
-            if(parts[0].equals("PF")){
-                Beacon b = findBeaconBySSID(beacons, i.SSID);
-                if(b == null) { // unseen node
-                    try {
-                        b = new Beacon(i.SSID, Point.getDefault());
-                    }
-                    catch(Exception e){
-                        continue; // incorrect format...
-                    }
-
-                    // we have a map node but no map! Pull the map!
-                    if(currentMap == null)
-                        status.pullMap(b.getBuildingIndex());
-
+            // likely to be one of ours
+            if (parts[0].equals("PF")) {
+                int buildingId;
+                int nodeId;
+                try {
+                    buildingId = Integer.parseInt(parts[1]);
+                    nodeId = Integer.parseInt(parts[2]);
                 }
-                b.setFrequency(i.frequency);
-                // add our node. This is either the reference we already knew,
-                // or it is the new placeholder node we have created.
-                current.add(b);
+                // maybe not
+                catch (Exception e) {
+                    continue;
+                }
 
-                // take note of the signal strength
-                beaconStrength.put(b.getIndex(), i.level);
+                // new map found
+                if (currentMap == null) {
+                    ctx.pullMap(buildingId);
+                    currentMap = ctx.getCurrentMap();
+                }
+
+                Beacon b = findBeacon(i.SSID);
+                // we don't have the beacon listed
+                if (b == null) {
+                    b = currentMap.getBeacon(i.SSID);
+                    if (b == null)
+                        b = new Beacon(i.SSID, Point.getDefault());
+                }
+                // we do but we don't know the location
+                else if (b.getLocation().equals(Point.getDefault())) {
+                    Beacon fromMap = currentMap.getBeacon(i.SSID);
+                    if (fromMap != null) // found the location
+                        b = fromMap;
+                }
+
+                // update our values from the pull
+                b.setFrequency(i.frequency);
+                b.setLevel(i.level);
+                current.add(b); // make a note of our beacon.
             }
         }
 
         beacons = current; // update the collection.
 
-        // we are out of range of a map!
-        if(beacons.size() == 0){
-            status.setCurrentMap(null);
+
+        // no beacons..
+        if (beacons.size() == 0) {
+            ctx.setCurrentMap(null);
             return;
         }
 
-        // make sure we have the correct map
-        int curr_map = getCurrentMapId();
-        if(curr_map != status.getCurrentBuildingId())
-            status.pullMap(curr_map);
+        // if we are in a different map, pull it and
+        // update the beacon references.
+        int currentMapId = getCurrentMapId();
+        if (!currentMap.getId().equals(currentMapId))
+            changeMap(currentMapId, ctx);
 
-        // make sure we have the correct references.
-        correctBeaconReferences(status.getCurrentMap());
+        // trigger RTT call
+        if (Build.VERSION.SDK_INT >= 28) {
 
-        // update the signal strength of the nodes
-        updateSignalStrength(beaconStrength, status);
+        }
 
-        // sort by signal strength
+        // sort by strength
         Collections.sort(beacons);
     }
 
@@ -117,14 +158,14 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         List<Beacon> ret = new ArrayList<>();
         // this is always going to be sorted!
         for(int i = 0; i < beacons.size(); i++) {
-            if (i == 3)
+            if (ret.size() == 3)
                 break;
             ret.add(beacons.get(i));
         }
         return ret;
     }
 
-    private Beacon findBeaconBySSID(Collection<Beacon> beacons, String ssid){
+    private Beacon findBeacon(String ssid){
         for(Beacon b : beacons)
             if(b.getSSID().equals(ssid))
                 return b;
@@ -162,43 +203,20 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return max_key;
     }
 
-    // let's make sure the references reference the the beacon with the correct location info.
-    private void correctBeaconReferences(Map map){
-        if(map == null)
-            return;
+    private void changeMap(int mapId, AppStatus app){
+        app.pullMap(mapId);
 
-        for(int i = 0; i < beacons.size(); i++){
-            Beacon b = beacons.get(i);
-            Beacon mb = map.getBeacon(b.getSSID());
-            // check the reference!
-            if(b != mb) {
-                beacons.set(i, mb);
-                mb.setFrequency(b.getFrequency());
-            }
+        for(Iterator<Beacon> i = app.getCurrentMap().getBeacons(); i.hasNext(); ){
+            Beacon b = i.next();
+
+            Beacon fromList = findBeacon(b.getSSID());
+            if(fromList == null)
+                continue;
+            int index = beacons.indexOf(fromList);
+            b.setFrequency(fromList.getFrequency());
+            b.setLevel(fromList.getLevel());
+            beacons.set(index, b);
         }
-    }
-
-    private void updateSignalStrength(HashMap<Integer, Integer> strengths, AppStatus status){
-        for(Beacon b : beacons){
-            Integer level = strengths.get(b.getIndex());
-            if(level == null)
-                level = 0;
-            b.setLevel(level);
-        }
-
-        if(status.getCurrentMap() != null)
-            for(Iterator<Beacon> i = status.getCurrentMap().getBeacons(); i.hasNext(); ){
-                Beacon b = i.next();
-                if(beacons.contains(b))
-                    continue;
-                try{
-                    int strength = strengths.get(b.getIndex());
-                    b.setLevel(strength);
-                }
-                catch(Exception e){
-                    b.setLevel(-128);
-                }
-            }
     }
 
     /**
@@ -210,17 +228,81 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return beacons.iterator();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    class BeaconRangingResultCallback extends RangingResultCallback {
+        @Override
+        public void onRangingResults(List<RangingResult> results){
+            for(RangingResult r : results){
+                if(r.getStatus() != RangingResult.STATUS_SUCCESS)
+                    continue;
+
+                String ssid = null;
+                if(r.getMacAddress() == null)
+                    continue;
+
+                // find SSID (the hard way)
+                for(ScanResult b : lastResults){
+                    if(b.BSSID.equals(r.getMacAddress().toString()))
+                        ssid = b.SSID;
+                }
+                if(ssid == null)
+                    continue;
+
+                // found a beacon
+                Beacon b = findBeacon(ssid);
+                if(b == null)
+                    continue;
+                b.setLevel(r.getRssi());
+            }
+        }
+
+        @Override
+        public void onRangingFailure(int code){
+            Log.d("BeaconReceiver", "Ranging failed with code " + code);
+        }
+    }
+
     class ScanThread extends Thread{
+        private final int delay;
+
+        public ScanThread(){
+            super();
+            // if we are above 28 we will rely more on the RTT api.
+            if(Build.VERSION.SDK_INT >= 28)
+                delay = 32000;
+            else delay = 500;
+        }
         public void run(){
             while(true){
-                // note: this is currently deprecated;
-                // it will have to be removed at some point
                 wifiManager.startScan();
                 try{
-                    sleep(500);
+                    sleep(delay);
                 }
                 catch(InterruptedException ignored){ }
 
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    class RttThread extends Thread {
+        public void run(){
+            while(true){
+                try{
+                    sleep(500);
+                }
+                catch(InterruptedException ignored) {}
+
+                if(lastResults == null)
+                    continue;
+
+                RangingRequest r = new RangingRequest.Builder().addAccessPoints(lastResults).build();
+                try{
+                    rttManager.startRanging(r, AsyncTask.THREAD_POOL_EXECUTOR, new BeaconRangingResultCallback());
+                }
+                catch(SecurityException e){
+                    Log.d("BeaconReceiver", "Ranging permission denied..");
+                }
             }
         }
     }

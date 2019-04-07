@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.rtt.WifiRttManager;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -104,6 +106,12 @@ public class AppStatus extends Application {
         receiver = value;
         IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(value, bf);
+
+        if(Build.VERSION.SDK_INT >= 28){
+            IntentFilter rttIntent = new IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED);
+            registerReceiver(value, rttIntent);
+
+        }
     }
 
     public MapReceiver getMapReceiver() {
