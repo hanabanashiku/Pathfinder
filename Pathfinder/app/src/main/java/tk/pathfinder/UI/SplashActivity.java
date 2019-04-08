@@ -1,13 +1,14 @@
 package tk.pathfinder.UI;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.PermissionChecker;
 import tk.pathfinder.Networking.AppStatus;
-import tk.pathfinder.Networking.BeaconReceiver;
 import tk.pathfinder.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -18,15 +19,15 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // register our receiver
-        BeaconReceiver br = new BeaconReceiver(this.getApplicationContext());
-        IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(br, bf);
+        if(PermissionChecker.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PermissionChecker.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 69);
+        if(PermissionChecker.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PermissionChecker.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 69);
+        if(PermissionChecker.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_WIFI_STATE) != PermissionChecker.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_WIFI_STATE}, 69);
+        if(PermissionChecker.checkSelfPermission(this.getApplicationContext(), Manifest.permission.CHANGE_WIFI_STATE) != PermissionChecker.PERMISSION_GRANTED)
+            requestPermissions(new String[]{Manifest.permission.CHANGE_WIFI_STATE}, 69);
 
-        // keep the radios awake
-        br.getWifiLock().acquire();
-        // set and register our receiver
-        ((AppStatus)getApplicationContext()).setBeaconReceiver(br);
 
         new Handler().postDelayed(() -> {
             Intent homeIntent = new Intent(SplashActivity.this, HomeActivity.class);
@@ -34,6 +35,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         },SPLASH_TIME_OUT);
     }
+
 
     @Override
     protected void onResume(){

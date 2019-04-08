@@ -16,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".Networking.AppStatus">
+        <receiver
+            android:name=".Networking.BeaconReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".UI.ViewMapActivity"
             android:label="@string/title_activity_view_map"

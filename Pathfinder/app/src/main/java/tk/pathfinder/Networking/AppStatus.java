@@ -98,7 +98,7 @@ public class AppStatus extends Application {
         return currentMap.getId();
     }
 
-    public BeaconReceiver getBeaconReceiver(){
+    /*public BeaconReceiver getBeaconReceiver(){
         return receiver;
     }
 
@@ -110,7 +110,7 @@ public class AppStatus extends Application {
             registerReceiver(value, rttIntent);
 
         }
-    }
+    }*/
 
     public MapReceiver getMapReceiver() {
         return mapReceiver;
@@ -128,5 +128,13 @@ public class AppStatus extends Application {
     public void onCreate(){
         super.onCreate();
         location = Point.getDefault();
+
+        // register our receiver
+        receiver = new BeaconReceiver(this);
+        IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        registerReceiver(receiver, bf);
+
+        // keep the radios awake
+        receiver.getWifiLock().acquire();
     }
 }

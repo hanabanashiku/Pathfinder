@@ -252,6 +252,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     class BeaconRangingResultCallback extends RangingResultCallback {
         @Override
         public void onRangingResults(List<RangingResult> results){
+            Log.d("BeaconRangingResult", "Got some results");
             for(RangingResult r : results){
                 if(r.getStatus() != RangingResult.STATUS_SUCCESS)
                     continue;
@@ -278,7 +279,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
 
         @Override
         public void onRangingFailure(int code){
-            Log.d("BeaconReceiver", "Ranging failed with code " + code);
+            Log.e("BeaconRangingResult", "Ranging failed with code " + code);
         }
     }
 
@@ -314,7 +315,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
                 }
                 catch(InterruptedException ignored) {}
 
-                if(lastResults == null)
+                if(lastResults == null || rttManager == null)
                     continue;
 
                 RangingRequest r = new RangingRequest.Builder().addAccessPoints(lastResults).build();
