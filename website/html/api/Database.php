@@ -79,7 +79,7 @@ class Database extends mysqli {
         $q = $this->query("SELECT floor_id, floor_number FROM floors WHERE buildingID = $map_id");
         $res = [];
         while($r = $q->fetch_assoc())
-            $res[$r['floor_id']] = $res['floor_number'];
+            $res[$r['floor_id']] = $r['floor_number'];
         return $res;
     }
 
