@@ -173,12 +173,55 @@ public class Navigation {
         return new Path((Edge[])edges.toArray());
     }
 
-    //converts signal strength (in Mhz) to distance (in meters)
-    public double strengthToDistance(Beacon strength, Beacon frequency){
+    /**
+     * Approximate location on the map given three closest beacons
+     * @param b1 A beacon.
+     * @param b2 A beacon.
+     * @param b3 A beacon.
+     * @return An approximate location.
+     */
+    public static Point triangulate(Beacon b1, Beacon b2, Beacon b3){
+        List<Beacon> beacons = new ArrayList<>();
 
+        // get our beacons
+        if(b1 != null)
+            beacons.add(b1);
+        if(b2 != null)
+            beacons.add(b2);
+        if(b3 != null)
+            beacons.add(b3);
 
-        double exp = (27.55 - (20 * Math.log10((double)frequency.getFrequency())) + Math.abs((double)strength.getLevel())) / 20.0;
-        return Math.pow(10.0, exp);
+        // not enough beacons
+        if(beacons.size() == 0)
+            throw new IllegalArgumentException();
+
+        // all we know
+        if(beacons.size() == 1){
+            return beacons.get(0).getLocation();
+        }
+
+        // make the signal strength 0-based
+        int s1 = beacons.get(0).getLevel() + 127;
+        int s2 = beacons.get(1).getLevel() + 127;
+
+        int x = (beacons.get(0).getLocation().getX() - beacons.get(1).getLocation().getX())/2;
+        int y = beacons.get(0).getLocation().getY();
+        int z = (beacons.get(0).getLocation().getZ() - beacons.get(1).getLocation().getZ())/2;
+        int s = ((s2-s1)/256) + 1;
+
+        Point m = new Point(x, y, z).multiply(s);
+
+        // we're done
+        if(beacons.size() == 2)
+            return m;
+
+        int s3 = beacons.get(2).getLevel() + 127;
+
+        x = (beacons.get(2).getLocation().getX() - m.getX())/2;
+        z = (beacons.get(2).getLocation().getZ() - m.getZ())/2;
+        int sc = ((s3 - s2 - s1)/ 256) + 1;
+
+        return new Point(x, y, z).multiply(sc);
     }
 
 }

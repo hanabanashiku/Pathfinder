@@ -78,6 +78,13 @@ public final class Point {
         return Math.abs(Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getZ() - q.getZ(), 2)));
     }
 
+    public Point multiply(double d){
+        int x = (int)(this.x * d);
+        int z = (int)(this.z * d);
+
+        return new Point(x, y, z);
+    }
+
     /***
      * Get the Euclidian distance between two points
      * @param p The second point

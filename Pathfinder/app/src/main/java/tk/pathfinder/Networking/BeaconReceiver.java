@@ -14,7 +14,6 @@ import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +22,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Map;
+import tk.pathfinder.Map.Navigation;
 import tk.pathfinder.Map.Point;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
@@ -31,6 +31,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     private WifiRttManager rttManager;
     private WifiManager.WifiLock wifiLock;
     private List<ScanResult> lastResults;
+    Thread t = null;
 
     public BeaconReceiver(Context app) {
         beacons = new ArrayList<>();
@@ -142,13 +143,27 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         if (!currentMap.getId().equals(currentMapId))
             changeMap(currentMapId, ctx);
 
-        // trigger RTT call
-        if (Build.VERSION.SDK_INT >= 28) {
-
+        // trigger RTT loop
+        if (Build.VERSION.SDK_INT >= 28 && t == null){
+            t = new RttThread();
+            t.start();
         }
+
 
         // sort by strength
         Collections.sort(beacons);
+
+        List<Beacon> closest = closestBeacons();
+
+        int size = closest.size();
+        Point loc;
+        if(size == 1)
+            loc = Navigation.triangulate(closest.get(0), null, null);
+        else if(size == 2)
+            loc = Navigation.triangulate(closest.get(0), closest.get(1), null);
+        else
+            loc = Navigation.triangulate(closest.get(0), closest.get(1), closest.get(2));
+        ctx.setCurrentLocation(loc);
     }
 
     /**
