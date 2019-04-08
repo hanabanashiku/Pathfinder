@@ -104,8 +104,6 @@ public class AppStatus extends Application {
 
     public void setBeaconReceiver(BeaconReceiver value){
         receiver = value;
-        IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(value, bf);
 
         if(Build.VERSION.SDK_INT >= 28){
             IntentFilter rttIntent = new IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED);

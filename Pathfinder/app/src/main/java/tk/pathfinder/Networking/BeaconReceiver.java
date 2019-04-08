@@ -75,6 +75,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     // TODO Update location as well
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
+        Log.d("BeaconReceiver", "ONRECEIVE**********\n\n\n");
         AppStatus ctx = (AppStatus) context.getApplicationContext();
         Map currentMap = ctx.getCurrentMap();
 
@@ -84,12 +85,15 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         lastResults = wifiManager.getScanResults();
         List<Beacon> current = new ArrayList<>();
 
+        Log.d("BeaconReceiver", "Received " + lastResults.size() + " aps");
+
         // let's check the results
         for (ScanResult i : lastResults) {
             String[] parts = i.SSID.split("_");
 
             // likely to be one of ours
             if (parts[0].equals("PF")) {
+                Log.d("BeaconReceiver", "Found " + i.SSID);
                 int buildingId;
                 int nodeId;
                 try {
@@ -164,6 +168,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         else
             loc = Navigation.triangulate(closest.get(0), closest.get(1), closest.get(2));
         ctx.setCurrentLocation(loc);
+        goAsync();
     }
 
     /**
@@ -289,6 +294,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         }
         public void run(){
             while(true){
+                Log.d("BeaconReceiver", "Starting scan.");
                 wifiManager.startScan();
                 try{
                     sleep(delay);
