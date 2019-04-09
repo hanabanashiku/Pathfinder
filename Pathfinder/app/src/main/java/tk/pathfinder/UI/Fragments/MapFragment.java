@@ -1,11 +1,10 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,9 @@ import android.view.ViewGroup.LayoutParams;
 
 
 import tk.pathfinder.Map.Map;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.MapView;
 
 public class MapFragment extends Fragment {
 

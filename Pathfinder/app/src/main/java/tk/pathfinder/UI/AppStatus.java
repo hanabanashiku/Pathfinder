@@ -1,24 +1,23 @@
-package tk.pathfinder.Networking;
+package tk.pathfinder.UI;
 
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import android.net.wifi.rtt.WifiRttManager;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import tk.pathfinder.Map.*;
-import tk.pathfinder.UI.HomeActivity;
-import tk.pathfinder.UI.MapReceiver;
-import tk.pathfinder.UI.MapSearchActivity;
-import tk.pathfinder.UI.NavigationActivity;
-import tk.pathfinder.UI.NavigationSearchActivity;
-import tk.pathfinder.UI.ViewMapActivity;
+import tk.pathfinder.Networking.Api;
+import tk.pathfinder.Networking.BeaconReceiver;
+import tk.pathfinder.UI.Activities.HomeActivity;
+import tk.pathfinder.UI.Activities.MapSearchActivity;
+import tk.pathfinder.UI.Activities.NavigationActivity;
+import tk.pathfinder.UI.Activities.NavigationSearchActivity;
+import tk.pathfinder.UI.Activities.ViewMapActivity;
 
 /**
  * Shows current stats for the running app.
@@ -97,20 +96,6 @@ public class AppStatus extends Application {
             return -1;
         return currentMap.getId();
     }
-
-    /*public BeaconReceiver getBeaconReceiver(){
-        return receiver;
-    }
-
-    public void setBeaconReceiver(BeaconReceiver value){
-        receiver = value;
-
-        if(Build.VERSION.SDK_INT >= 28){
-            IntentFilter rttIntent = new IntentFilter(WifiRttManager.ACTION_WIFI_RTT_STATE_CHANGED);
-            registerReceiver(value, rttIntent);
-
-        }
-    }*/
 
     public MapReceiver getMapReceiver() {
         return mapReceiver;

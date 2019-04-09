@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import tk.pathfinder.Map.Navigation;
 import tk.pathfinder.Map.Node;
 import tk.pathfinder.Map.Path;
 import tk.pathfinder.Map.Room;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
 import tk.pathfinder.exceptions.NoValidPathException;
 

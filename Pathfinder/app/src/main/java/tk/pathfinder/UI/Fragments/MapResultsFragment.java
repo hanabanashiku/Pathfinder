@@ -1,24 +1,22 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.IOException;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.Networking.Api;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Alert;
 
 /**
  * A fragment for listing the results of a map search.

@@ -1,16 +1,15 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentTransaction;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Alert;
+import tk.pathfinder.UI.Fragments.MapViewFragment;
 
 public class ViewMapActivity extends AppCompatActivity {
 

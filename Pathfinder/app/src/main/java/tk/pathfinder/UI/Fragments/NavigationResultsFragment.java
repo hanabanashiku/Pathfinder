@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import java.util.List;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.Map.Room;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
 
 /**

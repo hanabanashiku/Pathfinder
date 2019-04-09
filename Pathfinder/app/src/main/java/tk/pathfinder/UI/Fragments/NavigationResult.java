@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import tk.pathfinder.Map.Room;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
 
 

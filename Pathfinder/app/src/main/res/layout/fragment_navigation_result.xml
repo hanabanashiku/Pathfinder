@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:onClick="onClick"
-    tools:context=".UI.NavigationResult">
+    tools:context=".UI.Fragments.NavigationResult">
 
     <TableRow
         android:layout_width="match_parent"

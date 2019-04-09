@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.os.Bundle;
 

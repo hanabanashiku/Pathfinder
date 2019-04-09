@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,10 @@ import android.widget.ImageButton;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Fragments.MapResult;
+import tk.pathfinder.UI.Fragments.MapResultsFragment;
 
 public class MapSearchActivity extends AppCompatActivity implements MapResult.MapResultListener {
 

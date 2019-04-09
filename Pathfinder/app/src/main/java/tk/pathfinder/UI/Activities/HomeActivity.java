@@ -1,11 +1,14 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Fragments.MapFragment;
+import tk.pathfinder.UI.MapReceiver;
+import tk.pathfinder.UI.Fragments.NoMapFragment;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -8,7 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:onClick="onClick"
-    tools:context=".UI.MapResult">
+    tools:context=".UI.Fragments.MapResult">
 
     <TextView
         android:id="@+id/map_name_label"

@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -20,8 +20,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Map.Map;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Alert;
+import tk.pathfinder.UI.MapView;
 
 
 public class MapViewFragment extends Fragment {

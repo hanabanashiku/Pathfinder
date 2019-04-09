@@ -6,7 +6,7 @@
     android:layout_margin="5pt"
     android:layout_weight="1"
     android:orientation="vertical"
-    tools:context=".UI.NoMapFragment">
+    tools:context=".UI.Fragments.NoMapFragment">
 
     <Space
         android:layout_width="match_parent"

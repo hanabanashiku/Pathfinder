@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".Networking.AppStatus">
+        android:name=".UI.AppStatus">
         <receiver
             android:name=".Networking.BeaconReceiver">
             <intent-filter>
@@ -23,38 +23,38 @@
             </intent-filter>
         </receiver>
         <activity
-            android:name=".UI.ViewMapActivity"
+            android:name=".UI.Activities.ViewMapActivity"
             android:label="@string/title_activity_view_map"
-            android:parentActivityName=".UI.MapSearchActivity"
+            android:parentActivityName=".UI.Activities.MapSearchActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="tk.pathfinder.UI.MapSearchActivity" />
+                android:value="tk.pathfinder.UI.Activities.MapSearchActivity" />
         </activity>
         <activity
-            android:name=".UI.MapSearchActivity"
+            android:name=".UI.Activities.MapSearchActivity"
             android:label="@string/title_activity_map_search"
-            android:parentActivityName=".UI.HomeActivity"
+            android:parentActivityName=".UI.Activities.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="tk.pathfinder.UI.HomeActivity" />
+                android:value="tk.pathfinder.UI.Activities.HomeActivity" />
         </activity>
         <activity
-            android:name=".UI.NavigationActivity"
+            android:name=".UI.Activities.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UI.NavigationSearchActivity"
+            android:name=".UI.Activities.NavigationSearchActivity"
             android:label="@string/title_activity_navigation_search"
-            android:parentActivityName=".UI.HomeActivity"
+            android:parentActivityName=".UI.Activities.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="tk.pathfinder.UI.HomeActivity" />
+                android:value="tk.pathfinder.UI.Activities.HomeActivity" />
         </activity>
         <activity
-            android:name=".UI.HomeActivity"
+            android:name=".UI.Activities.HomeActivity"
             android:label="HomeActivity">
         </activity>
         <receiver android:name=".UI.MapReceiver">
@@ -62,14 +62,13 @@
                 <action android:name="tk.pathfinder.MAP_CHANGED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".UI.SplashActivity">
+        <activity android:name=".UI.Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UI.BuildingSpinnerActivity" />
     </application>
 
 </manifest>

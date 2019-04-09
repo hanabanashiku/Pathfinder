@@ -1,4 +1,4 @@
-package tk.pathfinder.UI;
+package tk.pathfinder.UI.Activities;
 
 
 import androidx.fragment.app.FragmentManager;
@@ -13,8 +13,10 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
+import tk.pathfinder.UI.Fragments.NavigationResult;
+import tk.pathfinder.UI.Fragments.NavigationResultsFragment;
 
 /**
  * An activity for searching for destinations on a map.

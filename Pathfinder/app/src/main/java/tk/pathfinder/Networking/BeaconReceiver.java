@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Map.Navigation;
 import tk.pathfinder.Map.Point;
+import tk.pathfinder.UI.AppStatus;
 
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;

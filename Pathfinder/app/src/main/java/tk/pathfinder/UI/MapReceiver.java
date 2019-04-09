@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import tk.pathfinder.Map.Map;
-import tk.pathfinder.Networking.AppStatus;
+import tk.pathfinder.UI.Activities.HomeActivity;
+import tk.pathfinder.UI.Activities.NavigationSearchActivity;
 
 public class MapReceiver extends BroadcastReceiver {
 
