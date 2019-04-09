@@ -3,6 +3,7 @@ package tk.pathfinder.UI;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.Networking.AppStatus;
@@ -12,6 +13,7 @@ public class MapReceiver extends BroadcastReceiver {
     // manage the activities to ensure we are on the correct one when the map is changed.
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("MapReceiver", "Changing maps!");
         AppStatus status = (AppStatus)context.getApplicationContext();
         if(status.getHomeActivity() == null)
             return;

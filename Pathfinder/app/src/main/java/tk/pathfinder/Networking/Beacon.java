@@ -19,16 +19,12 @@ public class Beacon implements Comparable<Beacon> {
         this.ssid = ssid;
         this.location = p;
         this.strength = -128; // minimum strength for now.
-        String[] parts = ssid.split("_");
-        try{ // PF_building_node
-            if(parts.length != 3) throw new Exception();
-            if(!parts[0].equals("PF")) throw new Exception();
-            this.building_index = Integer.parseInt(parts[1]);
-            this.index = Integer.parseInt(parts[2]);
-        }
-        catch(Exception e){
+        int[] ids = parseSsid(ssid);
+
+        if(ids.length == 0)
             throw new IllegalArgumentException("Invalid SSID format for beacon");
-        }
+        building_index = ids[0];
+        index = ids[1];
     }
 
     public int getIndex(){
@@ -61,6 +57,30 @@ public class Beacon implements Comparable<Beacon> {
 
     public Point getLocation(){
         return location;
+    }
+
+    /**
+     * Parse an SSID into a building id and a node id.
+     * @param ssid the ssid string to parse
+     * @return an array of the form {building_id, node_id} or {} on failure.
+     */
+    static int[] parseSsid(String ssid){
+        String[] parts = ssid.split("_");
+
+        if(!parts[0].equals("PF") || parts.length != 3)
+            return new int[]{};
+
+        int[] ret = new int[2];
+
+        try{
+            ret[0] = Integer.parseInt(parts[1]);
+            ret[1] = Integer.parseInt(parts[2]);
+        }
+        catch(NumberFormatException ignored){
+            return new int[]{};
+        }
+
+        return ret;
     }
 
     @Override

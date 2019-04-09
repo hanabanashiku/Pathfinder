@@ -12,10 +12,10 @@ import android.net.wifi.rtt.WifiRttManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.util.SparseIntArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         wifiManager = (WifiManager) app.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         // make sure the radios don't go to sleep
         wifiLock = wifiManager
-                .createWifiLock((android.os.Build.VERSION.SDK_INT >= 19 ? WifiManager.WIFI_MODE_FULL_HIGH_PERF : WifiManager.WIFI_MODE_FULL),
+                .createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF,
                         "pathfinder_wifi_lock");
 
         // start a ranging thread to make up for
@@ -64,79 +64,79 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     }
 
     /**
-     * This function is run whenever a new signal is received.
+     * This function is run whenever a new scan result is available.
      * It updates the beacon table, updates the signal strength,
      * pulls the relevant map if a new building has been entered,
      * and sorts the beacons by strength.
-     * This function is atomic (it can only be run once at a time)
+     * This function is atomic (it can only be run once at a time).
+     * It will run ~4 times/2 minutes for API >= 28 and every half second otherwise.
      * @param context The context
      * @param intent The intent
      */
-    // TODO Update location as well
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
-        Log.d("BeaconReceiver", "ONRECEIVE**********\n\n\n");
         AppStatus ctx = (AppStatus) context.getApplicationContext();
         Map currentMap = ctx.getCurrentMap();
-
-
-        // this is a Wifi scan result
-        // this will be ran every half second for < 28 and ~4 times/2 minutes for >= 28
         lastResults = wifiManager.getScanResults();
+
+        Log.d("BeaconReceiver", "Received " + lastResults.size() + " signals");
+
+        if(currentMap == null){
+            // pull from the results to get the right map.
+            int building = getCurrentMapId();
+
+            new Thread() {
+                @Override
+                public void run(){
+                    ctx.pullMap(building);
+                    processResults(ctx);
+                }
+            }.start();
+        }
+        else
+            processResults(ctx);
+    }
+
+    private void processResults(AppStatus ctx){
         List<Beacon> current = new ArrayList<>();
 
-        Log.d("BeaconReceiver", "Received " + lastResults.size() + " aps");
+        Map currentMap = ctx.getCurrentMap();
 
-        // let's check the results
-        for (ScanResult i : lastResults) {
-            String[] parts = i.SSID.split("_");
+        if(lastResults == null || currentMap == null)
+            return;
 
-            // likely to be one of ours
-            if (parts[0].equals("PF")) {
-                Log.d("BeaconReceiver", "Found " + i.SSID);
-                int buildingId;
-                int nodeId;
-                try {
-                    buildingId = Integer.parseInt(parts[1]);
-                    nodeId = Integer.parseInt(parts[2]);
-                }
-                // maybe not
-                catch (Exception e) {
-                    continue;
-                }
+        for(ScanResult i : lastResults) {
+            // not ours, continue
+            if(Beacon.parseSsid(i.SSID).length == 0)
+                continue;
 
-                // new map found
-                if (currentMap == null) {
-                    ctx.pullMap(buildingId);
-                    currentMap = ctx.getCurrentMap();
-                }
+            Log.d("BeaconReceiver", "Discovered access point " + i.SSID);
 
-                Beacon b = findBeacon(i.SSID);
-                // we don't have the beacon listed
-                if (b == null) {
-                    b = currentMap.getBeacon(i.SSID);
-                    if (b == null)
-                        b = new Beacon(i.SSID, Point.getDefault());
-                }
-                // we do but we don't know the location
-                else if (b.getLocation().equals(Point.getDefault())) {
-                    Beacon fromMap = currentMap.getBeacon(i.SSID);
-                    if (fromMap != null) // found the location
-                        b = fromMap;
-                }
-
-                // update our values from the pull
-                b.setFrequency(i.frequency);
-                b.setLevel(i.level);
-                current.add(b); // make a note of our beacon.
+            Beacon b = findBeacon(i.SSID);
+            if(b == null){ // if we couldn't find it in our beacon set, pull it from the map
+                b = currentMap.getBeacon(i.SSID);
+                if(b == null) // if it's not in the map, make a new object.
+                    b = new Beacon(i.SSID, Point.getDefault());
             }
+            // we have the beacon but don't know the location.
+            else if(b.getLocation().equals(Point.getDefault())){
+                Beacon fromMap = currentMap.getBeacon(i.SSID);
+                if(fromMap != null) // we found the beacon in our map
+                    b = fromMap;
+            }
+            // otherwise, we have the beacon and it shows the correct location
+
+            // update our values from the pull
+            b.setFrequency(i.frequency);
+            b.setLevel(i.level);
+            current.add(b);
         }
 
-        beacons = current; // update the collection.
+        Collections.sort(current);
+        beacons = current; // update our collection [probably not be thread safe]
 
-
-        // no beacons..
-        if (beacons.size() == 0) {
+        // no beacons.. don't show a map.
+        if(beacons.size() == 0){
             ctx.setCurrentMap(null);
             return;
         }
@@ -144,19 +144,46 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         // if we are in a different map, pull it and
         // update the beacon references.
         int currentMapId = getCurrentMapId();
-        if (!currentMap.getId().equals(currentMapId))
-            changeMap(currentMapId, ctx);
+        if(!currentMap.getId().equals(currentMapId)){
+            new Thread(){
+                @Override
+                public void run(){
+                    ctx.pullMap(currentMapId);
+                    changeMap(ctx);
+                    setLocation(ctx);
+                }
+            }.start();
+        }
+        else
+            // set the current location of the user based on the closest nodes.
+            setLocation(ctx);
 
-        // trigger RTT loop
+        // trigger RTT loop for >= 28 if not already done
         if (Build.VERSION.SDK_INT >= 28 && t == null){
             t = new RttThread();
             t.start();
         }
+    }
 
+    /**
+     * @return The top three closest beacons on the same floor based on signal strength.
+     */
+    public List<Beacon> closestBeacons(){
+        List<Beacon> ret = new ArrayList<>();
+        // this is always going to be sorted!
+        for(int i = 0; i < beacons.size(); i++) {
+            if (ret.size() == 3)
+                break;
+            // make sure they are all on the same floor.
+            if(ret.size() > 1 &&
+                    ret.get(0).getLocation().getY() != beacons.get(i).getLocation().getY())
+                continue;
+            ret.add(beacons.get(i));
+        }
+        return ret;
+    }
 
-        // sort by strength
-        Collections.sort(beacons);
-
+    private void setLocation(AppStatus ctx){
         List<Beacon> closest = closestBeacons();
 
         int size = closest.size();
@@ -168,21 +195,6 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         else
             loc = Navigation.triangulate(closest.get(0), closest.get(1), closest.get(2));
         ctx.setCurrentLocation(loc);
-        goAsync();
-    }
-
-    /**
-     * @return The top three closest beacons based on signal strength.
-     */
-    public List<Beacon> closestBeacons(){
-        List<Beacon> ret = new ArrayList<>();
-        // this is always going to be sorted!
-        for(int i = 0; i < beacons.size(); i++) {
-            if (ret.size() == 3)
-                break;
-            ret.add(beacons.get(i));
-        }
-        return ret;
     }
 
     private Beacon findBeacon(String ssid){
@@ -192,28 +204,30 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return null;
     }
 
-    @SuppressWarnings("ConstantConditions")
     /* Get the beacon consensus on the current map.
      * If there are multiple maps, the one with the largest number of beacons will be selected. */
     private int getCurrentMapId(){
-        if(beacons.size() == 0)
+        if(lastResults == null || lastResults.size() == 0)
             return -1;
 
         // each node gets a vote
-        HashMap<Integer, Integer> votes = new HashMap<>();
+        SparseIntArray votes = new SparseIntArray();
 
-        for(Beacon b : beacons){
-            int numVotes = 0;
+        for(ScanResult r : lastResults){
+            int[] ids = Beacon.parseSsid(r.SSID);
 
-            if(votes.containsKey(b.getBuildingIndex())){
-                numVotes = votes.get(b.getBuildingIndex());
-            }
-            votes.put(b.getBuildingIndex(), numVotes + 1);
+            if(ids.length == 0)
+                continue;
+            int building = ids[0];
+
+            int numVotes = votes.get(building, 0);
+            votes.put(building, numVotes + 1);
         }
 
         int max = -1;
         int max_key = -1;
-        for(int key : votes.keySet()){
+        for(int k = 0; k < votes.size(); k++){
+            int key = votes.keyAt(k);
             int i = votes.get(key);
             if(i > max){
                 max = i;
@@ -223,8 +237,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return max_key;
     }
 
-    private void changeMap(int mapId, AppStatus app){
-        app.pullMap(mapId);
+    private void changeMap(AppStatus app){
 
         for(Iterator<Beacon> i = app.getCurrentMap().getBeacons(); i.hasNext(); ){
             Beacon b = i.next();
@@ -252,7 +265,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     class BeaconRangingResultCallback extends RangingResultCallback {
         @Override
         public void onRangingResults(List<RangingResult> results){
-            Log.d("BeaconRangingResult", "Got some results");
+            Log.d("BeaconRangingResult", "Ranging request received.");
             for(RangingResult r : results){
                 if(r.getStatus() != RangingResult.STATUS_SUCCESS)
                     continue;
@@ -286,12 +299,12 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
     class ScanThread extends Thread{
         private final int delay;
 
-        public ScanThread(){
+        ScanThread(){
             super();
             // if we are above 28 we will rely more on the RTT api.
             if(Build.VERSION.SDK_INT >= 28)
                 delay = 32000;
-            else delay = 500;
+            else delay = 1000;
         }
         public void run(){
             while(true){
@@ -311,7 +324,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         public void run(){
             while(true){
                 try{
-                    sleep(500);
+                    sleep(1000);
                 }
                 catch(InterruptedException ignored) {}
 
@@ -323,7 +336,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
                     rttManager.startRanging(r, AsyncTask.THREAD_POOL_EXECUTOR, new BeaconRangingResultCallback());
                 }
                 catch(SecurityException e){
-                    Log.d("BeaconReceiver", "Ranging permission denied..");
+                    Log.e("BeaconReceiver", "Ranging permission denied..");
                 }
             }
         }

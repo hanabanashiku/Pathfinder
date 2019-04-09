@@ -76,7 +76,7 @@ public class AppStatus extends Application {
             setCurrentMap(map);
             setCurrentLocation(Point.getDefault());
         } catch (IOException e) {
-            Log.d("API", e.getMessage(), e);
+            Log.e("API", e.getMessage(), e);
             setCurrentMap(null);
         }
     }
