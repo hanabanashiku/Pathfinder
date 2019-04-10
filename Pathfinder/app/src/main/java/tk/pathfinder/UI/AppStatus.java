@@ -9,7 +9,6 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import tk.pathfinder.Map.*;
 import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Networking.BeaconReceiver;
@@ -34,6 +33,7 @@ public class AppStatus extends Application {
     private MapSearchActivity mapSearch;
     private ViewMapActivity viewMap;
     private Activity current;
+    private MapReceiver mapReceiver;
 
     public HomeActivity getHomeActivity() { return home; }
     public void setHomeActivity(HomeActivity value) { home = value;}
@@ -63,12 +63,11 @@ public class AppStatus extends Application {
      * @param map The map to set.
      */
     public void setCurrentMap(Map map){
+        Log.d("AppStatus", "Changing map.");
         currentMap = map;
 
         // tell the main activity that the map has changed!
-        LocalBroadcastManager.getInstance(this).sendBroadcast(
-                new Intent("tk.pathfinder.MAP_CHANGED")
-        );
+        sendBroadcast(new Intent("tk.pathfinder.MAP_CHANGED"));
     }
 
     /**
@@ -109,6 +108,11 @@ public class AppStatus extends Application {
         return currentMap.getId();
     }
 
+    /**
+     * @return The map receiver.
+     */
+    public MapReceiver getMapReceiver() { return mapReceiver; }
+
     public AppStatus() {}
     
     @Override
@@ -121,7 +125,7 @@ public class AppStatus extends Application {
         IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(beaconReceiver, bf);
 
-        MapReceiver mapReceiver = new MapReceiver();
+        mapReceiver = new MapReceiver();
         IntentFilter mf = new IntentFilter("tk.pathfinder.MAP_CHANGED");
         registerReceiver(mapReceiver, mf);
 

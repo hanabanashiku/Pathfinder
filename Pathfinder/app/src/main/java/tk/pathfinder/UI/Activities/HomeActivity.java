@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
 import tk.pathfinder.UI.Fragments.MapFragment;
-import tk.pathfinder.UI.MapReceiver;
 import tk.pathfinder.UI.Fragments.NoMapFragment;
 
 import android.content.Intent;
@@ -19,6 +18,7 @@ public class HomeActivity extends AppCompatActivity
         implements MapFragment.MapFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +29,7 @@ public class HomeActivity extends AppCompatActivity
 
         fragmentManager = getSupportFragmentManager();
 
-        MapReceiver mr = new MapReceiver();
-        status.setMapReceiver(mr);
-        // make sure it's called at least once
-        mr.onReceive(this, new Intent());
+        status.getMapReceiver().onReceive(this, new Intent());
     }
 
     private void switchFragment(Fragment fragment){

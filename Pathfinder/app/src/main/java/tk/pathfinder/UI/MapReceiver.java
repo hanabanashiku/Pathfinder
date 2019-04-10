@@ -17,7 +17,6 @@ public class MapReceiver extends BroadcastReceiver {
     // manage the activities to ensure we are on the correct one when the map is changed.
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("MapReceiver", "Changing maps!");
         AppStatus status = (AppStatus)context.getApplicationContext();
         if(status.getHomeActivity() == null)
             return;

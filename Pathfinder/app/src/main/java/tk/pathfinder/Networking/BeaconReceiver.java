@@ -94,21 +94,25 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         if(currentMap == null){
             // pull from the results to get the right map.
             int building = getCurrentMapId();
+            if(building == -1){
+                ctx.setCurrentLocation(Point.getDefault());
+                return;
+            }
 
             new Thread() {
                 @Override
                 public void run(){
                     ctx.pullMap(building);
-                    processResults(ctx);
+                    processResults(ctx, building);
                 }
             }.start();
         }
         else
-            processResults(ctx);
+            processResults(ctx, getCurrentMapId());
     }
 
     // process the last received set of results from the WifiManager.
-    private void processResults(AppStatus ctx){
+    private void processResults(AppStatus ctx, int building){
         List<Beacon> current = new ArrayList<>();
 
         Map currentMap = ctx.getCurrentMap();
@@ -153,12 +157,11 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
 
         // if we are in a different map, pull it and
         // update the beacon references.
-        int currentMapId = getCurrentMapId();
-        if(!currentMap.getId().equals(currentMapId)){
+        if(!currentMap.getId().equals(building)){
             new Thread(){
                 @Override
                 public void run(){
-                    ctx.pullMap(currentMapId);
+                    ctx.pullMap(building);
                     changeMap(ctx);
                     setLocation(ctx);
                 }
@@ -323,7 +326,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             // if we are above 28 we will rely more on the RTT api.
             if(Build.VERSION.SDK_INT >= 28)
                 delay = 32000;
-            else delay = 1000;
+            else delay = 2000;
         }
         public void run(){
             while(true){
@@ -346,7 +349,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         public void run(){
             while(true){
                 try{
-                    sleep(1000);
+                    sleep(2000);
                 }
                 catch(InterruptedException ignored) {}
 

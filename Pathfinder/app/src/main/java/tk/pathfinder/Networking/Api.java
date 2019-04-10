@@ -1,5 +1,7 @@
 package tk.pathfinder.Networking;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ public class Api {
      * @throws IOException If there was an error returned by the HTTP connection or the endpoint.
      */
     public static Map getMap(Integer id) throws IOException{
+        Log.d("bug", id.toString());
         HttpsURLConnection con;
         try{
             URL url = new URL("https://path-finder.tk/api/maps?id=" + id.toString());
