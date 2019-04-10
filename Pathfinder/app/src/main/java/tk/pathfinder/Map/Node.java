@@ -1,6 +1,5 @@
 package tk.pathfinder.Map;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /***
@@ -12,8 +11,6 @@ import java.util.Objects;
 public abstract class Node {
     protected int id;
     protected Point point;
-    private boolean visited;
-    private ArrayList<Edge> edges = new ArrayList<Edge> ();
 
     /***
      * @return the location of the node in 3D space
@@ -22,6 +19,9 @@ public abstract class Node {
         return point;
     }
 
+    /**
+     * @return The database index of the node.
+     */
     public int getId() { return id; }
 
     /***
@@ -39,18 +39,6 @@ public abstract class Node {
         point = value;
     }
 
-    public boolean isVisited(){
-        return visited;
-    }
-    
-    public void setVisited(boolean visited){
-        this.visited = visited;
-    }
-    
-    public ArrayList<Edge> getEdges(){
-        return edges;
-    }
-
     /***
      * @return true if the node represents an intersection between two edges.
      */
@@ -61,13 +49,11 @@ public abstract class Node {
         if (this == o) return true;
         if (!(o instanceof Node)) return false;
         Node node = (Node) o;
-        return visited == node.visited &&
-                Objects.equals(point, node.point) &&
-                Objects.equals(edges, node.edges);
+        return Objects.equals(point, node.point);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(point, visited, edges);
+        return Objects.hash(point);
     }
 }

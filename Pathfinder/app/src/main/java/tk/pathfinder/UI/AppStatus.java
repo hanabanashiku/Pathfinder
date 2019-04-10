@@ -28,14 +28,12 @@ import tk.pathfinder.UI.Activities.ViewMapActivity;
 public class AppStatus extends Application {
     private Map currentMap;
     private Point location;
-    private BeaconReceiver receiver;
     private HomeActivity home;
     private NavigationActivity navigation;
     private NavigationSearchActivity navSearch;
     private MapSearchActivity mapSearch;
     private ViewMapActivity viewMap;
     private Activity current;
-    private MapReceiver mapReceiver;
 
     public HomeActivity getHomeActivity() { return home; }
     public void setHomeActivity(HomeActivity value) { home = value;}
@@ -60,6 +58,10 @@ public class AppStatus extends Application {
         return currentMap;
     }
 
+    /**
+     * Set the current map and send a tk.pathfinder.MAP_CHANGED action.
+     * @param map The map to set.
+     */
     public void setCurrentMap(Map map){
         currentMap = map;
 
@@ -69,6 +71,10 @@ public class AppStatus extends Application {
         );
     }
 
+    /**
+     * Pull a map from the database and set it to the current map.
+     * @param map_id The index of the map to pull.
+     */
     public void pullMap(int map_id){
         try {
             Map map = Api.getMap(map_id);
@@ -80,10 +86,16 @@ public class AppStatus extends Application {
         }
     }
 
+    /**
+     * @return The last calculated user location on the map.
+     */
     public Point getCurrentLocation(){
         return location;
     }
 
+    /**
+     * @param p The user's current location on the map.
+     */
     public void setCurrentLocation(Point p){
         location = p;
     }
@@ -97,16 +109,6 @@ public class AppStatus extends Application {
         return currentMap.getId();
     }
 
-    public MapReceiver getMapReceiver() {
-        return mapReceiver;
-    }
-
-    public void setMapReceiver(MapReceiver value){
-        mapReceiver = value;
-        IntentFilter mf = new IntentFilter("tk.pathfinder.MAP_CHANGED");
-        registerReceiver(value, mf);
-    }
-
     public AppStatus() {}
     
     @Override
@@ -114,12 +116,16 @@ public class AppStatus extends Application {
         super.onCreate();
         location = Point.getDefault();
 
-        // register our receiver
-        receiver = new BeaconReceiver(this);
+        // register our receivers
+        BeaconReceiver beaconReceiver = new BeaconReceiver(this);
         IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(receiver, bf);
+        registerReceiver(beaconReceiver, bf);
+
+        MapReceiver mapReceiver = new MapReceiver();
+        IntentFilter mf = new IntentFilter("tk.pathfinder.MAP_CHANGED");
+        registerReceiver(mapReceiver, mf);
 
         // keep the radios awake
-        receiver.getWifiLock().acquire();
+        beaconReceiver.getWifiLock().acquire();
     }
 }

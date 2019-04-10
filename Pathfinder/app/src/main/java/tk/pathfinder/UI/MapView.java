@@ -1,7 +1,6 @@
 package tk.pathfinder.UI;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.*;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -11,10 +10,9 @@ import java.util.Iterator;
 
 import tk.pathfinder.Map.*;
 import tk.pathfinder.Map.Point;
-import tk.pathfinder.R;
 
 /**
- * TODO: document your custom view class.
+ * A widget for viewing a map.
  */
 public class MapView extends View {
 
@@ -145,10 +143,6 @@ public class MapView extends View {
     public void setCurrentFloor(int floor){
         currentFloor = floor;
         invalidate(); // redraw the map
-    }
-
-    public int getCurrentFloor(){
-        return currentFloor;
     }
 
     private Point translatePoint(Point p){

@@ -2,10 +2,8 @@ package tk.pathfinder.Map;
 
 import tk.pathfinder.Networking.Beacon;
 import tk.pathfinder.exceptions.NoValidPathException;
-import java.lang.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -149,10 +147,12 @@ public class Navigation {
         return res;
     }
 
+    // our heuristic value
     private static double h(Node node, Node goal){
         return node.getPoint().distance(goal.getPoint());
     }
 
+    // assemble the path generated from the A* algorithm
     private static Path getPathResult(Map map, HashMap<Node, Node> cameFrom, Node current){
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
@@ -223,5 +223,4 @@ public class Navigation {
 
         return new Point(x, y, z).multiply(sc);
     }
-
 }

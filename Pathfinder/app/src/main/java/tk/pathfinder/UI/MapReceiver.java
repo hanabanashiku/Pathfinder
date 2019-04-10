@@ -9,6 +9,9 @@ import tk.pathfinder.Map.Map;
 import tk.pathfinder.UI.Activities.HomeActivity;
 import tk.pathfinder.UI.Activities.NavigationSearchActivity;
 
+/**
+ * A broadcast receiver for updating the app status when a new map is discovered.
+ */
 public class MapReceiver extends BroadcastReceiver {
 
     // manage the activities to ensure we are on the correct one when the map is changed.

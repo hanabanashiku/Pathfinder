@@ -2,8 +2,10 @@ package tk.pathfinder.UI;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
+/**
+ * An Android alert dialog with an OK button.
+ */
 // Should not take 29 lines to do this...
 public class Alert {
     private AlertDialog dialog;
@@ -13,12 +15,7 @@ public class Alert {
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         dialog = bldr.create();
     }
 

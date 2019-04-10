@@ -21,6 +21,12 @@ import tk.pathfinder.Map.*;
  */
 public class Api {
 
+    /**
+     * Get a map from the database
+     * @param id The map id.
+     * @return The map.
+     * @throws IOException If there was an error returned by the HTTP connection or the endpoint.
+     */
     public static Map getMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
@@ -53,14 +59,13 @@ public class Api {
         }
 
         Integer index;
-        String name, addr;
+        String name;
         List<Node> nodes = new ArrayList<>();
         List<Edge> edges = new ArrayList<>();
         List<Beacon> beacons = new ArrayList<>();
         try{
             index = json.getInt("id");
             name = json.getString("name");
-            addr = json.getString("address");
 
             // parse map nodes
             JSONArray nArr = json.getJSONArray("nodes");
@@ -126,40 +131,7 @@ public class Api {
         eArr = edges.toArray(eArr);
         bArr = beacons.toArray(bArr);
 
-        return new Map(index, name, addr, eArr, bArr);
-    }
-
-    /**
-     * Get a list of maps from the database.
-     * @return A JSONObject containing the map data.
-     */
-    public static JSONObject GetMaps() throws IOException {
-        HttpsURLConnection con;
-        try{
-            URL url = new URL("https://path-finder.tk/api/maps?list");
-            con = (HttpsURLConnection)url.openConnection();
-        }
-        catch(MalformedURLException e){
-            throw new RuntimeException("Invalid URL encountered");
-        }
-        String response = getReader(con);
-        JSONObject json;
-        try{
-            json = new JSONObject(response);
-        }
-        catch(JSONException e){
-            throw new IOException("Could not parse the JSON data");
-        }
-
-        if(con.getResponseCode() != 200)
-            try{
-                throw new IOException("Error getting maps: " + json.getString("details"));
-            }
-            catch(JSONException e){
-                throw new IOException("Error getting maps; additionally, a JSON error was encountered while parsing the error.");
-            }
-
-        return json;
+        return new Map(index, name, eArr, bArr);
     }
 
 
@@ -224,6 +196,7 @@ public class Api {
         return r.readLine();
     }
 
+    // find a node matching a specific id
     private static Node findNode(List<Node> nodes, int id){
         for(Node n : nodes)
             if(n.getId() == id)
@@ -231,6 +204,9 @@ public class Api {
         return null;
     }
 
+    /**
+     * Represents a result from trying to find a map using a set of keywords.
+     */
     public static class MapQueryResult{
         private final int id;
         private final String name;
@@ -238,6 +214,10 @@ public class Api {
         public int getId() { return id; }
         public String getName() { return name;}
 
+        /**
+         * @param id The map index.
+         * @param name The map name.
+         */
         MapQueryResult(int id, String name){
             this.id = id;
             this.name = name;

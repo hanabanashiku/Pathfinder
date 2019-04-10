@@ -1,21 +1,28 @@
 package tk.pathfinder.Networking;
 
-import android.os.Build;
-
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 import tk.pathfinder.Map.Point;
 
+/**
+ * Represents a positioning beacon relating to a particular building map.
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
+ */
 public class Beacon implements Comparable<Beacon> {
     private String ssid;
     private int index;
     private int building_index;
     private int strength;
-    private int frequency;
     private Point location;
 
-    public Beacon(String ssid, Point p) throws IllegalArgumentException {
+    /**
+     * @param ssid The beacon's SSID identifier.
+     * @param p The location of the beacon on the map.
+     * @throws IllegalArgumentException if the SSID is invalid.
+     */
+    Beacon(String ssid, Point p) throws IllegalArgumentException {
         this.ssid = ssid;
         this.location = p;
         this.strength = -128; // minimum strength for now.
@@ -27,34 +34,47 @@ public class Beacon implements Comparable<Beacon> {
         index = ids[1];
     }
 
+    /**
+     * @return The Database index of the beacon.
+     */
     public int getIndex(){
         return index;
     }
 
+    /**
+     * @return The index matching the building that the beacon belongs to.
+     */
     public int getBuildingIndex(){
         return building_index;
     }
 
+    /**
+     * @return The beacon's hotspot SSID.
+     */
     public String getSSID(){
         return ssid;
     }
 
+    /**
+     * @return The signal strength of the beacon, in dBs over the interval [-127, 128].
+     */
     public int getLevel(){
         return strength;
     }
 
-    public void setLevel(int level){
-        if(level < -128 || level > 128)
+    /**
+     * @param level The decibel level of the signal beacon's signal strength the last time it was checked.
+     * @throws IllegalArgumentException if the value is outside of the interval [-127, 128].
+     */
+    void setLevel(int level){
+        if(level < -127 || level > 128)
             throw new IllegalArgumentException();
         strength = level;
     }
 
-    public int getFrequency() { return frequency; }
-
-    public void setFrequency(int value){
-        frequency = value;
-    }
-
+    /**
+     * @return The location of the beacon on the map.
+     */
     public Point getLocation(){
         return location;
     }
@@ -93,12 +113,14 @@ public class Beacon implements Comparable<Beacon> {
                 Objects.equals(ssid, beacon.ssid);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
         return Objects.hash(ssid, index, building_index);
     }
 
+    /**
+     * Compare the two beacons based on signal strength.
+     */
     @Override
     public int compareTo(Beacon o) {
         return Integer.compare(getLevel(), o.getLevel());

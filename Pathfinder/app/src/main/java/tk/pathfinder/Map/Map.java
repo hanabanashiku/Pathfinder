@@ -20,19 +20,21 @@ public class Map {
     private ArrayList<Edge> edges;
     private ArrayList<Beacon> beacons;
 
-    //private Bitmap image;
     private Integer id;
     private String name;
-    private String address;
 
-    public Map(Integer id, String name, String address, Edge[] edges, Beacon[] beacons){
+    /**
+     * @param id The database index of the map.
+     * @param name The name of the map.
+     * @param edges The set of edges.
+     * @param beacons The set of beacons.
+     */
+    public Map(Integer id, String name, Edge[] edges, Beacon[] beacons){
         if(edges == null)
             throw new NullPointerException("edges");
 
         this.id = id;
         this.name = name;
-        this.address = address;
-        //this.image = image;
 
         nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
@@ -54,7 +56,7 @@ public class Map {
     /**
      * @return an iterator pointing to all map nodes.
      */
-    public Iterator<Node> getNodes(){
+    Iterator<Node> getNodes(){
         return nodes.iterator();
     }
 
@@ -95,7 +97,11 @@ public class Map {
         return elevators.iterator();
     }
 
-    public Iterator<FloorConnector> getFloorConnectors(FloorConnector.FloorConnectorTypes type){
+    /**
+     * @param type A type of floor connector
+     * @return An iterator pointing to all floor connectors of the given type.
+     */
+    Iterator<FloorConnector> getFloorConnectors(FloorConnector.FloorConnectorTypes type){
         List<FloorConnector> connectors = new ArrayList<>();
         for(Iterator<Node> i = getNodes(); i.hasNext(); ){
             Node n = i.next();
@@ -109,7 +115,7 @@ public class Map {
      * @param n The current edge
      * @return an iterator pointing to all edges connected to the current, sorted by weight.
      */
-    public Iterator<Edge> getNextEdges(Node n){
+    Iterator<Edge> getNextEdges(Node n){
         final ArrayList<Edge> resultEdges = new ArrayList<>();
 
         for(Edge e : edges)
@@ -148,43 +154,11 @@ public class Map {
      * @param b A node.
      * @return The edge, or null if it does not exist.
      */
-    public Edge getEdge(Node a, Node b){
+    Edge getEdge(Node a, Node b){
         for(Edge e : edges)
             if(e.contains(a) && e.contains(b))
                 return e;
         return null;
-    }
-
-    /***
-     * Add an edge to the map, and any associated nodes.
-     * @param e The edge ot add.
-     */
-    public void addEdge(Edge e){
-        if(e == null || edges.contains(e))
-            return;
-
-        edges.add(e);
-        if(nodes.contains(e.getNode1()))
-            nodes.add(e.getNode1());
-        if(nodes.contains(e.getNode2()))
-            nodes.add(e.getNode2());
-    }
-
-    /***
-     * Remove an edge from the map.
-     * @param e The edge to remove.
-     * @return true on success.
-     */
-    public boolean removeEdge(Edge e){
-        if(e == null || !edges.contains(e))
-            return false;
-
-        edges.remove(e);
-        if(!getNextEdges(e.getNode1()).hasNext())
-            nodes.remove(e.getNode1());
-        if(!getNextEdges(e.getNode2()).hasNext())
-            nodes.remove(e.getNode2());
-        return true;
     }
 
     /***
@@ -215,6 +189,11 @@ public class Map {
         return n;
     }
 
+    /**
+     * Search for a destination by name.
+     * @param keywords The search terms to use.
+     * @return A list of destinations matching the given keywords.
+     */
     public List<Room> findDestination(String keywords){
         List<Room> ret = new ArrayList<>();
         String[] parts = keywords.split(" ");
@@ -231,7 +210,8 @@ public class Map {
         return ret;
     }
 
-    public FloorConnector getClosestFloorConnector(Point p) throws IllegalStateException{
+    // get the closest floor connector to a point.
+    private FloorConnector getClosestFloorConnector(Point p) throws IllegalStateException{
         FloorConnector result = null;
         double min = Double.POSITIVE_INFINITY; // minimum distance
 
@@ -272,22 +252,24 @@ public class Map {
             return (int)a.distance(b.getPoint());
     }
 
+    /**
+     * @return The name of the map.
+     */
     public String getName() {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    /*public Bitmap getImage() {
-        return image;
-    }*/
-
+    /**
+     * @return The database index of the map.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * @param ssid A beacon SSID.
+     * @return The beacon matching the given SSID, or null.
+     */
     public Beacon getBeacon(String ssid){
         for(Beacon i : beacons)
             if(i.getSSID().equals(ssid))

@@ -26,13 +26,19 @@ import tk.pathfinder.Map.Navigation;
 import tk.pathfinder.Map.Point;
 import tk.pathfinder.UI.AppStatus;
 
+/**
+ * A Broadcast receiver that looks for Pathfinder beacons and updates the app state accordingly.
+ * @author Michael MacLean
+ * @version 1.0
+ * @since 1.0
+ */
 public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon> {
     private List<Beacon> beacons;
     private WifiManager wifiManager;
     private WifiRttManager rttManager;
     private WifiManager.WifiLock wifiLock;
     private List<ScanResult> lastResults;
-    Thread t = null;
+    Thread t = null; // the rtt thread
 
     public BeaconReceiver(Context app) {
         beacons = new ArrayList<>();
@@ -60,6 +66,9 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         rttManager = (WifiRttManager)app.getSystemService(Context.WIFI_RTT_RANGING_SERVICE);
     }
 
+    /**
+     * @return The active wifi lock.
+     */
     public WifiManager.WifiLock getWifiLock() {
         return wifiLock;
     }
@@ -98,6 +107,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             processResults(ctx);
     }
 
+    // process the last received set of results from the WifiManager.
     private void processResults(AppStatus ctx){
         List<Beacon> current = new ArrayList<>();
 
@@ -128,7 +138,6 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             // otherwise, we have the beacon and it shows the correct location
 
             // update our values from the pull
-            b.setFrequency(i.frequency);
             b.setLevel(i.level);
             current.add(b);
         }
@@ -184,6 +193,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return ret;
     }
 
+    // set the location of the user wrt to the current map.
     private void setLocation(AppStatus ctx){
         List<Beacon> closest = closestBeacons();
 
@@ -198,6 +208,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         ctx.setCurrentLocation(loc);
     }
 
+    // find a beacon with a given ssid
     private Beacon findBeacon(String ssid){
         for(Beacon b : beacons)
             if(b.getSSID().equals(ssid))
@@ -238,6 +249,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return max_key;
     }
 
+    // change the beacon references to mach the current app-wide map.
     private void changeMap(AppStatus app){
 
         for(Iterator<Beacon> i = app.getCurrentMap().getBeacons(); i.hasNext(); ){
@@ -247,7 +259,6 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             if(fromList == null)
                 continue;
             int index = beacons.indexOf(fromList);
-            b.setFrequency(fromList.getFrequency());
             b.setLevel(fromList.getLevel());
             beacons.set(index, b);
         }
@@ -262,6 +273,9 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         return beacons.iterator();
     }
 
+    /**
+     * A callback class for managing the RTT ranging results and updating the beacon signal strengths accordingly.
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     class BeaconRangingResultCallback extends RangingResultCallback {
         @Override
@@ -297,6 +311,10 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         }
     }
 
+    /**
+     * A thread that periodically initiates a wifi scan.
+     * The number of times per minute varies based on whether the user is on or above API 28.
+     */
     class ScanThread extends Thread{
         private final int delay;
 
@@ -320,6 +338,9 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         }
     }
 
+    /**
+     * A thread that periodically sends RTT ranging requests to the app.
+     */
     @RequiresApi(api = Build.VERSION_CODES.P)
     class RttThread extends Thread {
         public void run(){

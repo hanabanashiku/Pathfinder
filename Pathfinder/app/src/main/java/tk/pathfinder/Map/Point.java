@@ -14,6 +14,9 @@ public final class Point {
 
     private static Point nullPoint = new Point(-1, -1, -1);
 
+    /**
+     * @return The default point, defined by (-1, -1, -1).
+     */
     public static Point getDefault() { return nullPoint; }
 
 
@@ -28,57 +31,43 @@ public final class Point {
         this.z = z;
     }
 
+    /**
+     * Construct the point (0, 0, 0)
+     */
     public Point(){
         this.x = 0;
         this.y = 0;
         this.z = 0;
     }
 
-    /***
-     * @param y The point to add
-     * @return A new point this + y
-     */
-    public Point add(Point y){
-        return new Point(this.x + y.x, this.y + y.y, this.z + y.z);
-    }
-
     public int getX() {
         return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getZ() {
         return z;
     }
 
-    public void setZ(int z) {
-        this.z = z;
-    }
-
     /***
-     * Get the Euclidian distance between two points
+     * Get the Euclidean distance between two points
      * @param p The first point
      * @param q The second point
-     * @return The distance between the points, or -1 if the points are on different elevations.
+     * @return The distance between the points, ignoring elevation.
      */
-    public static double distance(Point p, Point q){
-        if(p.getY() != q.getY())
-            return -1;
+    private static double distance(Point p, Point q){
         return Math.abs(Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getZ() - q.getZ(), 2)));
     }
 
-    public Point multiply(double d){
+    /**
+     * Multiply the vector by a constant.
+     * @param d The factor to multiply by.
+     * @return The new point.
+     */
+    Point multiply(double d){
         int x = (int)(this.x * d);
         int z = (int)(this.z * d);
 
@@ -86,11 +75,11 @@ public final class Point {
     }
 
     /***
-     * Get the Euclidian distance between two points
+     * Get the Euclidean distance between two points
      * @param p The second point
      * @return The distance between the points, or -1 if the points are on different elevations.
      */
-    public double distance(Point p){
+    double distance(Point p){
         return distance(this, p);
     }
 
