@@ -23,7 +23,6 @@
         </receiver>
         <activity
             android:name=".UI.Activities.ViewMapActivity"
-            android:label="@string/title_activity_view_map"
             android:parentActivityName=".UI.Activities.MapSearchActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -32,7 +31,6 @@
         </activity>
         <activity
             android:name=".UI.Activities.MapSearchActivity"
-            android:label="@string/title_activity_map_search"
             android:parentActivityName=".UI.Activities.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
@@ -41,11 +39,9 @@
         </activity>
         <activity
             android:name=".UI.Activities.NavigationActivity"
-            android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.Activities.NavigationSearchActivity"
-            android:label="@string/title_activity_navigation_search"
             android:parentActivityName=".UI.Activities.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -53,15 +49,15 @@
                 android:value="tk.pathfinder.UI.Activities.HomeActivity" />
         </activity>
         <activity
-            android:name=".UI.Activities.HomeActivity"
-            android:label="HomeActivity">
+            android:name=".UI.Activities.HomeActivity">
         </activity>
         <receiver android:name=".UI.MapReceiver">
             <intent-filter>
                 <action android:name="tk.pathfinder.MAP_CHANGED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".UI.Activities.SplashActivity">
+        <activity android:name=".UI.Activities.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

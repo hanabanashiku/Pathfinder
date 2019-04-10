@@ -33,9 +33,8 @@
             android:layout_weight="1"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/destination_search_box"
-            android:inputType="textNoSuggestions|textPersonName|text"
-            android:text="@string/search_for_a_map" />
+            android:hint="@string/search_for_a_map"
+            android:inputType="textNoSuggestions|textPersonName|text" />
 
         <ImageButton
             android:id="@+id/map_search_submit"

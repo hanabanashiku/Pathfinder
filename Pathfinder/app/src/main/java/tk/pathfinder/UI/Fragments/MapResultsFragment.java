@@ -68,6 +68,12 @@ public class MapResultsFragment extends Fragment {
         t.commit();
     }
 
+    private void noResults(){
+        FragmentTransaction t = getFragmentManager().beginTransaction();
+        t.add(R.id.map_search_results_content, new NoResultsFragment());
+        t.commit();
+    }
+
     // static to avoid memory leaks
     // takes (string)keywords, (AppStatus)context, (FragmentManager)mgr as arguments
     private static class MapSearchTask extends AsyncTask<Object, String, Api.MapQueryResult[]>{
@@ -94,7 +100,10 @@ public class MapResultsFragment extends Fragment {
             super.onPostExecute(result);
             if(result == null)
                 return;
-            f.addResults(result);
+            if(result.length == 0)
+                f.noResults();
+            else
+                f.addResults(result);
             f.d.dismiss();
         }
     }

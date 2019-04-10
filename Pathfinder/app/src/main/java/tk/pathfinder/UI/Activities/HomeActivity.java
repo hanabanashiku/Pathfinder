@@ -79,6 +79,8 @@ public class HomeActivity extends AppCompatActivity
 
     public void onClick(View view) {
         EditText text = findViewById(R.id.noMap_search);
-        onSearch(text.getText().toString());
+        String keywords = text.getText().toString();
+        if(!keywords.isEmpty())
+            onSearch(text.getText().toString());
     }
 }

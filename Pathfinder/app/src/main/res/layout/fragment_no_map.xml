@@ -35,9 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/building_search_box_hint"
-        android:inputType="textNoSuggestions"
-        android:text="@string/search" />
+        android:hint="@string/search"
+        android:inputType="textNoSuggestions" />
 
     <Space
         android:layout_width="match_parent"

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -67,14 +66,9 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
         }
 
         if(results == null || results.size() == 0){
-            TextView text = new TextView(getContext());
-            text.setText(getString(R.string.dest_not_found));
-            text.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            layout.addView(text);
+            t.add(layout.getId(), new NoResultsFragment());
         }
-        else
-            t.commit();
-
+        t.commit();
         return v;
     }
 
