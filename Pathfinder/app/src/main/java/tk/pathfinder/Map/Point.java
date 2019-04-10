@@ -58,7 +58,7 @@ public final class Point {
      * @param q The second point
      * @return The distance between the points, ignoring elevation.
      */
-    private static double distance(Point p, Point q){
+    public static double distance(Point p, Point q){
         return Math.abs(Math.sqrt(Math.pow(p.getX() - q.getX(), 2) + Math.pow(p.getZ() - q.getZ(), 2)));
     }
 

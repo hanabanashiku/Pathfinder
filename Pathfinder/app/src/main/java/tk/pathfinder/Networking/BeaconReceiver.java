@@ -358,6 +358,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
 
                 RangingRequest r = new RangingRequest.Builder().addAccessPoints(lastResults).build();
                 try{
+                    Log.d("RttThread", "Ranging..");
                     rttManager.startRanging(r, AsyncTask.THREAD_POOL_EXECUTOR, new BeaconRangingResultCallback());
                 }
                 catch(SecurityException e){

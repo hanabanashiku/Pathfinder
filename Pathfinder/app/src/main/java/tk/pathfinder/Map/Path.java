@@ -59,6 +59,20 @@ public class Path implements Iterable<Edge> {
         return new Path(arr);
     }
 
+    /**
+     * Check if there exists an edge connecing the two nodes.
+     * @param a Node 1
+     * @param b Ndde 2
+     * @return True if there is an edge connecting the two nodes.
+     */
+    public boolean contains(Node a, Node b){
+        for(Edge e : edges){
+            if(e.getOther(a) == b)
+                return true;
+        }
+        return false;
+    }
+
 
     @NonNull
     @Override

@@ -23,4 +23,5 @@
     <string name="sorry_about_that">Sorry about that!</string>
     <string name="welcome_to_pathfinder">Welcome to Pathfinder!</string>
     <string name="pathfinder">Pathfinder</string>
+    <string name="name">Name</string>
 </resources>
