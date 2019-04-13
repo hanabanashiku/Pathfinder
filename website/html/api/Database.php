@@ -110,7 +110,7 @@ class Database extends mysqli {
 
             switch($node['type']){
                 case 'room':
-                    $rm = $this->query("SELECT * FROM rooms WHERE id = '" . $node['id'] ."'");
+                    $rm = $this->query("SELECT * FROM rooms WHERE nodeID = '" . $node['id'] ."'");
                     if($rm->num_rows == 0)
                         continue;
                     $r_row = $rm->fetch_assoc();
