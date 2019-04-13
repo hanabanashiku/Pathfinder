@@ -330,7 +330,6 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
         }
         public void run(){
             while(true){
-                Log.d("BeaconReceiver", "Starting scan.");
                 wifiManager.startScan();
                 try{
                     sleep(delay);

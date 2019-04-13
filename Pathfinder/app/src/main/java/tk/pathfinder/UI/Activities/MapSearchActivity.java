@@ -42,7 +42,6 @@ public class MapSearchActivity extends AppCompatActivity implements MapResult.Ma
     }
 
     public void onSubmitClick(View v){
-        Log.d("MapSearchActivity", "submitting..");
         String keywords = ((EditText)findViewById(R.id.map_search_box)).getText().toString();
         if(keywords.isEmpty()) // don't submit for an empty string
             return;

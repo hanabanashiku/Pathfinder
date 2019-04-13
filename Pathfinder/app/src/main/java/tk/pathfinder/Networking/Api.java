@@ -30,7 +30,6 @@ public class Api {
      * @throws IOException If there was an error returned by the HTTP connection or the endpoint.
      */
     public static Map getMap(Integer id) throws IOException{
-        Log.d("bug", id.toString());
         HttpsURLConnection con;
         try{
             URL url = new URL("https://path-finder.tk/api/maps?id=" + id.toString());
@@ -76,8 +75,8 @@ public class Api {
                 JSONObject j = nArr.getJSONObject(i);
                 int n_id = j.getInt("id");
                 JSONObject n_corr = j.getJSONObject("coordinate");
-                Point p = new Point((int)(n_corr.getDouble("x")*100),
-                        (int)(n_corr.getDouble("y")*100), (int)(n_corr.getDouble("z")*100));
+                Point p = new Point((int)(n_corr.getDouble("x")*1000),
+                        (int)(n_corr.getDouble("y")), (int)(n_corr.getDouble("z")*1000));
                 switch(j.getString("type")){
                     case "room":
                         String room_num = j.getString("room_number");

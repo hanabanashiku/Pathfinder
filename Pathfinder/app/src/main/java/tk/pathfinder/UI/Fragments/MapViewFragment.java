@@ -15,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import tk.pathfinder.Map.Room;
 import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.UI.AppStatus;
@@ -85,7 +87,7 @@ public class MapViewFragment extends Fragment {
         return v;
     }
 
-    void setMapView(){
+    private void setMapView(){
         view = new MapView(this.getContext());
         view.setMap(map);
     }
@@ -114,9 +116,10 @@ public class MapViewFragment extends Fragment {
         public int getCount() {
             if(map == null)
                 return 0;
-
             if(count == -1){ // define it if it's not defined and cache it
                 int[] range = map.getFloorRange();
+                for(Iterator<Room> i = map.getRooms(); i.hasNext(); )
+                    System.out.println(i.next().getPoint().getY());
                 smallestFloor = range[0];
                 count = (Math.abs(range[0]) + Math.abs(range[1]));
                 if(smallestFloor < 0) count += 1; // for floor 0
