@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +166,7 @@ public class MapViewFragment extends Fragment {
         protected void onPostExecute(Map result){
             f.map = result;
             f.setMapView();
-            f.d.dismiss();
+           f.d.dismiss();
         }
     }
 }

@@ -78,7 +78,6 @@ public class Api {
                 JSONObject n_corr = j.getJSONObject("coordinate");
                 Point p = new Point((int)(n_corr.getDouble("x")*100),
                         (int)(n_corr.getDouble("y")*100), (int)(n_corr.getDouble("z")*100));
-
                 switch(j.getString("type")){
                     case "room":
                         String room_num = j.getString("room_number");
@@ -104,9 +103,9 @@ public class Api {
             // parse map edges
             JSONArray eArr = json.getJSONArray("edges");
             for(int i = 0; i < eArr.length(); i++){
-                JSONObject j = eArr.getJSONObject(i);
-                int n1_id = j.getInt("node1");
-                int n2_id = j.getInt("node2");
+                JSONArray j = eArr.getJSONArray(i);
+                int n1_id = j.getInt(0);
+                int n2_id = j.getInt(1);
                 Node node1 = findNode(nodes, n1_id);
                 Node node2 = findNode(nodes, n2_id);
                 if(node1 == null || node2 == null)

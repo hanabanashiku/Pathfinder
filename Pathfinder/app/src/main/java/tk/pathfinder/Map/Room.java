@@ -20,14 +20,17 @@ public class Room extends Node {
      * @param locked Whether or not the room requires authorization to enter.
      */
     public Room(int id, Point p, String roomNumber, String name, boolean locked){
-        if(point == null)
+        if(p == null)
             throw new NullPointerException("p");
-        if(roomNumber == null)
+        if(roomNumber == null && name == null)
             throw new NullPointerException("roomNumber");
 
         this.id = id;
         this.point = p;
-        this.roomNumber = roomNumber;
+        if(roomNumber == null)
+            this.roomNumber = "0";
+        else
+            this.roomNumber = roomNumber;
         if(name == null)
             this.name = roomNumber;
         else this.name = name;
