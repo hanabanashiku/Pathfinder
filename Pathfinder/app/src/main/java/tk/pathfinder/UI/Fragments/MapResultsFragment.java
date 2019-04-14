@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,8 @@ public class MapResultsFragment extends Fragment {
                 res = Api.findMaps((String)args[0]);
             }
             catch(IOException e){
-                new Alert("Error", e.getMessage(), ctx.getCurrentActivity().getBaseContext()).show();
+                //f.d.dismiss();
+                //new Alert("Error", e.getMessage(), ctx.getCurrentActivity()).show();
             }
             return res;
         }

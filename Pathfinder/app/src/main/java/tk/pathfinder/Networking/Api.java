@@ -90,11 +90,11 @@ public class Api {
                         FloorConnector.FloorConnectorTypes fc_type = FloorConnector.FloorConnectorTypes.values()[j.getInt("connector_type")];
                         boolean fc_auth = j.getBoolean("requires_auth");
                         boolean operating = j.getBoolean("is_operational");
-                        nodes.add(new FloorConnector(id, p, fc_name, fc_type, new int[0], operating, fc_auth));
+                        nodes.add(new FloorConnector(n_id, p, fc_name, fc_type, new int[0], operating, fc_auth));
                         break;
 
                     case "intersection":
-                        nodes.add(new Intersection(id, p));
+                        nodes.add(new Intersection(n_id, p));
                         break;
                 }
             }

@@ -65,7 +65,6 @@ public class MapView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
 
         // check for nulls
         if(map == null)
@@ -134,6 +133,7 @@ public class MapView extends View {
 
     public void setMap(Map map){
         this.map = map;
+        invalidate();
     }
 
     public Map getMap(){

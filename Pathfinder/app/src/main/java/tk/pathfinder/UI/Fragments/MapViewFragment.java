@@ -1,38 +1,34 @@
 package tk.pathfinder.UI.Fragments;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import tk.pathfinder.Map.Room;
 import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Map.Map;
 import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
 import tk.pathfinder.UI.Alert;
-import tk.pathfinder.UI.MapView;
 
 
 public class MapViewFragment extends Fragment {
-    private MapView view;
     private Map map;
-    private MapFragment mapController;
+    private MapControllerFragment mapController;
     private int mapId;
     private ProgressDialog d;
 
@@ -69,7 +65,7 @@ public class MapViewFragment extends Fragment {
             map = status.getCurrentMap();
         }
 
-        mapController = new MapFragment();
+        mapController = new MapControllerFragment();
     }
 
     @Override
@@ -88,8 +84,15 @@ public class MapViewFragment extends Fragment {
     }
 
     private void setMapView(){
-        view = new MapView(this.getContext());
-        view.setMap(map);
+        /*int[] floors = map.getFloorRange();
+        List<MapControllerFragment> frags = new ArrayList<>();
+        for(int i = floors[0]; i <= floors[1]; i++) {
+            MapControllerFragment frag = new MapControllerFragment();
+            frag.setMapView(map, i);
+            frags.add(frag);
+        }
+        mPageAdapter.fragments = frags;
+        mPageAdapter.notifyDataSetChanged();*/
     }
 
     /**
@@ -97,47 +100,35 @@ public class MapViewFragment extends Fragment {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        private int count = -1;
-        private int smallestFloor;
+        int smallestFloor = -1;
+        int count = -1;
 
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
-            int floor = smallestFloor + position;
-            view.setCurrentFloor(floor);
-            return mapController;
+            MapControllerFragment fragment = new MapControllerFragment();
+            fragment.setMapView(map, smallestFloor + position);
+            return fragment;
         }
 
         @Override
         public int getCount() {
             if(map == null)
                 return 0;
-            if(count == -1){ // define it if it's not defined and cache it
-                int[] range = map.getFloorRange();
-                for(Iterator<Room> i = map.getRooms(); i.hasNext(); )
-                    System.out.println(i.next().getPoint().getY());
-                smallestFloor = range[0];
-                count = (Math.abs(range[0]) + Math.abs(range[1]));
-                if(smallestFloor < 0) count += 1; // for floor 0
+
+            if(count == -1){
+                int[] floors = map.getFloorRange();
+                smallestFloor = floors[0];
+                if(floors[0] <= 0)
+                    count = floors[1] + -1*floors[1];
+                else count = floors[1] - floors[0];
+                count += 1;
             }
             return count;
-        }
-    }
-
-    @SuppressLint("ValidFragment")
-    public class MapFragment extends Fragment{
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.fragment_map_controller, container, false);
-            FrameLayout layout = v.findViewById(R.id.map_view_display);
-            layout.addView(view);
-            return v;
         }
     }
 
@@ -155,7 +146,6 @@ public class MapViewFragment extends Fragment {
                 m = Api.getMap((Integer)args[0]);
             }
             catch(IOException e){
-                //d.hide();
                 Looper.prepare();
                 new Alert("Error", e.getMessage(), ctx.getCurrentActivity());
                 e.printStackTrace();
