@@ -38,13 +38,36 @@ public class Edge implements Comparator<Edge>, Comparable<Edge> {
         return node2;
     }
 
+    /**
+     * Get the node that is connected to the given node.
+     * @param n The known node
+     * @return The unknown node, or null.
+     */
+    Node getOther(Node n){
+        if(n.equals(node1))
+            return node2;
+        if(n.equals(node2))
+            return node1;
+        return null;
+    }
+
     /***
      * @return The distance spanned by the edge.
      */
-    public double getWeight(){
+    double getWeight(){
         if(weight == -1)
             weight = node1.getPoint().distance(node2.getPoint());
         return weight;
+    }
+
+
+    /**
+     * Check if the node is one of the two nodes the edge connects.
+     * @param n The node to check.
+     * @return True if the node is contained in the edge.
+     */
+    boolean contains(Node n){
+        return node1.equals(n) || node2.equals(n);
     }
 
     @Override

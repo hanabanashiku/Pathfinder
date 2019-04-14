@@ -4,10 +4,16 @@ import java.util.Iterator;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Represents a sequences of edges on a map leading to a destination.
+ */
 public class Path implements Iterable<Edge> {
     private Edge[] edges;
 
-    public Path(Edge[] e){
+    /**
+     * @param e A list of edges.
+     */
+    Path(Edge[] e){
         if(e == null)
             throw new IllegalArgumentException();
         edges = e;
@@ -21,12 +27,11 @@ public class Path implements Iterable<Edge> {
     }
 
     /**
-     * @return The total distance travelled by the path.
+     * @return The total distance traveled by the path.
      */
     public int distance(){
         int distance = 0;
-        for(Iterator<Edge> i = iterator(); i.hasNext(); ){
-            Edge e = i.next();
+        for (Edge e : this) {
             distance += e.getWeight();
         }
         return distance;
@@ -36,6 +41,36 @@ public class Path implements Iterable<Edge> {
         if(i < 0 || i >= edges.length)
             throw new IndexOutOfBoundsException();
         return edges[i];
+    }
+
+    /**
+     * Combine two paths together.
+     * @param path The path to append.
+     * @return A new path as a combination of this path and the one provided.
+     * @throws IllegalArgumentException if the end node of the first path does not equal the start node of the second path.
+     */
+    Path append(Path path){
+        if(edges[edges.length - 1] != path.edges[path.length() - 1]) // TODO probably a bug
+            throw new IllegalArgumentException("The end node of the first path must equal the start node of the second.");
+
+        Edge[] arr = new Edge[edges.length + path.length()];
+        System.arraycopy(edges, 0, arr, 0, edges.length);
+        System.arraycopy(path.edges, 0, arr, edges.length, path.length());
+        return new Path(arr);
+    }
+
+    /**
+     * Check if there exists an edge connecing the two nodes.
+     * @param a Node 1
+     * @param b Ndde 2
+     * @return True if there is an edge connecting the two nodes.
+     */
+    public boolean contains(Node a, Node b){
+        for(Edge e : edges){
+            if(e.getOther(a) == b)
+                return true;
+        }
+        return false;
     }
 
 

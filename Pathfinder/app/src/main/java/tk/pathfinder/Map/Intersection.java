@@ -8,6 +8,10 @@ package tk.pathfinder.Map;
  */
 public class Intersection extends Node {
 
+    /**
+     * @param id The database index of the node.
+     * @param p The location of the node on its map.
+     */
     public Intersection(int id, Point p){
         this.id = id;
         point = p;

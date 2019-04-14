@@ -20,57 +20,52 @@ public class Room extends Node {
      * @param locked Whether or not the room requires authorization to enter.
      */
     public Room(int id, Point p, String roomNumber, String name, boolean locked){
-        if(point == null)
+        if(p == null)
             throw new NullPointerException("p");
-        if(roomNumber == null)
+        if(roomNumber == null && name == null)
             throw new NullPointerException("roomNumber");
 
         this.id = id;
         this.point = p;
-        this.roomNumber = roomNumber;
+        if(roomNumber == null)
+            this.roomNumber = "0";
+        else
+            this.roomNumber = roomNumber;
         if(name == null)
             this.name = roomNumber;
         else this.name = name;
         this.auth = locked;
     }
 
-    public Room(Point p, String roomNumber){
-        if(point == null)
-            throw new NullPointerException("p");
-        if(roomNumber == null)
-            throw new NullPointerException("roomNumber");
-        this.point = p;
-        this.roomNumber = roomNumber;
-        this.name = this.roomNumber;
-        this.auth = false;
-    }
-
+    /**
+     * @return The name of the room.
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * @param value The new name.
+     */
     public void setName(String value){
         if(value == null)
             this.name = this.roomNumber;
         this.name = value;
     }
 
+    /**
+     * @return The room number.
+     */
     public String getRoomNumber(){
         return this.roomNumber;
     }
 
-    public void setRoomNumber(String value){
-        if(value == null)
-            throw new NullPointerException("value");
-        this.roomNumber = value;
-    }
 
+    /**
+     * @return True if authorization is required to access the room.
+     */
     public boolean requiresAuthorization(){
         return this.auth;
-    }
-
-    public void setAuthorization(boolean value){
-        this.auth = value;
     }
 
     @Override

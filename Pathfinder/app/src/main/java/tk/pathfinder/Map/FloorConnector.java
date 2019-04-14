@@ -1,12 +1,6 @@
 package tk.pathfinder.Map;
 
-
-import android.os.Build;
-
-import java.util.HashMap;
-import java.util.stream.IntStream;
-
-import androidx.annotation.RequiresApi;
+import android.util.SparseBooleanArray;
 
 /***
  * Represents a node that allows a user to move between floors, such as an elevator.
@@ -22,7 +16,7 @@ public class FloorConnector extends Node {
 
     private String name;
     private boolean auth;
-    private HashMap<Integer, Boolean> floors;
+    private SparseBooleanArray floors;
     private boolean operational;
     private FloorConnectorTypes type;
 
@@ -31,7 +25,7 @@ public class FloorConnector extends Node {
      * @param name The name of the node (set to null for a generic name).
      * @param type The type of connector.
      * @param floors An array containing all floors accessible from the connector.
-     * @params operational Whether the elevator is working.
+     * @param operational Whether the elevator is working.
      * @param requiresAuthorization if true, the connector requires authorization to use.
      */
     public FloorConnector(int id, Point p, String name, FloorConnectorTypes type, int[] floors, boolean operational, boolean requiresAuthorization){
@@ -39,28 +33,8 @@ public class FloorConnector extends Node {
             throw new NullPointerException("floors must be non-empty");
         processConstructor(id, p, name, type, operational, requiresAuthorization);
 
-        this.floors = new HashMap<>();
+        this.floors = new SparseBooleanArray();
         for (int floor : floors) this.floors.put(floor, true);
-    }
-
-    /***
-     * @param p The location of the node in 3D space.
-     * @param name The name of the node (set to null for a generic name).
-     * @param type The type of connector.
-     * @param firstFloor The most bottom floor number that the connector can reach.
-     * @param lastFloor The most highest floor number that the connector can reach.
-     * @param operational Whether the elevator is working.
-     * @param requiresAuthorization if true, the connector requires authorization to use.
-     * @throws IllegalArgumentException on invalid firstFloor or lastFloor arguments.
-     */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public FloorConnector(int id, Point p, String name, FloorConnectorTypes type, int firstFloor, int lastFloor,
-                          boolean operational, boolean requiresAuthorization) throws IllegalArgumentException {
-        processConstructor(id, p, name, type, operational, requiresAuthorization);
-
-        if(firstFloor >= lastFloor)
-            throw new IllegalArgumentException("The last floor must be greater than the first floor!");
-        IntStream.rangeClosed(firstFloor, lastFloor).forEach(floor -> this.floors.put(floor, true));
     }
 
     private void processConstructor(int id, Point p, String name, FloorConnectorTypes type, boolean operational, boolean requiresAuthorization){
@@ -153,13 +127,9 @@ public class FloorConnector extends Node {
     /***
      * @param floor The floor to check.
      * @return true if the node may be used to access the floor.
-     */
+     */ // TODO implement this
     public boolean isFloorAccessible(int floor){
-        if(!isOperational())
-            return false;
-        if(this.floors.containsKey(floor))
-            return this.floors.get(floor);
-        return false;
+        return true;
     }
 
     /***

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5pt"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    tools:context=".UI.Fragments.NoMapFragment">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15pt" />
+
+    <TextView
+        android:id="@+id/no_map_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_map_header"
+        android:textAlignment="center"
+        android:textSize="10pt" />
+
+    <TextView
+        android:id="@+id/no_map_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_map_desc" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20pt" />
+
+    <EditText
+        android:id="@+id/noMap_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/search"
+        android:inputType="textNoSuggestions" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15pt" />
+
+    <Button
+        android:id="@+id/search_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search"
+        android:onClick="onClick"/>
+
+</LinearLayout>

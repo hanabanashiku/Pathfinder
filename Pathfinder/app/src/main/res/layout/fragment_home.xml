@@ -5,7 +5,7 @@
                                              android:id="@+id/constraintLayout"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                             tools:context="tk.pathfinder.UI.HomeActivity">
+                                             tools:context="tk.pathfinder.UI.Activities.HomeActivity">
 
   <TextView
           android:id="@+id/section_label"
