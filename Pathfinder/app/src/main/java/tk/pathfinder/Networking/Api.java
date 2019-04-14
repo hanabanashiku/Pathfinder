@@ -80,7 +80,11 @@ public class Api {
                 switch(j.getString("type")){
                     case "room":
                         String room_num = j.getString("room_number");
+                        if(room_num.equals("null"))
+                            room_num = null;
                         String room_name = j.getString("name");
+                        if(room_name.equals("null"))
+                            room_name = null;
                         boolean auth = j.getBoolean("requires_auth");
                         nodes.add(new Room(n_id, p, room_num, room_name, auth));
                         break;

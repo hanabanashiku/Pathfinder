@@ -1,57 +1,67 @@
 package tk.pathfinder.UI.Activities;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.os.Bundle;
+import android.os.Looper;
 
-import androidx.fragment.app.FragmentTransaction;
-import tk.pathfinder.UI.AppStatus;
+import java.io.IOException;
+
+import tk.pathfinder.Map.Map;
+import tk.pathfinder.Networking.Api;
 import tk.pathfinder.R;
 import tk.pathfinder.UI.Alert;
-import tk.pathfinder.UI.Fragments.MapViewFragment;
+import tk.pathfinder.UI.AppStatus;
+import tk.pathfinder.UI.MapView;
 
 public class ViewMapActivity extends AppCompatActivity {
+    int mapId;
+    MapView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_map);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // display the map widget
+        mapId = getIntent().getIntExtra("mapId", 73);
+        view = findViewById(R.id.map_view_window);
+        new MapDetailsTask().execute(mapId, getApplicationContext(), this);
+    }
 
-        int mapId = getIntent().getIntExtra("mapId", -1);
-        if(mapId == -1){
-            new Alert("Error", "An unknown error has occurred.", this).show();
-            return;
+    private static class MapDetailsTask extends AsyncTask<Object, String, Map> {
+        private AppStatus ctx;
+        private ViewMapActivity f;
+
+        @Override
+        protected Map doInBackground(Object... args) {
+            ctx = (AppStatus)args[1];
+            f = (ViewMapActivity) args[2];
+
+            Map m = null;
+            try{
+                m = Api.getMap((Integer)args[0]);
+            }
+            catch(IOException e){
+                Looper.prepare();
+                new Alert("Error", e.getMessage(), ctx.getCurrentActivity());
+                e.printStackTrace();
+            }
+
+            //d.hide();
+            return m;
         }
-        MapViewFragment f = MapViewFragment.newInstance(mapId);
-        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.add(R.id.map_container, f);
-        t.commit();
-    }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        ((AppStatus)getApplicationContext()).setCurrentActivity(this);
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        AppStatus status = (AppStatus)getApplicationContext();
-        if(status.getCurrentActivity() == this)
-            status.setCurrentActivity(null);
-    }
-
-    @Override
-    public void onBackPressed(){
-        super.onBackPressed();
-        finish();
+        @Override
+        protected void onPostExecute(Map result){
+            f.getSupportActionBar().setTitle(result.getName());
+            f.view.setMap(result);
+        }
     }
 }

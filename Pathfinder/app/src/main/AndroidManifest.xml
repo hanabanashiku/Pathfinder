@@ -9,30 +9,32 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".UI.AppStatus"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".UI.AppStatus">
-        <receiver
-            android:name=".Networking.BeaconReceiver">
-            <intent-filter>
-                <action android:name="android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION" />
-            </intent-filter>
-        </receiver>
+        android:theme="@style/AppTheme">
         <activity
             android:name=".UI.Activities.ViewMapActivity"
+            android:label="@string/title_activity_view_map"
             android:parentActivityName=".UI.Activities.MapSearchActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.pathfinder.UI.Activities.MapSearchActivity" />
         </activity>
+
+        <receiver android:name=".Networking.BeaconReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.WifiManager.SCAN_RESULTS_AVAILABLE_ACTION" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".UI.Activities.MapSearchActivity"
             android:parentActivityName=".UI.Activities.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.pathfinder.UI.Activities.HomeActivity" />
@@ -48,15 +50,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="tk.pathfinder.UI.Activities.HomeActivity" />
         </activity>
-        <activity
-            android:name=".UI.Activities.HomeActivity">
-        </activity>
+        <activity android:name=".UI.Activities.HomeActivity"></activity>
+
         <receiver android:name=".UI.MapReceiver">
             <intent-filter>
                 <action android:name="tk.pathfinder.MAP_CHANGED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".UI.Activities.SplashActivity"
+
+        <activity
+            android:name=".UI.Activities.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

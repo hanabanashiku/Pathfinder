@@ -63,7 +63,7 @@ public final class Point {
     }
 
     /**
-     * Multiply the vector by a constant.
+     * Multiply the vector by a constant, excluding the y (floor) direction.
      * @param d The factor to multiply by.
      * @return The new point.
      */

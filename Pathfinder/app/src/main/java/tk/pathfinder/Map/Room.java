@@ -27,13 +27,10 @@ public class Room extends Node {
 
         this.id = id;
         this.point = p;
-        if(roomNumber == null)
-            this.roomNumber = "0";
-        else
-            this.roomNumber = roomNumber;
         if(name == null)
             this.name = roomNumber;
         else this.name = name;
+        this.roomNumber = roomNumber;
         this.auth = locked;
     }
 

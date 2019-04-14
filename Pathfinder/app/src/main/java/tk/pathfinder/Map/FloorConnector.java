@@ -11,7 +11,7 @@ import android.util.SparseBooleanArray;
 public class FloorConnector extends Node {
 
     public enum FloorConnectorTypes{
-        STAIRCASE, ELEVATOR, ESCALATOR
+        STAIRCASE, ELEVATOR, UP_ESCALATOR, DOWN_ESCALATOR
     }
 
     private String name;
@@ -68,7 +68,7 @@ public class FloorConnector extends Node {
                 case ELEVATOR:
                     this.name = "Elevator";
                     break;
-                case ESCALATOR:
+                case UP_ESCALATOR: case DOWN_ESCALATOR:
                     this.name = "Escalator";
                     break;
             }
