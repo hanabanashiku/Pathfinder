@@ -6,9 +6,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,14 +33,22 @@ public class MapSearchActivity extends AppCompatActivity implements MapResult.Ma
 
         Intent i = getIntent();
         String keywords = i.getStringExtra("keywords");
+        EditText search = findViewById(R.id.map_search_box);
+        ImageButton submit = findViewById(R.id.map_search_submit);
 
         // submit our search
         if(keywords != null){
-            EditText search = findViewById(R.id.map_search_box);
-            ImageButton submit = findViewById(R.id.map_search_submit);
             search.setText(keywords);
             submit.performClick();
         }
+
+        search.setOnEditorActionListener((v, actionId, event) -> {
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                submit.performClick();
+                return true;
+            }
+            return false;
+        });
     }
 
     public void onSubmitClick(View v){
@@ -50,6 +61,7 @@ public class MapSearchActivity extends AppCompatActivity implements MapResult.Ma
         FragmentTransaction t = fm.beginTransaction();
         t.replace(R.id.map_results_content, f);
         t.commit();
+        getSupportActionBar().setTitle("Search Results");
     }
 
     // display the map
