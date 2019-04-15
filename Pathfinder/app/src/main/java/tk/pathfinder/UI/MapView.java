@@ -8,6 +8,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import java.util.Iterator;
@@ -23,6 +27,7 @@ public class MapView extends View {
     private static final int NODE_RADIUS = 15;
     Map map;
     int floor = 1;
+    int[] floorRange;
 
     private TextPaint textPaint;
     private static Paint roomPaint;
@@ -41,25 +46,30 @@ public class MapView extends View {
     protected int content_height;
     // the map's center with respect to the canvas dimensions
     protected android.graphics.Point drawCenter;
+    // the map's center with respect to map coordinates
+    protected android.graphics.Point mapCenter = new android.graphics.Point(500, 500);
     // how much the map is zoomed in
     protected double zoom = 1;
 
+    private ScaleGestureDetector scaleDetector;
+    private GestureDetector gestureDetector;
+
     public MapView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public MapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
         density = getResources().getDisplayMetrics().density;
         // Set up paint objects
         textPaint = new TextPaint();
@@ -92,41 +102,32 @@ public class MapView extends View {
         pathPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         pathPaint.setStyle(Paint.Style.STROKE);
         pathPaint.setStrokeWidth(4*getResources().getDisplayMetrics().density);
-    }
 
-    /**
-     * Get the 1000-based real-world point that the map is currently centered on
-     * @return The current center of the map.
-     */
-    protected android.graphics.Point getMapCenter(){
-        return new android.graphics.Point(500, 500);
+        // set up event listeners
+        scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
     /**
      * @param z A constant to zoom by, from 1 to 5.
      */
-    public void setZoom(double z){
+    protected void setZoom(double z){
         if(z < 1)
             z = 1;
         if(z > 5)
             z = 5;
 
-        double finalZ = z;
+        zoom = z;
+        invalidate();
+    }
 
-        // gradually zoom in or out
-        ((Runnable) () -> {
-            int timesPerSecond = 5;
-            double seconds = 1;
-            // increment five times a second.
-            double increment = (finalZ - zoom) / (seconds * timesPerSecond);
-            while (zoom != finalZ) {
-                zoom += increment;
-                invalidate();
-                try {
-                    wait(1000 / timesPerSecond);
-                } catch (InterruptedException e) { }
-            }
-        }).run();
+    /**
+     * Reset the map's positioning and zoom to the default.
+     */
+    public void resetPosition(){
+        mapCenter.x = 500;
+        mapCenter.y = 500;
+        setZoom(1);
     }
 
     @Override
@@ -174,8 +175,6 @@ public class MapView extends View {
             canvas.drawBitmap(locationIcon, p.x - c, p.y - c, roomPaint);
             canvas.drawText(text, p.x, p.y + 2*NODE_RADIUS*density, textPaint);
         }
-            android.graphics.Point testp = translatePoint(new Point(1000, 0, 1000));
-            canvas.drawBitmap(locationIcon, testp.x, testp.y, roomPaint);
 
         for(Iterator<FloorConnector> connectors = map.getFloorConnectors(); connectors.hasNext(); ){
             FloorConnector con = connectors.next();
@@ -215,10 +214,9 @@ public class MapView extends View {
      */
     private android.graphics.Point translatePoint(Point p){
         // get the point on the map we are centered around.
-        android.graphics.Point center = getMapCenter();
         // distance of the points from the map center.
-        int x = p.getX() - center.x;
-        int y = p.getZ() - center.y;
+        int x = p.getX() - mapCenter.x;
+        int y = p.getZ() - mapCenter.y;
         // find the point on the board with the correct zoom
         // the content dimensions are given an offset to make sure a node at 1000x1000 has room to render
         x = (int)(zoom*((x*(content_width - 60*density))/1000d));
@@ -226,6 +224,14 @@ public class MapView extends View {
         x += drawCenter.x + padding[3];
         y += drawCenter.y + padding[0];
         return new android.graphics.Point(x, y);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev){
+        boolean ret = scaleDetector.onTouchEvent(ev);
+        ret = gestureDetector.onTouchEvent(ev) || ret;
+        ret = super.onTouchEvent(ev) || ret;
+        return ret;
     }
 
     @Override
@@ -262,11 +268,70 @@ public class MapView extends View {
 
     public void setMap(Map map){
         this.map = map;
+        this.floorRange = map.getFloorRange();
         invalidate();
     }
 
     public void setFloor(int floor){
         this.floor = floor;
         invalidate();
+    }
+
+    /**
+     * A listener to detect scaling by panning fingers on the view.
+     * Note that onScale will only run if it has detected a valid scale motion.
+     */
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector){
+            setZoom(Math.max(1, zoom*Math.min(detector.getScaleFactor(), 5.0)));
+            return true;
+        }
+    }
+
+    /**
+     * A gesture listener to be used in combination with ScaleListener.
+     */
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override // move the center
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distX, float distY){
+            // offset in terms of the original map
+            double offsetX = (1000*distX) / content_width / Math.max(1, (9/10d)*zoom);
+            double offsetY = (1000*distY) / content_height / zoom;
+
+            mapCenter.x = (int)Math.min(Math.max(0, mapCenter.x + offsetX), 1000);
+            mapCenter.y = (int)Math.min(Math.max(0, mapCenter.y + offsetY), 1000);
+            invalidate();
+            return true;
+        }
+
+        @Override // change floors
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY){
+
+            // check if the velocity is not strong enough to be a fling
+            // or if the fling is directed upwards or downwards with a tolerance of 250. (i.e. fling up)
+            if(Math.abs(vX) < 750 || Math.abs(vY) - Math.abs(vX) >= 250)
+                return true;
+
+            // get the velocity magnitudes to determine if the page is turning left or right
+            boolean left = (e2.getX() - e1.getX()) < 0;
+            // turn page left
+            if(left){
+                Log.d("MapView", "Changing floor left");
+                if(floor == floorRange[0])
+                    setFloor(floorRange[1]);
+                else setFloor(floor - 1);
+            }
+
+            // turn right
+            else{
+                Log.d("MapView", "Changing floor right");
+                if(floor == floorRange[1])
+                    setFloor(floorRange[0]);
+                else
+                    setFloor(floor + 1);
+            }
+            return true;
+        }
     }
 }
