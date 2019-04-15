@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Looper;
+import android.view.View;
 
 import java.io.IOException;
 
@@ -33,6 +34,10 @@ public class ViewMapActivity extends AppCompatActivity {
         mapId = getIntent().getIntExtra("mapId", 73);
         view = findViewById(R.id.map_view_window);
         new MapDetailsTask().execute(mapId, getApplicationContext(), this);
+    }
+
+    public void onCenterClick(View v){
+        view.resetPosition();
     }
 
     private static class MapDetailsTask extends AsyncTask<Object, String, Map> {
