@@ -37,8 +37,12 @@ public class MapView extends View {
 
     // top right bottom left
     private int[] padding = new int[] {0, 0, 0, 0};
-    int content_width;
-    int content_height;
+    protected int content_width;
+    protected int content_height;
+    // the map's center with respect to the canvas dimensions
+    protected android.graphics.Point drawCenter;
+    // how much the map is zoomed in
+    protected double zoom = 1;
 
     public MapView(Context context) {
         super(context);
@@ -88,7 +92,41 @@ public class MapView extends View {
         pathPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         pathPaint.setStyle(Paint.Style.STROKE);
         pathPaint.setStrokeWidth(4*getResources().getDisplayMetrics().density);
+    }
 
+    /**
+     * Get the 1000-based real-world point that the map is currently centered on
+     * @return The current center of the map.
+     */
+    protected android.graphics.Point getMapCenter(){
+        return new android.graphics.Point(500, 500);
+    }
+
+    /**
+     * @param z A constant to zoom by, from 1 to 5.
+     */
+    public void setZoom(double z){
+        if(z < 1)
+            z = 1;
+        if(z > 5)
+            z = 5;
+
+        double finalZ = z;
+
+        // gradually zoom in or out
+        ((Runnable) () -> {
+            int timesPerSecond = 5;
+            double seconds = 1;
+            // increment five times a second.
+            double increment = (finalZ - zoom) / (seconds * timesPerSecond);
+            while (zoom != finalZ) {
+                zoom += increment;
+                invalidate();
+                try {
+                    wait(1000 / timesPerSecond);
+                } catch (InterruptedException e) { }
+            }
+        }).run();
     }
 
     @Override
@@ -102,18 +140,18 @@ public class MapView extends View {
         for(Iterator<Edge> edges = map.getEdges(); edges.hasNext(); ){
             Edge e = edges.next();
 
-            Point p1 = translatePoint(e.getNode1().getPoint());
-            Point p2 = translatePoint(e.getNode2().getPoint());
+            android.graphics.Point p1 = translatePoint(e.getNode1().getPoint());
+            android.graphics.Point p2 = translatePoint(e.getNode2().getPoint());
 
             // only draw the current floor
-            if(p1.getY() != floor && p2.getY() != floor)
+            if(e.getNode1().getPoint().getY() != floor && e.getNode2().getPoint().getY() != floor)
                 continue;
 
             canvas.drawLine(
-                    p1.getX(),
-                    p1.getZ(),
-                    p2.getX(),
-                    p2.getZ(),
+                    p1.x,
+                    p1.y,
+                    p2.x,
+                    p2.y,
                     pathPaint
             );
         }
@@ -125,7 +163,7 @@ public class MapView extends View {
             if(r.getPoint().getY() != floor)
                 continue;
 
-            Point p = translatePoint(r.getPoint());
+            android.graphics.Point p = translatePoint(r.getPoint());
 
             String text;
             if(r.getRoomNumber() == null)
@@ -133,9 +171,11 @@ public class MapView extends View {
             else if(r.getName() == null)
                 text = r.getRoomNumber();
             else text = r.getRoomNumber() + ": " + r.getName();
-            canvas.drawBitmap(locationIcon, p.getX() - c, p.getZ() - c, roomPaint);
-            canvas.drawText(text, p.getX(), p.getZ() + 2*NODE_RADIUS*density, textPaint);
+            canvas.drawBitmap(locationIcon, p.x - c, p.y - c, roomPaint);
+            canvas.drawText(text, p.x, p.y + 2*NODE_RADIUS*density, textPaint);
         }
+            android.graphics.Point testp = translatePoint(new Point(1000, 0, 1000));
+            canvas.drawBitmap(locationIcon, testp.x, testp.y, roomPaint);
 
         for(Iterator<FloorConnector> connectors = map.getFloorConnectors(); connectors.hasNext(); ){
             FloorConnector con = connectors.next();
@@ -143,7 +183,7 @@ public class MapView extends View {
             if(!con.isFloorAccessible(floor))
                 continue;
 
-            Point p = translatePoint(con.getPoint());
+            android.graphics.Point p = translatePoint(con.getPoint());
 
             Bitmap icon;
             switch(con.getType()){
@@ -163,16 +203,29 @@ public class MapView extends View {
                     continue;
             }
 
-            canvas.drawBitmap(icon, p.getX() - c, p.getZ() - c, roomPaint);
-            canvas.drawText(con.getName(), p.getX(), p.getZ() + 2*NODE_RADIUS*density, textPaint);
+            canvas.drawBitmap(icon, p.x - c, p.y - c, roomPaint);
+            canvas.drawText(con.getName(), p.x, p.y + 2*NODE_RADIUS*density, textPaint);
         }
     }
 
-    private Point translatePoint(Point p){
-        int x = (int)(1.2*(p.getX()/1000d) * content_width + padding[3]);
-        int y = (int)(1.2*(p.getZ()/1000d) * content_height + padding[0]);
-
-        return new Point(x, p.getY(), y);
+    /**
+     * Calculate the correct location of the point on the canvas.
+     * @param p The 1000-based map ratio point returned from the API
+     * @return A 2D point that can be applied to the canvas centered around the given center.
+     */
+    private android.graphics.Point translatePoint(Point p){
+        // get the point on the map we are centered around.
+        android.graphics.Point center = getMapCenter();
+        // distance of the points from the map center.
+        int x = p.getX() - center.x;
+        int y = p.getZ() - center.y;
+        // find the point on the board with the correct zoom
+        // the content dimensions are given an offset to make sure a node at 1000x1000 has room to render
+        x = (int)(zoom*((x*(content_width - 60*density))/1000d));
+        y = (int)(zoom*((y* (content_height - 80*density))/1000d));
+        x += drawCenter.x + padding[3];
+        y += drawCenter.y + padding[0];
+        return new android.graphics.Point(x, y);
     }
 
     @Override
@@ -198,12 +251,13 @@ public class MapView extends View {
         }
     }
 
-    @Override
+    @Override // called at least once, after the initial onMeasure
     protected void onSizeChanged(int w, int h, int oldw, int oldh){
         padding = new int[] {getPaddingTop(), getPaddingRight(), getPaddingBottom(), getPaddingLeft()};
         content_width = w - padding[3] - padding[1];
         content_height = h - padding[0] - padding[2];
         density = getResources().getDisplayMetrics().density;
+        drawCenter = new android.graphics.Point(content_width / 2 + padding[3], content_height / 2 + padding[0]);
     }
 
     public void setMap(Map map){

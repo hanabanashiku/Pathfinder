@@ -79,7 +79,7 @@ public final class Point {
      * @param p The second point
      * @return The distance between the points, or -1 if the points are on different elevations.
      */
-    double distance(Point p){
+    public double distance(Point p){
         return distance(this, p);
     }
 
