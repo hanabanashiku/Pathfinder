@@ -25,14 +25,14 @@ import tk.pathfinder.R;
 public class MapView extends View {
 
     private static final int NODE_RADIUS = 15;
-    Map map;
-    int floor = 1;
-    int[] floorRange;
+    protected Map map;
+    protected int floor = 1;
+    protected int[] floorRange;
 
     private TextPaint textPaint;
     private static Paint roomPaint;
-    private Paint pathPaint;
-    private float density;
+    protected Paint pathPaint;
+    {}    protected float density;
 
     private static Bitmap locationIcon;
     private static Bitmap escalatorUp;
@@ -53,6 +53,9 @@ public class MapView extends View {
 
     private ScaleGestureDetector scaleDetector;
     private GestureDetector gestureDetector;
+
+    protected boolean pagingNotAllowed = false;
+    protected boolean trackingLocation = true;
 
     public MapView(Context context) {
         super(context);
@@ -128,6 +131,7 @@ public class MapView extends View {
         mapCenter.x = 500;
         mapCenter.y = 500;
         setZoom(1);
+        trackingLocation = true;
     }
 
     @Override
@@ -137,7 +141,12 @@ public class MapView extends View {
         if(map == null)
             return;
 
-        // draw paths
+        drawEdges(canvas);
+        drawNodes(canvas);
+        drawFloorConnectors(canvas);
+    }
+
+    protected void drawEdges(Canvas canvas){
         for(Iterator<Edge> edges = map.getEdges(); edges.hasNext(); ){
             Edge e = edges.next();
 
@@ -156,7 +165,9 @@ public class MapView extends View {
                     pathPaint
             );
         }
+    }
 
+    protected void drawNodes(Canvas canvas){
         int c = (int)(NODE_RADIUS*density);
         for(Iterator<Room> rooms = map.getRooms(); rooms.hasNext(); ){
             Room r = rooms.next();
@@ -175,6 +186,10 @@ public class MapView extends View {
             canvas.drawBitmap(locationIcon, p.x - c, p.y - c, roomPaint);
             canvas.drawText(text, p.x, p.y + 2*NODE_RADIUS*density, textPaint);
         }
+    }
+
+    protected void drawFloorConnectors(Canvas canvas){
+        int c = (int)(NODE_RADIUS*density);
 
         for(Iterator<FloorConnector> connectors = map.getFloorConnectors(); connectors.hasNext(); ){
             FloorConnector con = connectors.next();
@@ -212,7 +227,7 @@ public class MapView extends View {
      * @param p The 1000-based map ratio point returned from the API
      * @return A 2D point that can be applied to the canvas centered around the given center.
      */
-    private android.graphics.Point translatePoint(Point p){
+    protected android.graphics.Point translatePoint(Point p){
         // get the point on the map we are centered around.
         // distance of the points from the map center.
         int x = p.getX() - mapCenter.x;
@@ -301,6 +316,7 @@ public class MapView extends View {
 
             mapCenter.x = (int)Math.min(Math.max(0, mapCenter.x + offsetX), 1000);
             mapCenter.y = (int)Math.min(Math.max(0, mapCenter.y + offsetY), 1000);
+            trackingLocation = false;
             invalidate();
             return true;
         }
@@ -310,7 +326,8 @@ public class MapView extends View {
 
             // check if the velocity is not strong enough to be a fling
             // or if the fling is directed upwards or downwards with a tolerance of 250. (i.e. fling up)
-            if(Math.abs(vX) < 750 || Math.abs(vY) - Math.abs(vX) >= 250)
+            // or if paging is not allowed (i.e. for NavigationView)
+            if(pagingNotAllowed || Math.abs(vX) < 750 || Math.abs(vY) - Math.abs(vX) >= 250)
                 return true;
 
             // get the velocity magnitudes to determine if the page is turning left or right

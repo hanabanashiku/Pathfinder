@@ -1,30 +1,24 @@
 package tk.pathfinder.UI.Activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+import tk.pathfinder.Map.Room;
+import tk.pathfinder.R;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-
+import android.view.View;
 
 import java.util.Iterator;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-
-import tk.pathfinder.Map.Map;
-import tk.pathfinder.Map.Navigation;
-import tk.pathfinder.Map.Node;
-import tk.pathfinder.Map.Path;
-import tk.pathfinder.Map.Room;
+import tk.pathfinder.UI.Alert;
 import tk.pathfinder.UI.AppStatus;
-import tk.pathfinder.R;
 import tk.pathfinder.UI.NavigationView;
 import tk.pathfinder.exceptions.NoValidPathException;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    private Room destination;
+    public NavigationView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,33 +26,72 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AppStatus status = (AppStatus) getApplicationContext();
+        AppStatus status = (AppStatus)getApplicationContext();
         status.setNavigationActivity(this);
 
         Intent i = getIntent();
 
         int roomId = i.getIntExtra("roomId", -1);
-        // an argument was provided
-        if (roomId == -1)
-            return;
-        for (Iterator<Room> it = status.getCurrentMap().getRooms(); it.hasNext(); ) {
+        Room destination = null;
+
+        for(Iterator<Room> it = status.getCurrentMap().getRooms(); it.hasNext(); ){
             Room room = it.next();
-            if (room.getId() == roomId)
+            if(room.getId() == roomId)
                 destination = room;
         }
 
-        // define the text on the top
-        TextView text = findViewById(R.id.nav_label);
-        text.setText(String.format("Navigating to %s", destination.getName()));
+        // check for errors
+        if(roomId == -1 || destination == null){
+            new Alert("Error", "Invalid destination.", this).show();
+            finish();
+            return;
+        }
 
-        // insert navigation view
-        NavigationView v = new NavigationView(this);
-        v.setDestination(destination);
-        v.setMap(((AppStatus) getApplicationContext()).getCurrentMap());
-        FrameLayout l = findViewById(R.id.navigation_view_container);
-        l.addView(v);
+        view = findViewById(R.id.navigation_view_window);
+        view.setCallbackListener(new CallbackListener());
+        view.setMap(status.getCurrentMap());
+        view.setDestination(destination);
+
+        toolbar.setTitle(destination.getName());
     }
 
+    public void onLocationClick(View v){
+        view.resetPosition();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setNavigationActivity(this);
+        status.setCurrentActivity(this);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
+        status.setNavigationActivity(null);
+    }
+
+    private class CallbackListener implements NavigationView.NavigationListener {
+        @Override
+        public void onNoPath(NoValidPathException e){
+            new Alert("Could not find route",
+                    "There is no way to get from your current location to " + e.getDestination().getName() + ".", getApplicationContext())
+                    .show();
+            finish();
+        }
+
+        @Override
+        public void onArrival(){
+            new Alert("", "You have arrived at your destination", getApplicationContext());
+            // go back home
+            Intent i = new Intent(NavigationActivity.this, HomeActivity.class);
+            startActivity(i);
+        }
+    }
 }

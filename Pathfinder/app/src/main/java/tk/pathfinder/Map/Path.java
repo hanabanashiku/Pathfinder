@@ -60,7 +60,7 @@ public class Path implements Iterable<Edge> {
     }
 
     /**
-     * Check if there exists an edge connecing the two nodes.
+     * Check if there exists an edge connecting the two nodes.
      * @param a Node 1
      * @param b Ndde 2
      * @return True if there is an edge connecting the two nodes.
@@ -70,6 +70,18 @@ public class Path implements Iterable<Edge> {
             if(e.getOther(a) == b)
                 return true;
         }
+        return false;
+    }
+
+    /**
+     * Check if a node exists on the current path.
+     * @param a The node to check.
+     * @return True if the node lies on the path.
+     */
+    public boolean contains(Node a){
+        for(Edge e : edges)
+            if(e.contains(a))
+                return true;
         return false;
     }
 

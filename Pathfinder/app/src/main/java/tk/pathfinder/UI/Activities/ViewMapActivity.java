@@ -31,13 +31,31 @@ public class ViewMapActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mapId = getIntent().getIntExtra("mapId", 73);
+        mapId = getIntent().getIntExtra("mapId", -1);
         view = findViewById(R.id.map_view_window);
         new MapDetailsTask().execute(mapId, getApplicationContext(), this);
     }
 
     public void onCenterClick(View v){
         view.resetPosition();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        AppStatus status = (AppStatus)getApplicationContext();
+        status.setViewMapActivity(this);
+        status.setCurrentActivity(this);
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        AppStatus status = (AppStatus)getApplicationContext();
+        if(status.getCurrentActivity() == this)
+            status.setCurrentActivity(null);
+        status.setViewMapActivity(null);
     }
 
     private static class MapDetailsTask extends AsyncTask<Object, String, Map> {

@@ -97,6 +97,11 @@ public class AppStatus extends Application {
      */
     public void setCurrentLocation(Point p){
         location = p;
+        // trigger redraw
+        if(navigation != null) {
+            navigation.view.invalidate();
+            navigation.view.getDirection(currentMap.closestNode(p));
+        }
     }
 
     /**
