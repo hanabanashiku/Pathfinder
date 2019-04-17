@@ -1,6 +1,5 @@
 package tk.pathfinder.UI.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,7 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends MenuActivity
         implements MapFragment.MapFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
@@ -53,19 +52,10 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume(){
-        super.onResume();
-        AppStatus status = (AppStatus)getApplicationContext();
-        status.setCurrentActivity(this);
-    }
-
-    @Override
     protected void onDestroy(){
         super.onDestroy();
         AppStatus status = (AppStatus)getApplicationContext();
         status.setHomeActivity(null);
-        if(status.getCurrentActivity() == this)
-            status.setCurrentActivity(null);
     }
 
     public void onSearch(String keywords) {

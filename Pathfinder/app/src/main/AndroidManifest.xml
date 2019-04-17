@@ -11,10 +11,12 @@
     <application
         android:name=".UI.AppStatus"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher_icon"
+        android:icon="@drawable/ic_launcher_icon_square"
+        android:roundIcon="@drawable/ic_launcher_icon_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UI.Activities.AboutActivity"></activity>
         <activity android:name=".UI.Activities.NavigationActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

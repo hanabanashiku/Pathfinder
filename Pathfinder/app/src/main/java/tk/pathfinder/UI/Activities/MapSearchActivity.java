@@ -3,15 +3,12 @@ package tk.pathfinder.UI.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,7 +17,7 @@ import tk.pathfinder.R;
 import tk.pathfinder.UI.Fragments.MapResult;
 import tk.pathfinder.UI.Fragments.MapResultsFragment;
 
-public class MapSearchActivity extends AppCompatActivity implements MapResult.MapResultListener {
+public class MapSearchActivity extends MenuActivity implements MapResult.MapResultListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
