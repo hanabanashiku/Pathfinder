@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.R;
-import tk.pathfinder.UI.Fragments.MapFragment;
+import tk.pathfinder.UI.Fragments.MapLandingFragment;
 import tk.pathfinder.UI.Fragments.NoMapFragment;
 
 import android.content.Intent;
@@ -13,11 +13,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-public class HomeActivity extends MenuActivity
-        implements MapFragment.MapFragmentInteractionListener {
+public class HomeActivity extends MenuActivity{
 
     private FragmentManager fragmentManager;
     private boolean visible;
+    private View loadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,16 +26,18 @@ public class HomeActivity extends MenuActivity
         AppStatus status = (AppStatus)getApplicationContext();
         status.setHomeActivity(this);
         setContentView(R.layout.activity_home);
+        loadingBar = findViewById(R.id.progressBar);
 
         fragmentManager = getSupportFragmentManager();
 
-        status.getMapReceiver().onReceive(this, new Intent());
         visible = true;
+        status.getMapReceiver().onReceive(this, new Intent());
     }
 
     private void switchFragment(Fragment fragment){
         if(!visible)
             return;
+        loadingBar.setVisibility(View.GONE);
         FragmentTransaction trans = fragmentManager.beginTransaction();
         trans.replace(R.id.home_content, fragment);
         trans.commit();
@@ -45,15 +47,19 @@ public class HomeActivity extends MenuActivity
         switchFragment(new NoMapFragment());
     }
 
+    public void setFoundMap(){
+        switchFragment(new MapLandingFragment());
+    }
 
-    @Override
+
+   /* @Override
     public void onDestinationSearch(String keywords) {
         Bundle b = new Bundle();
         b.putString("keywords", keywords);
         Intent intent = new Intent(HomeActivity.this, NavigationSearchActivity.class);
         intent.putExtras(b);
         startActivity(intent);
-    }
+    }*/
 
     @Override
     protected void onResume(){
@@ -75,7 +81,7 @@ public class HomeActivity extends MenuActivity
         status.setHomeActivity(null);
     }
 
-    public void onSearch(String keywords) {
+    public void onMapSearch(String keywords) {
         Bundle b = new Bundle();
         b.putString("keywords", keywords);
         Intent i = new Intent(this, MapSearchActivity.class);
@@ -83,11 +89,26 @@ public class HomeActivity extends MenuActivity
         startActivity(i);
     }
 
+    public void onDestinationSearch(String keywords){
+        Bundle b = new Bundle();
+        b.putString("keywords", keywords);
+        Intent i = new Intent(this, NavigationSearchActivity.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
 
-    public void onClick(View view) {
+
+    public void onMapSubmit(View view) {
         EditText text = findViewById(R.id.noMap_search);
         String keywords = text.getText().toString();
         if(!keywords.isEmpty())
-            onSearch(text.getText().toString());
+            onMapSearch(text.getText().toString());
+    }
+
+    public void onDestinationSubmit(View view) {
+        EditText text = findViewById(R.id.dest_search_box);
+        String keywords = text.getText().toString();
+        if(!keywords.isEmpty())
+            onDestinationSearch(text.getText().toString());
     }
 }

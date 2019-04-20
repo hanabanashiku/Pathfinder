@@ -2,9 +2,13 @@ package tk.pathfinder.UI;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.util.Log;
 
 import java.io.IOException;
@@ -12,6 +16,7 @@ import java.io.IOException;
 import tk.pathfinder.Map.*;
 import tk.pathfinder.Networking.Api;
 import tk.pathfinder.Networking.BeaconReceiver;
+import tk.pathfinder.R;
 import tk.pathfinder.UI.Activities.HomeActivity;
 import tk.pathfinder.UI.Activities.MapSearchActivity;
 import tk.pathfinder.UI.Activities.NavigationActivity;
@@ -121,7 +126,20 @@ public class AppStatus extends Application {
      */
     public MapReceiver getMapReceiver() { return mapReceiver; }
 
-    public AppStatus() {}
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "Pathfinder";
+            String description = "";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("pathfinder", name, importance);
+            channel.setDescription(description);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    public AppStatus() {
+    }
     
     @Override
     public void onCreate(){
@@ -139,5 +157,7 @@ public class AppStatus extends Application {
 
         // keep the radios awake
         beaconReceiver.getWifiLock().acquire();
+
+        createNotificationChannel();
     }
 }

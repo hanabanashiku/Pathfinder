@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:onClick="onClick"
+    android:onClick="onMapSubmit"
     tools:context=".UI.Fragments.MapResult">
 
     <TextView

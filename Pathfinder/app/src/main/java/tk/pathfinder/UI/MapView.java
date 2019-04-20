@@ -72,7 +72,7 @@ public class MapView extends View {
         init(context);
     }
 
-    private void init(Context context) {
+    protected void init(Context context) {
         density = getResources().getDisplayMetrics().density;
         // Set up paint objects
         textPaint = new TextPaint();

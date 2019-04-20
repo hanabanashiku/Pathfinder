@@ -8,8 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-
-import java.util.Iterator;
+import android.util.AttributeSet;
 
 import tk.pathfinder.Map.Edge;
 import tk.pathfinder.Map.Map;
@@ -37,8 +36,25 @@ public class NavigationView extends MapView implements SensorEventListener {
     private double rotation;
 
 
-    public NavigationView(Context context){
+    public NavigationView(Context context) {
         super(context);
+        init(context);
+    }
+
+    public NavigationView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public NavigationView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    @Override
+    protected void init(Context context){
+        super.init(context);
+
         status = (AppStatus)context.getApplicationContext();
         pagingNotAllowed = true;
 
@@ -64,6 +80,9 @@ public class NavigationView extends MapView implements SensorEventListener {
         Sensor magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, magneticField, SensorManager.SENSOR_DELAY_NORMAL);
+
+        setMap(status.getCurrentMap());
+        resetPosition();
     }
 
     public void setDestination(Room room){
@@ -80,20 +99,27 @@ public class NavigationView extends MapView implements SensorEventListener {
 
     @Override
     public void onDraw(Canvas canvas){
+        floor = status.getCurrentLocation().getY();
         super.onDraw(canvas);
 
         // update current location
         Point current = status.getCurrentLocation();
-        Node currentNode = status.getCurrentMap().closestNode(current);
+        Node currentNode = map.closestNode(current);
         if(trackingLocation){
             mapCenter.x = current.getX();
             mapCenter.y = current.getZ();
         }
 
+        if(destination == null){
+            drawEdges(canvas);
+            drawUser(canvas);
+            return;
+        }
+
         // recalculate path
         if(!currentPath.contains(currentNode)){
             try{
-                currentPath = Navigation.NavigatePath(status.getCurrentMap(), currentNode, destination);
+                currentPath = Navigation.NavigatePath(map, currentNode, destination);
                 getDirection(currentNode);
             }
             catch(NoValidPathException e) { listener.onNoPath(e); }
@@ -178,6 +204,7 @@ public class NavigationView extends MapView implements SensorEventListener {
         Point p = status.getCurrentLocation();
         mapCenter.x = p.getX();
         mapCenter.y = p.getZ();
+        trackingLocation = true;
     }
 
     public void setCallbackListener(NavigationListener l){
