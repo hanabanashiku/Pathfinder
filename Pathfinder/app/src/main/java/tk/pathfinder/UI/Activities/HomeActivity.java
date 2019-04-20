@@ -17,6 +17,7 @@ public class HomeActivity extends MenuActivity
         implements MapFragment.MapFragmentInteractionListener {
 
     private FragmentManager fragmentManager;
+    private boolean visible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +30,12 @@ public class HomeActivity extends MenuActivity
         fragmentManager = getSupportFragmentManager();
 
         status.getMapReceiver().onReceive(this, new Intent());
+        visible = true;
     }
 
     private void switchFragment(Fragment fragment){
+        if(!visible)
+            return;
         FragmentTransaction trans = fragmentManager.beginTransaction();
         trans.replace(R.id.home_content, fragment);
         trans.commit();
@@ -49,6 +53,19 @@ public class HomeActivity extends MenuActivity
         Intent intent = new Intent(HomeActivity.this, NavigationSearchActivity.class);
         intent.putExtras(b);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        visible = true;
+        ((AppStatus)getApplicationContext()).getBeaconReceiver().onReceive(this, new Intent());
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        visible = false;
     }
 
     @Override

@@ -34,6 +34,7 @@ public class AppStatus extends Application {
     private ViewMapActivity viewMap;
     private Activity current;
     private MapReceiver mapReceiver;
+    private BeaconReceiver beaconReceiver;
 
     public HomeActivity getHomeActivity() { return home; }
     public void setHomeActivity(HomeActivity value) { home = value;}
@@ -57,6 +58,8 @@ public class AppStatus extends Application {
     public Map getCurrentMap(){
         return currentMap;
     }
+
+    public BeaconReceiver getBeaconReceiver() { return beaconReceiver; }
 
     /**
      * Set the current map and send a tk.pathfinder.MAP_CHANGED action.
@@ -126,7 +129,7 @@ public class AppStatus extends Application {
         location = Point.getDefault();
 
         // register our receivers
-        BeaconReceiver beaconReceiver = new BeaconReceiver(this);
+        beaconReceiver = new BeaconReceiver(this);
         IntentFilter bf = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(beaconReceiver, bf);
 
