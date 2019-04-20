@@ -23,6 +23,10 @@ public abstract class MenuActivity extends AppCompatActivity {
                 Intent i = new Intent(this, AboutActivity.class);
                 startActivity(i);
                 return true;
+            case R.id.map_search_menu_item:
+                i = new Intent(this, MapSearchActivity.class);
+                startActivity(i);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

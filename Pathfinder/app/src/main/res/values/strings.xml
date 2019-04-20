@@ -33,4 +33,5 @@
     <string name="pathfinder_logo">Pathfinder logo</string>
     <string name="oakland_university">Oakland University</string>
     <string name="no_implied_warranty">This app and its corresponding web interface is the result of a collaborative effort of undergraduate students at Oakland University. It is distributed in the hopes that someone may find it useful but without any implied warranty.</string>
+    <string name="search_for_a_building">Search for a Building</string>
 </resources>

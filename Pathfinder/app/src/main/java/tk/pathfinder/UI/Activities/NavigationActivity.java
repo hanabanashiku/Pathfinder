@@ -1,6 +1,5 @@
 package tk.pathfinder.UI.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import tk.pathfinder.Map.Room;
 import tk.pathfinder.R;
 
@@ -16,7 +15,7 @@ import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.UI.NavigationView;
 import tk.pathfinder.exceptions.NoValidPathException;
 
-public class NavigationActivity extends AppCompatActivity {
+public class NavigationActivity extends MenuActivity {
 
     public NavigationView view;
 

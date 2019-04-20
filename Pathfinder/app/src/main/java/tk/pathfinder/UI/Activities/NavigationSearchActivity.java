@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import tk.pathfinder.UI.AppStatus;
@@ -21,7 +20,7 @@ import tk.pathfinder.UI.Fragments.NavigationResultsFragment;
 /**
  * An activity for searching for destinations on a map.
  */
-public class NavigationSearchActivity extends AppCompatActivity implements NavigationResult.NavigationResultListener {
+public class NavigationSearchActivity extends MenuActivity implements NavigationResult.NavigationResultListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

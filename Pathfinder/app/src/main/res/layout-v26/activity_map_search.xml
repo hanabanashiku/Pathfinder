@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/search_for_a_building"
+            android:hint="Search for a Building"
             android:inputType="textNoSuggestions|textPersonName|text" />
 
         <ImageButton
