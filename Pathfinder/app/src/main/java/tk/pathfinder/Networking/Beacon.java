@@ -25,7 +25,7 @@ public class Beacon implements Comparable<Beacon> {
     Beacon(String ssid, Point p) throws IllegalArgumentException {
         this.ssid = ssid;
         this.location = p;
-        this.strength = -128; // minimum strength for now.
+        this.strength = 0; // minimum strength for now.
         int[] ids = parseSsid(ssid);
 
         if(ids.length == 0)
@@ -56,18 +56,18 @@ public class Beacon implements Comparable<Beacon> {
     }
 
     /**
-     * @return The signal strength of the beacon, in dBs over the interval [-127, 128].
+     * @return The normalized signal strength over the interval [0, 100].
      */
     public int getLevel(){
         return strength;
     }
 
     /**
-     * @param level The decibel level of the signal beacon's signal strength the last time it was checked.
-     * @throws IllegalArgumentException if the value is outside of the interval [-127, 128].
+     * @param level The signal strength, normalized to 101 levels.
+     * @throws IllegalArgumentException if the value is outside of the interval [0, 100].
      */
     void setLevel(int level){
-        if(level < -127 || level > 128)
+        if(level < 0 || level > 100)
             throw new IllegalArgumentException();
         strength = level;
     }

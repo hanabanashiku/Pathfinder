@@ -142,7 +142,7 @@ public class BeaconReceiver extends BroadcastReceiver implements Iterable<Beacon
             // otherwise, we have the beacon and it shows the correct location
 
             // update our values from the pull
-            b.setLevel(i.level);
+            b.setLevel(WifiManager.calculateSignalLevel(i.level, 101));
             current.add(b);
         }
 

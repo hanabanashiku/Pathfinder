@@ -200,27 +200,71 @@ public class Navigation {
             return beacons.get(0).getLocation();
         }
 
-        // make the signal strength 0-based
-        int s1 = beacons.get(0).getLevel() + 127;
-        int s2 = beacons.get(1).getLevel() + 127;
-
-        int x = (beacons.get(0).getLocation().getX() - beacons.get(1).getLocation().getX())/2;
+        int s1 = beacons.get(0).getLevel();
+        int s2 = beacons.get(1).getLevel();
+        // Find the midpoint of the line.
+        int m_x; int m_z;
         int y = beacons.get(0).getLocation().getY();
-        int z = (beacons.get(0).getLocation().getZ() - beacons.get(1).getLocation().getZ())/2;
-        int s = ((s2-s1)/256) + 1;
 
-        Point m = new Point(x, y, z).multiply(s);
+        if(s1 == 0 && s2 == 0)
+            throw new IllegalArgumentException("The beacons aren't there.");
+
+        else if(s1 == 0){
+            m_x = beacons.get(1).getLocation().getX();
+            m_z = beacons.get(1).getLocation().getZ();
+            return new Point(m_x, y, m_z);
+        }
+        else if(s2 == 0){
+            m_x = beacons.get(0).getLocation().getX();
+            m_z = beacons.get(0).getLocation().getZ();
+            return new Point(m_x, y, m_z);
+        }
+
+        Point m = findWeightedMidpoint(beacons.get(0).getLocation(), beacons.get(1).getLocation(), s1, s2, true);
+        int sc = m.getY();
+        m = new Point(m.getX(), beacons.get(0).getLocation().getY(), m.getZ());
 
         // we're done
         if(beacons.size() == 2)
             return m;
 
-        int s3 = beacons.get(2).getLevel() + 127;
+        int s3 = beacons.get(2).getLevel();
 
-        x = (beacons.get(2).getLocation().getX() - m.getX())/2;
-        z = (beacons.get(2).getLocation().getZ() - m.getZ())/2;
-        int sc = ((s3 - s2 - s1)/ 256) + 1;
+        if(s3 == 0)
+            return m;
 
-        return new Point(x, y, z).multiply(sc);
+        return findWeightedMidpoint(m, beacons.get(2).getLocation(), sc, s3, false);
+    }
+
+    // find the weighted midpoint of the two points with signal strength.
+    // if the last parameter is true, it will return the weighted signal strength as the Y value.
+    private static Point findWeightedMidpoint(Point p1, Point p2, int s1, int s2, boolean add_strength){
+        int dx = Math.abs(p2.getX() - p1.getX());
+        int dy = Math.abs(p2.getZ() - p1.getZ());
+        double weight = s2/(double)s1;
+        int dist_x = (int)Math.round(dx / (weight + 1));
+        int dist_y = (int)Math.round(dy / (weight + 1));
+        int x; int y;
+
+        if(p1.getX() < p2.getX())
+            x = p1.getX() + dist_x;
+        else
+            x = p2.getX() + dist_x;
+
+        if(p1.getZ() < p2.getZ())
+            y = p1.getZ() + dist_y;
+        else
+            y = p2.getZ() + dist_y;
+
+        int sig_dist = (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        int ds = (int)Math.round(sig_dist / (weight + 1));
+        int signal;
+        if(s1 < s2)
+            signal = s1 + ds;
+        else signal = s2 + ds;
+
+        if(add_strength)
+            return new Point(x, signal, y);
+        else return new Point(x, p1.getY(), y);
     }
 }
