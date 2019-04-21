@@ -24,6 +24,7 @@ public class MapLandingFragment extends Fragment {
 
     public MapLandingFragment() {}
 
+    NavigationView nav;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,10 +43,14 @@ public class MapLandingFragment extends Fragment {
             return false;
         });
 
-        NavigationView nav = v.findViewById(R.id.navigationView);
+        nav = v.findViewById(R.id.navigationView);
         nav.setMap(((AppStatus)getActivity().getApplicationContext()).getCurrentMap());
 
         return v;
+    }
+
+    public void resetPosition(){
+        nav.resetPosition();
     }
 
 }

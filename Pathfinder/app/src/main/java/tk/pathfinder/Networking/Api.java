@@ -122,8 +122,8 @@ public class Api {
                 JSONObject j = bArr.getJSONObject(i);
                 String ssid = j.getString("ssid");
                 JSONObject b_corr = j.getJSONObject("coordinate");
-                Point p = new Point((int)(b_corr.getDouble("x")*100),
-                        (int)(b_corr.getDouble("y")), (int)(b_corr.getDouble("z")*100));
+                Point p = new Point((int)(b_corr.getDouble("x")*1000),
+                        (int)(b_corr.getDouble("y")), (int)(b_corr.getDouble("z")*1000));
                 beacons.add(new Beacon(ssid, p));
             }
         }

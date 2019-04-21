@@ -31,9 +31,12 @@ public class NavigationView extends MapView implements SensorEventListener {
     private static Paint previousPathPaint;
     private static Paint userPaint;
 
-    private float[] grav = null;
-    private float[] geo = null;
-    private double rotation;
+    private final float[] grav = new float[3];
+    private final float[] geo = new float[3];
+    private final float[] rotation = new float[9];
+    private final float[] orientation = new float[3];
+    private double angle;
+
 
 
     public NavigationView(Context context) {
@@ -99,8 +102,10 @@ public class NavigationView extends MapView implements SensorEventListener {
 
     @Override
     public void onDraw(Canvas canvas){
+        if(map == null)
+            return;
         floor = status.getCurrentLocation().getY();
-        super.onDraw(canvas);
+
 
         // update current location
         Point current = status.getCurrentLocation();
@@ -110,42 +115,41 @@ public class NavigationView extends MapView implements SensorEventListener {
             mapCenter.y = current.getZ();
         }
 
-        if(destination == null){
-            drawEdges(canvas);
-            drawUser(canvas);
-            return;
-        }
-
-        // recalculate path
-        if(!currentPath.contains(currentNode)){
-            try{
-                currentPath = Navigation.NavigatePath(map, currentNode, destination);
-                getDirection(currentNode);
-            }
-            catch(NoValidPathException e) { listener.onNoPath(e); }
-        }
-
-        if(direction.x == 0 && direction.y == 0){
-            listener.onArrival();
-            return;
-        }
-
         drawEdges(canvas);
 
-        // draw the path to follow
-        for (Edge e : currentPath) {
-            Paint paint;
-            if (direction.x == 1 && (e.getNode2().getPoint().getX() >= current.getX() || e.getNode2().getPoint().getX() >= current.getY())
-                    || direction.y == 1 && (e.getNode2().getPoint().getZ() < current.getZ() || e.getNode2().getPoint().getZ() < current.getZ())) {
-                paint = destinationPathPaint;
-            } else
-                paint = previousPathPaint;
+        if(destination != null){
+            // recalculate path
+            if(!currentPath.contains(currentNode)){
+                try{
+                    currentPath = Navigation.NavigatePath(map, currentNode, destination);
+                    getDirection(currentNode);
+                }
+                catch(NoValidPathException e) { listener.onNoPath(e); }
+            }
 
-            android.graphics.Point e1 = translatePoint(e.getNode1().getPoint());
-            android.graphics.Point e2 = translatePoint(e.getNode2().getPoint());
+            if(direction.x == 0 && direction.y == 0){
+                listener.onArrival();
+                return;
+            }
 
-            canvas.drawLine(e1.x, e1.y, e2.x, e2.y, paint);
+            // draw the path to follow
+            for (Edge e : currentPath) {
+                Paint paint;
+                if (direction.x == 1 && (e.getNode2().getPoint().getX() >= current.getX() || e.getNode2().getPoint().getX() >= current.getY())
+                        || direction.y == 1 && (e.getNode2().getPoint().getZ() < current.getZ() || e.getNode2().getPoint().getZ() < current.getZ())) {
+                    paint = destinationPathPaint;
+                } else
+                    paint = previousPathPaint;
+
+                android.graphics.Point e1 = translatePoint(e.getNode1().getPoint());
+                android.graphics.Point e2 = translatePoint(e.getNode2().getPoint());
+
+                canvas.drawLine(e1.x, e1.y, e2.x, e2.y, paint);
+            }
         }
+
+        drawNodes(canvas);
+        drawFloorConnectors(canvas);
 
         // draw the directional marker
         drawUser(canvas);
@@ -153,40 +157,38 @@ public class NavigationView extends MapView implements SensorEventListener {
     }
 
     private void drawUser(Canvas canvas){
-        int x = content_width / 2;
-        int y = content_height / 2;
+        android.graphics.Point p = translatePoint(status.getCurrentLocation());
 
-        canvas.drawCircle(x, y, 6 * density, userPaint);
+        userPaint.setColor(Color.BLACK);
+        canvas.drawCircle(p.x, p.y, 10 * density, userPaint);
+        userPaint.setColor(Color.WHITE);
+        canvas.drawCircle(p.x, p.y, 9 * density, userPaint);
 
-        x = (int)(8 * density * Math.cos(rotation)) + x;
-        y = (int)(8 * density * Math.sin(rotation)) + y;
+        userPaint.setColor(Color.BLUE);
+        canvas.drawCircle(p.x, p.y, 6 * density, userPaint);
 
-        canvas.drawCircle(x, y, 2 * density, userPaint);
+        int x = (int)(14 * density * Math.cos(angle)) + p.x;
+        int y = (int)(14 * density * Math.sin(angle)) + p.y;
+        canvas.drawCircle(x, y, 4 * density, userPaint);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event){
         switch(event.sensor.getType()){
             case Sensor.TYPE_ACCELEROMETER:
-                grav = event.values;
+                filter(grav, event.values);
                 break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                geo = event.values;
+                filter(geo, event.values);
                 break;
             default:
                 return;
         }
 
-        if(grav != null && geo != null){
-            float[] identity = new float[9];
-            float[] rotation = new float[9];
-
-            if(SensorManager.getRotationMatrix(rotation, identity, grav, geo)){
-                float[] orientation = new float[3];
-                SensorManager.getOrientation(rotation, orientation);
-                this.rotation = Math.toDegrees(orientation[0]);
-                invalidate();
-            }
+        if(SensorManager.getRotationMatrix(rotation, null, grav, geo)) {
+            SensorManager.getOrientation(rotation, orientation);
+            this.angle = orientation[0];
+            invalidate();
         }
     }
 
@@ -205,6 +207,7 @@ public class NavigationView extends MapView implements SensorEventListener {
         mapCenter.x = p.getX();
         mapCenter.y = p.getZ();
         trackingLocation = true;
+        zoom = 3.5;
     }
 
     public void setCallbackListener(NavigationListener l){
@@ -214,5 +217,14 @@ public class NavigationView extends MapView implements SensorEventListener {
     public interface NavigationListener{
         void onNoPath(NoValidPathException e);
         void onArrival();
+    }
+
+    // use a low-pass filter on sensor values to smooth them.
+    private void filter(float[] matrix, float[] values){
+        final float alpha = 0.8f;
+
+        matrix[0] = alpha * matrix[0] + (1 - alpha) * values[0];
+        matrix[1] = alpha * matrix[1] + (1 - alpha) * values[1];
+        matrix[2] = alpha * matrix[2] + (1 - alpha) * values[2];
     }
 }

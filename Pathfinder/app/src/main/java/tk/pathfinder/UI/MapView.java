@@ -136,8 +136,6 @@ public class MapView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
         if(map == null)
             return;
 

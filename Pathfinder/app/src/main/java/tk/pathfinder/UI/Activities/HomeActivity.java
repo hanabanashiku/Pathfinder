@@ -18,6 +18,7 @@ public class HomeActivity extends MenuActivity{
     private FragmentManager fragmentManager;
     private boolean visible;
     private View loadingBar;
+    MapLandingFragment mapLanding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +49,9 @@ public class HomeActivity extends MenuActivity{
     }
 
     public void setFoundMap(){
-        switchFragment(new MapLandingFragment());
+        mapLanding = new MapLandingFragment();
+        switchFragment(mapLanding);
     }
-
-
-   /* @Override
-    public void onDestinationSearch(String keywords) {
-        Bundle b = new Bundle();
-        b.putString("keywords", keywords);
-        Intent intent = new Intent(HomeActivity.this, NavigationSearchActivity.class);
-        intent.putExtras(b);
-        startActivity(intent);
-    }*/
 
     @Override
     protected void onResume(){
@@ -110,5 +102,9 @@ public class HomeActivity extends MenuActivity{
         String keywords = text.getText().toString();
         if(!keywords.isEmpty())
             onDestinationSearch(text.getText().toString());
+    }
+
+    public void onMapCenter(View view){
+        mapLanding.resetPosition();
     }
 }
