@@ -21,11 +21,9 @@ import tk.pathfinder.R;
 /**
  * A fragment for displaying the results of a destination search.
  */
-public class NavigationResultsFragment extends Fragment implements NavigationResult.NavigationResultListener {
+public class NavigationResultsFragment extends Fragment {
 
     private String keywords;
-
-    private OnFragmentInteractionListener mListener;
 
     public NavigationResultsFragment() {
         // Required empty public constructor
@@ -70,32 +68,5 @@ public class NavigationResultsFragment extends Fragment implements NavigationRes
         }
         t.commit();
         return v;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement NavigationResultsListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    // Button click event
-    // A room has been selected, send the callback.
-    public void onRoomSelected(int roomId){
-        mListener.roomSelected(roomId);
-    }
-
-    public interface OnFragmentInteractionListener {
-        void roomSelected(int roomId);
     }
 }

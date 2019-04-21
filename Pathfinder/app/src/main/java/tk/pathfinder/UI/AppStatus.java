@@ -104,6 +104,11 @@ public class AppStatus extends Application {
      * @param p The user's current location on the map.
      */
     public void setCurrentLocation(Point p){
+        if(p == null){
+            location = Point.getDefault();
+            return;
+        }
+
         location = p;
         // trigger redraw
         if(navigation != null) {
@@ -133,6 +138,7 @@ public class AppStatus extends Application {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("pathfinder", name, importance);
             channel.setDescription(description);
+            channel.setShowBadge(false);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }

@@ -5,11 +5,11 @@ import tk.pathfinder.R;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 
 import java.util.Iterator;
 
-import androidx.appcompat.widget.Toolbar;
 import tk.pathfinder.UI.Alert;
 import tk.pathfinder.UI.AppStatus;
 import tk.pathfinder.UI.NavigationView;
@@ -23,8 +23,6 @@ public class NavigationActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         AppStatus status = (AppStatus)getApplicationContext();
         status.setNavigationActivity(this);
@@ -52,7 +50,7 @@ public class NavigationActivity extends MenuActivity {
         view.setMap(status.getCurrentMap());
         view.setDestination(destination);
 
-        toolbar.setTitle(destination.getName());
+        getSupportActionBar().setTitle(destination.getName());
     }
 
     public void onLocationClick(View v){
@@ -87,6 +85,7 @@ public class NavigationActivity extends MenuActivity {
 
         @Override
         public void onArrival(){
+           // Looper.prepare();
             new Alert("", "You have arrived at your destination", getApplicationContext());
             // go back home
             Intent i = new Intent(NavigationActivity.this, HomeActivity.class);

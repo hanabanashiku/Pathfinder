@@ -170,7 +170,7 @@ public class Navigation {
             edges.add(e);
         }
 
-        return new Path((Edge[])edges.toArray());
+        return new Path(edges.toArray(new Edge[0]));
     }
 
     /**

@@ -94,7 +94,7 @@ public class Path implements Iterable<Edge> {
 
             @Override
             public boolean hasNext() {
-                return i < edges.length;
+                return i < edges.length - 1;
             }
 
             @Override

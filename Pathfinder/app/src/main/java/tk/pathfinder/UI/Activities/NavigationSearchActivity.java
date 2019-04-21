@@ -53,7 +53,7 @@ public class NavigationSearchActivity extends MenuActivity implements Navigation
         NavigationResultsFragment f = NavigationResultsFragment.newInstance(keywords);
         FragmentTransaction t = fm.beginTransaction();
         t.replace(R.id.dest_results_content, f);
-
+        t.commit();
     }
 
     // we have selected a room, start navigation activity.

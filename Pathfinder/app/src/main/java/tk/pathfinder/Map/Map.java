@@ -200,11 +200,14 @@ public class Map {
 
         for(Iterator<Room> rooms = getRooms(); rooms.hasNext(); ){
             Room i = rooms.next();
-            for(String j : parts)
-                if (i.getName().contains(j) || i.getRoomNumber().contains(j)){
+            for(String j : parts) {
+                j = j.toLowerCase();
+                if (i.getRoomNumber() != null && i.getRoomNumber().toLowerCase().contains(j)
+                        || i.getName() != null && i.getName().toLowerCase().contains(j)) {
                     ret.add(i);
                     break;
                 }
+            }
         }
 
         return ret;

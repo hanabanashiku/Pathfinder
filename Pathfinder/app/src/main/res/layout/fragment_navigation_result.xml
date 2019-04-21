@@ -2,13 +2,13 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_res_table"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="3pt"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:onClick="onMapSubmit"
     tools:context=".UI.Fragments.NavigationResult">
 
     <TableRow

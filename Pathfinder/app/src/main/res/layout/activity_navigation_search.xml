@@ -21,47 +21,35 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/dest_search_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="5pt"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <EditText
+            android:id="@+id/dest_search_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/search_for_a_building"
+            android:inputType="textNoSuggestions|textPersonName|text" />
 
-            <EditText
-                android:id="@+id/dest_search_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/search_for_a_destination"
-                android:inputType="textNoSuggestions|textPersonName|text" />
+        <ImageButton
+            android:id="@+id/dest_search_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/search"
+            android:onClick="onSubmitClick"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_menu_search" />
 
-            <ImageButton
-                android:id="@+id/dest_search_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/search"
-                android:onClick="onSubmitClick"
-                android:scaleType="center"
-                android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
 
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/dest_results_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </FrameLayout>
-    </FrameLayout>
-
-
+    <FrameLayout
+        android:id="@+id/dest_results_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

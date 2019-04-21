@@ -90,14 +90,7 @@ public class NavigationView extends MapView implements SensorEventListener {
 
     public void setDestination(Room room){
         destination = room;
-        Map map = status.getCurrentMap();
-        Node current = map.closestNode(status.getCurrentLocation());
-        try{
-            currentPath = Navigation.NavigatePath(status.getCurrentMap(), current, destination);
-        }
-        catch(NoValidPathException e){
-            listener.onNoPath(e);
-        }
+        new NavigationRunnable().start();
     }
 
     @Override
@@ -109,7 +102,6 @@ public class NavigationView extends MapView implements SensorEventListener {
 
         // update current location
         Point current = status.getCurrentLocation();
-        Node currentNode = map.closestNode(current);
         if(trackingLocation){
             mapCenter.x = current.getX();
             mapCenter.y = current.getZ();
@@ -117,21 +109,7 @@ public class NavigationView extends MapView implements SensorEventListener {
 
         drawEdges(canvas);
 
-        if(destination != null){
-            // recalculate path
-            if(!currentPath.contains(currentNode)){
-                try{
-                    currentPath = Navigation.NavigatePath(map, currentNode, destination);
-                    getDirection(currentNode);
-                }
-                catch(NoValidPathException e) { listener.onNoPath(e); }
-            }
-
-            if(direction.x == 0 && direction.y == 0){
-                listener.onArrival();
-                return;
-            }
-
+        if(currentPath != null && currentPath.length() > 0) {
             // draw the path to follow
             for (Edge e : currentPath) {
                 Paint paint;
@@ -153,7 +131,6 @@ public class NavigationView extends MapView implements SensorEventListener {
 
         // draw the directional marker
         drawUser(canvas);
-
     }
 
     private void drawUser(Canvas canvas){
@@ -195,10 +172,28 @@ public class NavigationView extends MapView implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
+    // sets the direction we need to move to get to the destination, on each axis. (1 is forward)
     public void getDirection(Node current){
+        if(current == null)
+            return;
         int x = (int)Math.signum(destination.getPoint().getX() - current.getPoint().getX());
         int y = (int)Math.signum(destination.getPoint().getZ() - current.getPoint().getZ());
         direction = new android.graphics.Point(x, y);
+    }
+
+    public boolean recalculatePath(Node current) {
+        try {
+            currentPath = Navigation.NavigatePath(map, current, destination);
+            getDirection(current);
+        } catch (NoValidPathException e) {
+            listener.onNoPath(e);
+        }
+
+        if (direction.x == 0 && direction.y == 0) {
+            listener.onArrival();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -226,5 +221,28 @@ public class NavigationView extends MapView implements SensorEventListener {
         matrix[0] = alpha * matrix[0] + (1 - alpha) * values[0];
         matrix[1] = alpha * matrix[1] + (1 - alpha) * values[1];
         matrix[2] = alpha * matrix[2] + (1 - alpha) * values[2];
+    }
+
+    private class NavigationRunnable extends Thread {
+
+        @Override
+        public void run() {
+            recalculatePath(map.closestNode(status.getCurrentLocation()));
+
+            while(destination != null){
+                Node current = map.closestNode(status.getCurrentLocation());
+
+                // we have arrived
+                if (currentPath.length() == 0){
+                    listener.onArrival();
+                    currentPath = null;
+                    break;
+                }
+
+                // we are lost, recalculate
+                else if(!currentPath.contains(current))
+                        recalculatePath(current);
+            }
+        }
     }
 }
