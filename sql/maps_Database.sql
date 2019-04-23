@@ -30,6 +30,14 @@ CREATE TABLE nodes(
   FOREIGN KEY (floorID) REFERENCES floors(floor_ID),
   FOREIGN KEY (buildingID) REFERENCES buildings(id)
 );
+CREATE TABLE buildings(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(255),
+  map_image_path VARCHAR(255),
+  owner VARCHAR(50),
+  Primary key (id)
+);
 
 CREATE TABLE beacons(
   beaconID INT UNIQUE NOT NULL AUTO_INCREMENT,
@@ -59,7 +67,14 @@ Create TABLE ElectricalEnginerring(
   PRIMARY KEY floorID
   );
 
-
+Create Table floors(
+    floor_id INT NOT NULL AUTO_INCREMENT,
+    floor_number INT NOT NULL,
+    path_to_image varchar(255),
+    buildingID INT,
+    Primary Key (floor_id),
+    FOREIGN KEY (buildingID) REFERENCES buildings(id)
+);
 
   Create TABLE beacons(
     beaconID INT NOT NULL AUTO_INCREMENT,
@@ -96,4 +111,4 @@ Create TABLE ElectricalEnginerring(
   ALTER TABLE nodes ADD FOREIGN KEY (floorID) REFERENCES floors(floorID);
   ALTER TABLE nodes DROP COLUMN buildings;
   ALTER TABLE nodes ADD COLUMN buildingID after floorID;
-  FOREIGN KEY (buildingID) REFERENCES building(id); 
+  ALTER TABLE nodes ADD FOREIGN KEY (buildingID) REFERENCES buildings(id); 
