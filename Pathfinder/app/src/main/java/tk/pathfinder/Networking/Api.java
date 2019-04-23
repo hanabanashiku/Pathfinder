@@ -23,6 +23,9 @@ import tk.pathfinder.Map.*;
  */
 public class Api {
 
+    // change this URL when moving the website home.
+    private static final String URL_BASE = "https://path-finder.tk";
+
     /**
      * Get a map from the database
      * @param id The map id.
@@ -32,7 +35,7 @@ public class Api {
     public static Map getMap(Integer id) throws IOException{
         HttpsURLConnection con;
         try{
-            URL url = new URL("https://path-finder.tk/api/maps?id=" + id.toString());
+            URL url = new URL(URL_BASE + "/api/maps?id=" + id.toString());
             con = (HttpsURLConnection)url.openConnection();
         }
         catch(MalformedURLException e){
@@ -151,7 +154,7 @@ public class Api {
 
         try{
             keywords = URLEncoder.encode(keywords, "UTF-8");
-            URL url = new URL("https://path-finder.tk/api/maps?q=" + keywords);
+            URL url = new URL(URL_BASE + "/api/maps?q=" + keywords);
             con = (HttpsURLConnection)url.openConnection();
         }
         catch(MalformedURLException e){

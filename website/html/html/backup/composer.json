@@ -1,7 +1,0 @@
-{
-    "require": {
-        "spomky-labs/otphp": "^9.1",
-      "ext-mysqli": "*",
-      "ext-json": "*"
-    }
-}
