@@ -1,4 +1,0 @@
-<Files "Database.php">
-    Order Deny,Allow
-    Require all denied
-</Files>
