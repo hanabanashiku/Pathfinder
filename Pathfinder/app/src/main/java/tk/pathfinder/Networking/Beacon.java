@@ -22,7 +22,7 @@ public class Beacon implements Comparable<Beacon> {
      * @param p The location of the beacon on the map.
      * @throws IllegalArgumentException if the SSID is invalid.
      */
-    Beacon(String ssid, Point p) throws IllegalArgumentException {
+    public Beacon(String ssid, Point p) throws IllegalArgumentException {
         this.ssid = ssid;
         this.location = p;
         this.strength = 0; // minimum strength for now.
@@ -66,7 +66,7 @@ public class Beacon implements Comparable<Beacon> {
      * @param level The signal strength, normalized to 101 levels.
      * @throws IllegalArgumentException if the value is outside of the interval [0, 100].
      */
-    void setLevel(int level){
+    public void setLevel(int level){
         if(level < 0 || level > 100)
             throw new IllegalArgumentException();
         strength = level;
