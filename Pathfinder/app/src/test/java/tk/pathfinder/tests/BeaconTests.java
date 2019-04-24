@@ -126,6 +126,6 @@ public class BeaconTests {
         Assert.assertEquals(new Point(17, 1, 5), Navigation.triangulate(b1, b2, b3));
 
         b1.setLevel(25);
-        Assert.assertEquals(new Point(15, 1, 5), Navigation.triangulate(b1, b2, b3);
+        Assert.assertEquals(new Point(15, 1, 5), Navigation.triangulate(b1, b2, b3));
     }
 }
